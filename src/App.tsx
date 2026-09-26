@@ -3,12 +3,18 @@ import { ShopProvider, useShop } from './context/ShopContext';
 import { AnnouncementBar } from './components/AnnouncementBar';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
+import { MarqueeTicker } from './components/MarqueeTicker';
 import { CategoryStrip } from './components/CategoryStrip';
 import { EditorialSection } from './components/EditorialSection';
+import { WaveDivider } from './components/WaveDivider';
+import { BridalDarkSection } from './components/BridalDarkSection';
+import { TrendOfTheDay } from './components/TrendOfTheDay';
+import { SeasonForecast } from './components/SeasonForecast';
+import { ChangeLookStudio } from './components/ChangeLookStudio';
+import { WorthYourAttention } from './components/WorthYourAttention';
+import { LatestTrendsLookbook } from './components/LatestTrendsLookbook';
 import { NewArrivalsGrid } from './components/NewArrivalsGrid';
 import { SignatureCollections } from './components/SignatureCollections';
-import { TrendingShowcase } from './components/TrendingShowcase';
-import { BrandStorytelling } from './components/BrandStorytelling';
 import { ReviewsCarousel } from './components/ReviewsCarousel';
 import { InstagramGallery } from './components/InstagramGallery';
 import { NewsletterSection } from './components/NewsletterSection';
@@ -45,34 +51,55 @@ const AppContent: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
           >
-            {/* Hero Section */}
+            {/* 1. Hero Section - Virtual Boutique Showroom */}
             <HeroSection />
 
-            {/* Shop by Category Strip */}
+            {/* 2. Pure Zari Certified Running Marquee Ribbon */}
+            <MarqueeTicker />
+
+            {/* 3. SIX MOODS - Arched Domes Carousel Strip */}
             <CategoryStrip />
 
-            {/* Editorial Collection Section - Woven to Be Remembered */}
+            {/* 4. "Woven to Be Remembered" - 3D Curved Cylindrical Arc Carousel */}
             <EditorialSection />
 
-            {/* New Arrivals Product Grid */}
+            {/* 5. Smooth Multi-tier Wave Transition (Cream -> Dark Bridal) */}
+            <WaveDivider fromColor="#FAF7F0" toColor="#0D0907" />
+
+            {/* 6. The Bridal Collection - Double Ghost Typography & Scarlet Banner */}
+            <BridalDarkSection />
+
+            {/* 7. Wave Transition back to Cream Palette */}
+            <WaveDivider fromColor="#0D0907" toColor="#FAF7F0" invert />
+
+            {/* 8. Trend of the day & Seasonal Special - Blouse Size Selectors */}
+            <TrendOfTheDay />
+
+            {/* 9. Autumn—Winter 2026 Season Forecast - 3 Arched Frames */}
+            <SeasonForecast />
+
+            {/* 10. Interactive "Change Look" Live Model Draping Studio */}
+            <ChangeLookStudio />
+
+            {/* 11. "Worth your attention" - Hover-Expanding Vertical Slices Accordion */}
+            <WorthYourAttention />
+
+            {/* 12. "LATEST TRENDS" - 3D Block Typography, Lookbook & Video Reels */}
+            <LatestTrendsLookbook />
+
+            {/* 13. Curated Masterpiece Saree Collection Grid */}
             <NewArrivalsGrid />
 
-            {/* Signature Collections Showcase */}
+            {/* 14. Signature Handloom Craftsmanship & Heritage Stories */}
             <SignatureCollections />
 
-            {/* Trending Now Fashion Lookbook */}
-            <TrendingShowcase />
-
-            {/* Brand Storytelling - The Art of Indian Elegance */}
-            <BrandStorytelling />
-
-            {/* Customer Reviews & Social Proof */}
+            {/* 15. Customer Reviews & Social Proof */}
             <ReviewsCarousel />
 
-            {/* Instagram Styling Gallery */}
+            {/* 16. Instagram Draping Inspo Gallery */}
             <InstagramGallery />
 
-            {/* Newsletter Section */}
+            {/* 17. VIP Newsletter Invitation */}
             <NewsletterSection />
           </motion.div>
         )}

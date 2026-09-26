@@ -1,102 +1,203 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Sparkles } from 'lucide-react';
-import { EDITORIAL_COLLECTIONS } from '../data/sarees';
+import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { formatINR } from '../utils/formatters';
+
+const CURVED_ITEMS = [
+  {
+    id: 'saree-ruhani',
+    name: 'Ruhani Temple Silk',
+    category: 'Kanjivaram Silk',
+    price: 38500,
+    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=85',
+    slug: 'mayurakshi-kanjivaram-bridal-silk-saree'
+  },
+  {
+    id: 'saree-saanjh',
+    name: 'Saanjh Maroon Banarasi',
+    category: 'Banarasi Brocade',
+    price: 36200,
+    image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=85',
+    slug: 'varanasi-noor-kadhwa-banarasi-brocade'
+  },
+  {
+    id: 'saree-prerna',
+    name: 'Prerna Festive Silk',
+    category: 'Pure Katan Silk',
+    price: 31800,
+    image: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=800&q=85',
+    slug: 'tarangini-rani-pink-festive-brocade-saree'
+  },
+  {
+    id: 'saree-leela',
+    name: 'Leela Courtyard Silk',
+    category: 'Tissue Silk',
+    price: 42000,
+    image: 'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=800&q=85',
+    slug: 'swarna-hansa-pure-tissue-silk-saree'
+  },
+  {
+    id: 'saree-tara',
+    name: 'Tara Peacock Paithani',
+    category: 'Pure Organza',
+    price: 24500,
+    image: 'https://images.unsplash.com/photo-1617627143644-84524458f262?auto=format&fit=crop&w=800&q=85',
+    slug: 'chandrika-midnight-flora-pure-organza-saree'
+  },
+  {
+    id: 'saree-aaranya-emerald',
+    name: 'Aaranya Emerald Kanjivaram',
+    category: 'Kanjivaram Silk',
+    price: 52000,
+    image: 'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=800&q=85',
+    slug: 'rajkumari-emerald-temple-kanjivaram'
+  }
+];
 
 export const EditorialSection: React.FC = () => {
   const { navigateTo } = useShop();
+  const [activeIndex, setActiveIndex] = useState(2);
+
+  const handlePrev = () => {
+    setActiveIndex((prev) => (prev - 1 + CURVED_ITEMS.length) % CURVED_ITEMS.length);
+  };
+
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev + 1) % CURVED_ITEMS.length);
+  };
 
   return (
-    <section className="py-20 md:py-32 bg-[#F2EBDD] relative overflow-hidden">
-      {/* Decorative luxury watermark */}
-      <div className="absolute top-10 right-4 pointer-events-none select-none text-[120px] md:text-[200px] font-serif font-bold text-[#651C32]/[0.03] leading-none whitespace-nowrap">
-        AARANYA
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
-          <div className="inline-flex items-center gap-2 text-[#8B1E3F] text-xs font-semibold uppercase tracking-[0.3em] mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-[#C8A96B]" />
-            <span>Editorial Campaigns</span>
+    <section className="py-20 md:py-28 bg-[#FAF7F0] relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Top Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 sm:mb-16">
+          <div className="text-left">
+            <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-bold text-[#8B1E3F] block mb-2">
+              THE AARANYA SIGNATURES
+            </span>
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <h2 className="font-serif text-4xl sm:text-6xl font-light text-[#1C1A19] tracking-tight">
+                Woven to Be
+              </h2>
+              <span className="font-script text-5xl sm:text-7xl text-[#C8A96B] leading-none">
+                Remembered
+              </span>
+            </div>
           </div>
 
-          <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl font-light text-[#651C32] tracking-tight leading-[1.15] mb-5">
-            Woven to Be Remembered
-          </h2>
-
-          <p className="text-base sm:text-lg text-[#1C1A19]/75 font-sans font-light leading-relaxed">
-            Every saree tells a story of tradition, artistry, and timeless beauty. Curated narratives woven on the sacred looms of India.
-          </p>
-          <div className="w-16 h-0.5 bg-[#C8A96B] mx-auto mt-6" />
+          <button
+            onClick={() => navigateTo('catalog')}
+            className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#651C32] hover:text-[#8B1E3F] mt-4 sm:mt-0"
+          >
+            <span>Explore The Edit</span>
+            <ArrowRight className="w-4 h-4 text-[#C8A96B] group-hover:translate-x-1 transition-transform" />
+          </button>
         </div>
 
-        {/* Editorial Layout: Alternating Large & Offset Cards */}
-        <div className="space-y-16 md:space-y-28">
-          {EDITORIAL_COLLECTIONS.map((item, idx) => {
-            const isEven = idx % 2 === 0;
+        {/* 3D Cylindrical Curved Arc Carousel matching Frame 6 */}
+        <div className="relative py-8 overflow-hidden">
+          {/* Controls */}
+          <button
+            onClick={handlePrev}
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-[#FAF7F0]/90 hover:bg-[#651C32] text-[#1C1A19] hover:text-white shadow-xl border border-[#C8A96B]/40 transition-all duration-300"
+            aria-label="Previous saree"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
 
-            return (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 35 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className={`flex flex-col ${
-                  isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'
-                } items-center gap-8 md:gap-14 lg:gap-20`}
-              >
-                {/* Visual Image Column */}
-                <div className="w-full lg:w-3/5 group">
-                  <div className="relative rounded-3xl md:rounded-[2.5rem] overflow-hidden aspect-[16/10] sm:aspect-[16/10] shadow-xl border border-[#C8A96B]/30 bg-[#FAF7F0]">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                      loading="lazy"
-                    />
+          <button
+            onClick={handleNext}
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-[#FAF7F0]/90 hover:bg-[#651C32] text-[#1C1A19] hover:text-white shadow-xl border border-[#C8A96B]/40 transition-all duration-300"
+            aria-label="Next saree"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
 
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40 group-hover:opacity-20 transition-opacity" />
+          {/* Curved Arc Perspective Stage */}
+          <div className="relative flex items-center justify-center min-h-[440px] sm:min-h-[500px]">
+            {CURVED_ITEMS.map((item, idx) => {
+              // Calculate offset relative to activeIndex
+              let offset = idx - activeIndex;
+              if (offset < -CURVED_ITEMS.length / 2) offset += CURVED_ITEMS.length;
+              if (offset > CURVED_ITEMS.length / 2) offset -= CURVED_ITEMS.length;
 
-                    {/* Badge */}
-                    <div className="absolute top-5 left-5">
-                      <span className="px-3.5 py-1.5 rounded-full bg-[#FAF7F0]/90 backdrop-blur-md text-[#651C32] text-xs font-semibold uppercase tracking-wider shadow">
-                        {item.badge}
-                      </span>
+              const isVisible = Math.abs(offset) <= 2;
+              if (!isVisible) return null;
+
+              // 3D curve positioning
+              const translateX = offset * 220; // horizontal spread
+              const rotateY = offset * -18;    // cylindrical rotation angle
+              const translateZ = -Math.abs(offset) * 120; // push background elements into z-space
+              const scale = 1 - Math.abs(offset) * 0.12;
+              const opacity = 1 - Math.abs(offset) * 0.25;
+              const zIndex = 20 - Math.abs(offset);
+
+              return (
+                <motion.div
+                  key={item.id}
+                  animate={{
+                    x: translateX,
+                    rotateY: rotateY,
+                    z: translateZ,
+                    scale: scale,
+                    opacity: opacity
+                  }}
+                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ zIndex }}
+                  onClick={() => {
+                    if (offset === 0) {
+                      navigateTo('product', item.slug);
+                    } else {
+                      setActiveIndex(idx);
+                    }
+                  }}
+                  className="absolute cursor-pointer w-60 sm:w-72 aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border border-white/40 bg-[#1C1A19] select-none"
+                >
+                  {/* Saree Image */}
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover"
+                    draggable={false}
+                  />
+
+                  {/* Glassmorphism Dark Gradient Overlay at Bottom */}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent p-5 text-left text-white">
+                    <span className="text-[10px] uppercase font-semibold tracking-wider text-[#C8A96B] block">
+                      {item.category}
+                    </span>
+                    <h4 className="font-serif text-base sm:text-lg font-bold text-white line-clamp-1 mb-1">
+                      {item.name}
+                    </h4>
+                    <p className="font-serif text-sm font-semibold text-[#E5B842]">
+                      {formatINR(item.price)}
+                    </p>
+                  </div>
+
+                  {offset === 0 && (
+                    <div className="absolute top-3 right-3 p-1.5 rounded-full bg-[#E5B842] text-[#1C1A19] shadow">
+                      <Sparkles className="w-3.5 h-3.5" />
                     </div>
-                  </div>
-                </div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
 
-                {/* Editorial Narrative Column */}
-                <div className="w-full lg:w-2/5 text-left space-y-4">
-                  <div className="text-xs uppercase tracking-[0.25em] font-semibold text-[#8B1E3F]">
-                    {item.subtitle}
-                  </div>
-
-                  <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light text-[#651C32] leading-tight">
-                    {item.title}
-                  </h3>
-
-                  <p className="text-sm sm:text-base text-[#1C1A19]/75 font-sans font-light leading-relaxed">
-                    {item.description}
-                  </p>
-
-                  <div className="pt-3">
-                    <button
-                      onClick={() => navigateTo('catalog', undefined, item.linkCategory)}
-                      className="group/btn inline-flex items-center gap-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-[#651C32] hover:text-[#8B1E3F] transition-colors py-2 border-b-2 border-[#C8A96B] hover:border-[#651C32]"
-                    >
-                      <span>Explore Collection</span>
-                      <ArrowUpRight className="w-4 h-4 text-[#C8A96B] group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+          {/* Dots Indicator */}
+          <div className="flex items-center justify-center gap-2 mt-4">
+            {CURVED_ITEMS.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveIndex(i)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  activeIndex === i ? 'w-8 bg-[#651C32]' : 'w-2 bg-[#C8A96B]/40'
+                }`}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

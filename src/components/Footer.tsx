@@ -1,208 +1,146 @@
-import { Phone, Mail, MapPin, ShieldCheck } from 'lucide-react';
+import React, { useState } from 'react';
 import { useShop } from '../context/ShopContext';
+import confetti from 'canvas-confetti';
 
 export const Footer: React.FC = () => {
   const { navigateTo } = useShop();
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email.trim()) {
+      setSubscribed(true);
+      confetti({
+        particleCount: 40,
+        spread: 60,
+        origin: { y: 0.9 },
+        colors: ['#C8A96B', '#651C32', '#FAF7F0']
+      });
+    }
+  };
 
   return (
-    <footer className="bg-[#1C1A19] text-[#FAF7F0] pt-16 md:pt-24 pb-12 border-t border-[#C8A96B]/20 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12 pb-16 border-b border-white/10 text-left">
-          {/* Brand Info (2 cols on lg) */}
-          <div className="lg:col-span-2 space-y-5">
-            <div className="flex items-center gap-2">
-              <svg viewBox="0 0 40 40" className="w-6 h-6 text-[#C8A96B]" fill="currentColor">
-                <path d="M20 2C20.5 8 23 13 28 17C23 18 20 23 20 30C20 23 17 18 12 17C17 13 19.5 8 20 2Z" fill="currentColor" />
-                <circle cx="20" cy="34" r="2" fill="#C8A96B" />
-              </svg>
-              <span className="font-serif tracking-[0.22em] text-2xl font-bold uppercase text-[#FAF7F0]">
-                Aaranya Silks
-              </span>
-            </div>
+    <footer className="bg-[#FAF7F0] text-[#1C1A19] pt-20 border-t border-[#C8A96B]/25 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Upper Navigation Grid matching Reference Video Frame 1255 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12 pb-16 text-left">
+          {/* Brand Info */}
+          <div className="lg:col-span-1 space-y-3">
+            <h3 className="font-serif tracking-[0.2em] text-2xl font-bold uppercase text-[#651C32]">
+              Aaranya Silks
+            </h3>
+            <p className="font-script text-2xl text-[#8B1E3F] leading-tight">
+              Handwoven silks, draped for every celebration.
+            </p>
+          </div>
 
-            <p className="text-xs sm:text-sm text-[#FAF7F0]/70 font-sans font-light leading-relaxed max-w-sm">
-              A luxury Indian saree maison dedicated exclusively to pure handlooms, certified real gold zari, and timeless textile craftsmanship. Handcrafted in Varanasi, Kanchipuram, and Chanderi.
+          {/* Shop */}
+          <div className="space-y-3 text-xs">
+            <h4 className="font-serif font-bold text-sm text-[#1C1A19]">Shop</h4>
+            <ul className="space-y-2 text-[#1C1A19]/75 font-light">
+              <li><button onClick={() => navigateTo('catalog')} className="hover:text-[#651C32]">New arrivals</button></li>
+              <li><button onClick={() => navigateTo('catalog', undefined, 'Silk Sarees')} className="hover:text-[#651C32]">Silk sarees</button></li>
+              <li><button onClick={() => navigateTo('catalog', undefined, 'Bridal Sarees')} className="hover:text-[#651C32]">Bridal edit</button></li>
+              <li><button onClick={() => navigateTo('catalog')} className="hover:text-[#651C32]">Best sellers</button></li>
+            </ul>
+          </div>
+
+          {/* Explore */}
+          <div className="space-y-3 text-xs">
+            <h4 className="font-serif font-bold text-sm text-[#1C1A19]">Explore</h4>
+            <ul className="space-y-2 text-[#1C1A19]/75 font-light">
+              <li><button onClick={() => navigateTo('story')} className="hover:text-[#651C32]">Our story</button></li>
+              <li><button onClick={() => navigateTo('story')} className="hover:text-[#651C32]">Craftsmanship</button></li>
+              <li><button onClick={() => navigateTo('catalog')} className="hover:text-[#651C32]">Lookbook</button></li>
+              <li><span className="hover:text-[#651C32] cursor-pointer">Stores & Atelier</span></li>
+            </ul>
+          </div>
+
+          {/* Support */}
+          <div className="space-y-3 text-xs">
+            <h4 className="font-serif font-bold text-sm text-[#1C1A19]">Support</h4>
+            <ul className="space-y-2 text-[#1C1A19]/75 font-light">
+              <li><button onClick={() => navigateTo('story')} className="hover:text-[#651C32]">Contact us</button></li>
+              <li><span className="hover:text-[#651C32] cursor-pointer">Shipping & delivery</span></li>
+              <li><span className="hover:text-[#651C32] cursor-pointer">Returns & exchanges</span></li>
+              <li><span className="hover:text-[#651C32] cursor-pointer">FAQs</span></li>
+            </ul>
+          </div>
+
+          {/* Stay Updated Newsletter matching Frame 1255 */}
+          <div className="space-y-3 text-xs">
+            <h4 className="font-serif font-bold text-sm text-[#1C1A19]">Stay updated</h4>
+            <p className="text-[11px] text-[#1C1A19]/70 font-light leading-relaxed">
+              Subscribe for new collections, private offers, and styling notes from the atelier.
             </p>
 
-            <div className="space-y-2 text-xs text-[#FAF7F0]/70 font-light">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-[#C8A96B]" />
-                <span>Flagship Atelier: Indiranagar, Bengaluru, Karnataka 560038</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-[#C8A96B]" />
-                <span>Concierge & Bridal Styling: +91 98450 12890</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-[#C8A96B]" />
-                <span>concierge@aaranyasilks.com</span>
-              </div>
-            </div>
-
-            {/* Social Icons */}
-            <div className="flex items-center space-x-3 pt-2">
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                className="p-2.5 rounded-full bg-white/5 hover:bg-[#651C32] text-[#C8A96B] hover:text-white transition-colors border border-white/10"
-                aria-label="Instagram"
-              >
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noreferrer"
-                className="p-2.5 rounded-full bg-white/5 hover:bg-[#651C32] text-[#C8A96B] hover:text-white transition-colors border border-white/10"
-                aria-label="Facebook"
-              >
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-
-          {/* Saree Collections */}
-          <div className="space-y-4">
-            <h4 className="text-xs uppercase tracking-[0.25em] font-semibold text-[#C8A96B]">
-              Collections
-            </h4>
-            <ul className="space-y-2.5 text-xs text-[#FAF7F0]/75 font-light">
-              <li>
+            {subscribed ? (
+              <p className="text-xs font-semibold text-[#651C32]">
+                Thank you for subscribing!
+              </p>
+            ) : (
+              <form onSubmit={handleSubscribe} className="flex items-center gap-2">
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your email address"
+                  className="flex-1 px-3 py-2 rounded-lg bg-white border border-[#C8A96B]/40 text-xs focus:outline-none focus:border-[#651C32]"
+                />
                 <button
-                  onClick={() => navigateTo('catalog', undefined, 'Bridal Sarees')}
-                  className="hover:text-[#C8A96B] transition-colors"
+                  type="submit"
+                  className="px-4 py-2 rounded-full bg-[#651C32] hover:bg-[#8B1E3F] text-white text-xs font-semibold tracking-wider transition-colors shrink-0"
                 >
-                  Bridal Collection
+                  Subscribe
                 </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => navigateTo('catalog', undefined, 'Silk Sarees')}
-                  className="hover:text-[#C8A96B] transition-colors"
-                >
-                  Pure Silk Sarees
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => navigateTo('catalog', undefined, 'Banarasi Sarees')}
-                  className="hover:text-[#C8A96B] transition-colors"
-                >
-                  Banarasi Kadhwa Brocades
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => navigateTo('catalog', undefined, 'Kanjivaram Sarees')}
-                  className="hover:text-[#C8A96B] transition-colors"
-                >
-                  Kanjivaram Temple Weaves
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => navigateTo('catalog', undefined, 'Organza Sarees')}
-                  className="hover:text-[#C8A96B] transition-colors"
-                >
-                  Organza Sheer Drapes
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => navigateTo('catalog', undefined, 'Festive Sarees')}
-                  className="hover:text-[#C8A96B] transition-colors"
-                >
-                  Festive Radiance
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          {/* Customer Care */}
-          <div className="space-y-4">
-            <h4 className="text-xs uppercase tracking-[0.25em] font-semibold text-[#C8A96B]">
-              Customer Care
-            </h4>
-            <ul className="space-y-2.5 text-xs text-[#FAF7F0]/75 font-light">
-              <li>
-                <button onClick={() => navigateTo('story')} className="hover:text-[#C8A96B] transition-colors">
-                  Contact Our Atelier
-                </button>
-              </li>
-              <li>
-                <span className="text-[#FAF7F0]/75 hover:text-[#C8A96B] cursor-pointer">
-                  Complimentary Fall & Pico
-                </span>
-              </li>
-              <li>
-                <span className="text-[#FAF7F0]/75 hover:text-[#C8A96B] cursor-pointer">
-                  Domestic & Global Shipping
-                </span>
-              </li>
-              <li>
-                <span className="text-[#FAF7F0]/75 hover:text-[#C8A96B] cursor-pointer">
-                  Silk Care & Preservation Guide
-                </span>
-              </li>
-              <li>
-                <span className="text-[#FAF7F0]/75 hover:text-[#C8A96B] cursor-pointer">
-                  Certificate of Zari Authenticity
-                </span>
-              </li>
-              <li>
-                <span className="text-[#FAF7F0]/75 hover:text-[#C8A96B] cursor-pointer">
-                  Track Your Consignment
-                </span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Assurance & Legal */}
-          <div className="space-y-4">
-            <h4 className="text-xs uppercase tracking-[0.25em] font-semibold text-[#C8A96B]">
-              Heritage Assurance
-            </h4>
-            <div className="space-y-3 text-xs text-[#FAF7F0]/70 font-light">
-              <div className="flex items-start gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#C8A96B] shrink-0 mt-0.5" />
-                <span>100% Genuine Handlooms certified with Government Silk Mark</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#C8A96B] shrink-0 mt-0.5" />
-                <span>Fully insured express air transit across India and 40+ countries</span>
-              </div>
-            </div>
-
-            <div className="pt-2 border-t border-white/10 space-y-1.5 text-[11px] text-[#FAF7F0]/50 font-light">
-              <p className="hover:text-[#C8A96B] cursor-pointer">Privacy & Cookie Policy</p>
-              <p className="hover:text-[#C8A96B] cursor-pointer">Terms & Conditions of Sale</p>
-              <p className="hover:text-[#C8A96B] cursor-pointer">Heirloom Guarantee & Returns</p>
-            </div>
+              </form>
+            )}
           </div>
         </div>
+      </div>
 
-        {/* Bottom Copyright & Payment Methods */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#FAF7F0]/50 font-light">
-          <p>© {new Date().getFullYear()} Aaranya Silks. All Rights Reserved. Elegance Woven in Every Thread.</p>
+      {/* Panoramic Bottom Graphic with Flying Silk Pallu matching Frame 1255 */}
+      <div className="relative w-full overflow-hidden mt-6">
+        {/* Floating Crimson Silk Ribbon Overlay */}
+        <div className="absolute inset-x-0 top-0 h-28 pointer-events-none z-10 opacity-70">
+          <svg viewBox="0 0 1440 120" fill="none" className="w-full h-full preserve-3d" preserveAspectRatio="none">
+            <path
+              d="M-40,60 C280,120 480,-20 840,70 C1200,160 1360,10 1480,45"
+              stroke="#8B1E3F"
+              strokeWidth="48"
+              strokeLinecap="round"
+              opacity="0.4"
+            />
+            <path
+              d="M-20,45 C300,105 500,-35 860,55 C1220,145 1380,-5 1500,30"
+              stroke="#E5B842"
+              strokeWidth="4"
+              opacity="0.6"
+            />
+          </svg>
+        </div>
 
-          <div className="flex items-center gap-3">
-            <span className="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[10px] uppercase tracking-wider text-[#C8A96B]">
-              UPI / QR
-            </span>
-            <span className="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[10px] uppercase tracking-wider text-[#C8A96B]">
-              Visa / Mastercard
-            </span>
-            <span className="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[10px] uppercase tracking-wider text-[#C8A96B]">
-              Net Banking
-            </span>
-            <span className="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[10px] uppercase tracking-wider text-[#C8A96B]">
-              Insured Air
-            </span>
+        {/* Panoramic Photograph of Women in Silk Sarees */}
+        <div className="w-full h-56 sm:h-72 md:h-80 relative">
+          <img
+            src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=2000&q=85"
+            alt="Aaranya Silks Heritage Gathering"
+            className="w-full h-full object-cover object-center filter brightness-[0.78]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+
+          {/* Legal / Copyright Bar inside the panoramic banner */}
+          <div className="absolute bottom-4 inset-x-4 sm:inset-x-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-white/70 text-[11px] font-light">
+            <p>© {new Date().getFullYear()} Aaranya Silks. Handcrafted with pride in India.</p>
+            <div className="flex items-center gap-4">
+              <span className="hover:text-white cursor-pointer">Terms & Conditions</span>
+              <span>•</span>
+              <span className="hover:text-white cursor-pointer">Privacy Policy</span>
+              <span>•</span>
+              <span className="hover:text-white cursor-pointer">Silk Mark Authenticity</span>
+            </div>
           </div>
         </div>
       </div>
