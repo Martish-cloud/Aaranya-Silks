@@ -1,32 +1,62 @@
-# React + TypeScript + Vite
+# ✨ Brand Ambassador | Visual Gallery
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+<p align="center">
+  <img src="https://img.shields.io/badge/AI%20Fashion-Brand%20Ambassador-9B59B6?style=for-the-badge" alt="AI Fashion Brand Ambassador"/>
+  <img src="https://img.shields.io/badge/Visual%20Showcase-10%20Images-FF69B4?style=for-the-badge" alt="10 Images"/>
+</p>
 
-Currently, two official plugins are available:
+<h2 align="center">💖 Meet Our Brand Ambassador</h2>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+<p align="center">
+  A stunning visual collection showcasing fashion, elegance, traditional Indian attire, and modern style through a curated series of AI-generated portraits.
+</p>
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🌸 The Collection
 
-## Expanding the Oxlint configuration
+<p align="center">
+  <img src="./Brand%20Ambassador%20%281%29.png" width="48%" alt="Brand Ambassador – Lavender Outfit"/>
+  <img src="./Brand%20Ambassador%20%282%29.jpeg" width="48%" alt="Brand Ambassador – Casual Portrait"/>
+</p>
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+<p align="center">
+  <img src="./Brand%20Ambassador%20%283%29.jpeg" width="48%" alt="Brand Ambassador – Traditional Look"/>
+  <img src="./Brand%20Ambassador%20%284%29.jpeg" width="48%" alt="Brand Ambassador – Black Outfit"/>
+</p>
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+<p align="center">
+  <img src="./Brand%20Ambassador%20%285%29.png" width="48%" alt="Brand Ambassador – Elegant Dress"/>
+  <img src="./Brand%20Ambassador%20%286%29.png" width="48%" alt="Brand Ambassador – Green Saree"/>
+</p>
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+<p align="center">
+  <img src="./Brand%20Ambassador%20%287%29.png" width="48%" alt="Brand Ambassador – Maroon Saree"/>
+  <img src="./Brand%20Ambassador%20%288%29.png" width="48%" alt="Brand Ambassador – Beige Saree"/>
+</p>
+
+<p align="center">
+  <img src="./Brand%20Ambassador%20%289%29.png" width="48%" alt="Brand Ambassador – Traditional Bridal Style"/>
+  <img src="./Brand%20Ambassador%20%2810%29.png" width="48%" alt="Brand Ambassador – Modern Casual Look"/>
+</p>
+
+---
+
+## 🎨 Style Highlights
+
+| Category | Description |
+|:---|:---|
+| 👗 Fashion | Modern, casual, and traditional Indian outfits |
+| 💎 Aesthetics | Elegant styling and detailed accessories |
+| 📸 Photography | Portraits, lifestyle shots, and fashion poses |
+| 🌷 Theme | Beauty, elegance, and contemporary fashion |
+
+---
+
+<p align="center">
+  <b>✨ Elegance in Every Frame. Style in Every Story. ✨</b>
+</p>
+
+<p align="center">
+  Made with 💖 and creativity.
+</p>
