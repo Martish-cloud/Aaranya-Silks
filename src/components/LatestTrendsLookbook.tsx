@@ -1,15 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  Maximize2,
+  X
+} from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { WipeText } from './WipeText';
 import { resolveOptImage } from '../data/outfits';
 
-const REELS = [
-  { id: 1, title: 'Muhurtham Kanjivaram Draping', image: resolveOptImage('Sarees Section/Bridal Sarees 1.webp'), duration: '0:45' },
-  { id: 2, title: 'Banarasi Brocade Pleat Styling', image: resolveOptImage('Sarees Section/Banarasi Sarees.webp'), duration: '0:38' },
-  { id: 3, title: 'Tissue Silk Golden Hour Flow', image: resolveOptImage('Sarees Section/Sultana Bronze Rust Tissue Katan Saree 1.webp'), duration: '0:52' },
-  { id: 4, title: 'Whisper Organza Pallu Toss', image: resolveOptImage('Sarees Section/Gulmohar Pastel Peach Embroidered Organza 1.webp'), duration: '0:34' }
+// Real video assets from src/assets/Draped in Motion/
+import model1Vid from '../assets/Draped in Motion/Model (1).mp4';
+import model2Vid from '../assets/Draped in Motion/Model (2).mp4';
+import model3Vid from '../assets/Draped in Motion/Model (3).mp4';
+import model4Vid from '../assets/Draped in Motion/Model (4).mp4';
+
+// Real extracted high-resolution poster frames from the actual videos
+import model1Poster from '../assets/outfits_optimized/Draped in Motion/Model (1)_poster.webp';
+import model2Poster from '../assets/outfits_optimized/Draped in Motion/Model (2)_poster.webp';
+import model3Poster from '../assets/outfits_optimized/Draped in Motion/Model (3)_poster.webp';
+import model4Poster from '../assets/outfits_optimized/Draped in Motion/Model (4)_poster.webp';
+
+interface ReelItem {
+  id: number;
+  title: string;
+  subtitle: string;
+  videoUrl: string;
+  posterUrl: string;
+  duration: string;
+  durationSec: number;
+}
+
+const REELS: ReelItem[] = [
+  {
+    id: 1,
+    title: 'Model 1',
+    subtitle: 'Muhurtham Kanjivaram Draping',
+    videoUrl: model1Vid,
+    posterUrl: model1Poster,
+    duration: '0:08',
+    durationSec: 7.8
+  },
+  {
+    id: 2,
+    title: 'Model 2',
+    subtitle: 'Banarasi Brocade Pleat Styling',
+    videoUrl: model2Vid,
+    posterUrl: model2Poster,
+    duration: '0:07',
+    durationSec: 6.5
+  },
+  {
+    id: 3,
+    title: 'Model 3',
+    subtitle: 'Tissue Silk Golden Hour Flow',
+    videoUrl: model3Vid,
+    posterUrl: model3Poster,
+    duration: '0:07',
+    durationSec: 6.95
+  },
+  {
+    id: 4,
+    title: 'Model 4',
+    subtitle: 'Whisper Organza Pallu Toss',
+    videoUrl: model4Vid,
+    posterUrl: model4Poster,
+    duration: '0:06',
+    durationSec: 5.77
+  }
 ];
 
 const LOOKBOOK_PAGES = [
@@ -40,10 +103,89 @@ export const LatestTrendsLookbook: React.FC = () => {
   const { navigateTo } = useShop();
   const [currentPage, setCurrentPage] = useState(1); // 1-indexed
 
+  // Video playback states
+  const [activePlayingId, setActivePlayingId] = useState<number | null>(null);
+  const [isMuted, setIsMuted] = useState<boolean>(true);
+  const [videoProgress, setVideoProgress] = useState<Record<number, number>>({});
+  const [modalReel, setModalReel] = useState<ReelItem | null>(null);
+
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
   const activeLook = LOOKBOOK_PAGES[currentPage - 1];
 
+  // Pause active video when section scrolls out of view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting && activePlayingId !== null) {
+            videoRefs.current[activePlayingId - 1]?.pause();
+            setActivePlayingId(null);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [activePlayingId]);
+
+  const togglePlay = (id: number) => {
+    const videoIdx = id - 1;
+    const currentVideo = videoRefs.current[videoIdx];
+
+    if (activePlayingId === id) {
+      // Pause currently playing
+      currentVideo?.pause();
+      setActivePlayingId(null);
+    } else {
+      // Pause any previously playing video
+      if (activePlayingId !== null) {
+        videoRefs.current[activePlayingId - 1]?.pause();
+      }
+      // Play new video
+      if (currentVideo) {
+        currentVideo.currentTime = 0;
+        currentVideo.play().catch((err) => {
+          console.warn('Inline video play blocked, retrying muted:', err);
+          currentVideo.muted = true;
+          setIsMuted(true);
+          currentVideo.play();
+        });
+      }
+      setActivePlayingId(id);
+    }
+  };
+
+  const handleTimeUpdate = (id: number, e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const vid = e.currentTarget;
+    if (vid.duration > 0) {
+      const pct = (vid.currentTime / vid.duration) * 100;
+      setVideoProgress((prev) => ({ ...prev, [id]: pct }));
+    }
+  };
+
+  const handleVideoEnded = (id: number) => {
+    const videoIdx = id - 1;
+    const currentVideo = videoRefs.current[videoIdx];
+    if (currentVideo) {
+      currentVideo.currentTime = 0;
+      currentVideo.play().catch(() => {});
+    }
+  };
+
+  const activeCounter = activePlayingId !== null ? `0${activePlayingId}` : '01';
+
   return (
-    <section className="py-20 md:py-32 bg-[#FAF7F0] relative overflow-hidden border-t border-[#C8A96B]/20 text-[#1C1A19]">
+    <section
+      ref={sectionRef}
+      className="py-20 md:py-32 bg-[#FAF7F0] relative overflow-hidden border-t border-[#C8A96B]/20 text-[#1C1A19]"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Video Reels Preview Strip from Frame 18 */}
         <div className="mb-20">
@@ -60,43 +202,189 @@ export const LatestTrendsLookbook: React.FC = () => {
                 Draped in Motion
               </WipeText>
             </div>
-            <span className="text-xs text-[#1C1A19]/60 font-mono">
-              02 / 05 REELS
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-[#1C1A19]/70 font-mono tracking-wider">
+                {activeCounter} / 04 REELS
+              </span>
+            </div>
           </div>
 
+          {/* 4 Video Cards Grid matching Frame 18 */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {REELS.map((reel) => (
-              <div
-                key={reel.id}
-                onClick={() => navigateTo('catalog')}
-                className="group relative aspect-[9/14] rounded-2xl overflow-hidden bg-black cursor-pointer shadow-md hover:shadow-2xl transition-all"
-              >
-                <img
-                  src={reel.image}
-                  alt={reel.title}
-                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-80 group-hover:opacity-90"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
+            {REELS.map((reel, idx) => {
+              const isPlaying = activePlayingId === reel.id;
+              const progress = videoProgress[reel.id] || 0;
 
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-11 h-11 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:scale-110 group-hover:bg-[#E5B842] text-white group-hover:text-[#1C1A19] transition-all shadow-lg">
-                    <Play className="w-4 h-4 fill-current ml-0.5" />
+              return (
+                <div
+                  key={reel.id}
+                  onClick={() => togglePlay(reel.id)}
+                  className={`group relative aspect-[9/14] rounded-2xl overflow-hidden bg-black cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 border select-none ${
+                    isPlaying
+                      ? 'border-[#E5B842] ring-2 ring-[#E5B842]/50 shadow-2xl scale-[1.01]'
+                      : 'border-white/10 hover:-translate-y-1.5 hover:border-[#E5B842]/40'
+                  }`}
+                >
+                  {/* Poster Image (shown when not playing or loading) */}
+                  <img
+                    src={reel.posterUrl}
+                    alt={`${reel.title} - ${reel.subtitle}`}
+                    loading="lazy"
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+                      isPlaying ? 'opacity-0 pointer-events-none' : 'opacity-85 group-hover:opacity-95 group-hover:scale-105'
+                    }`}
+                  />
+
+                  {/* Real Video Element */}
+                  <video
+                    ref={(el) => { videoRefs.current[idx] = el; }}
+                    src={reel.videoUrl}
+                    playsInline
+                    loop
+                    muted={isMuted}
+                    preload="metadata"
+                    onTimeUpdate={(e) => handleTimeUpdate(reel.id, e)}
+                    onEnded={() => handleVideoEnded(reel.id)}
+                    className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-500 ${
+                      isPlaying ? 'opacity-100 z-0' : 'opacity-0 pointer-events-none'
+                    }`}
+                  />
+
+                  {/* Gradient Scrim Overlays */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/25 pointer-events-none z-10" />
+
+                  {/* Top Floating Controls (Mute & Expand) */}
+                  <div className="absolute top-3 inset-x-3 flex items-center justify-between z-20">
+                    <span className="font-mono text-[10px] font-bold text-white/80 bg-black/40 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/10">
+                      0{reel.id}
+                    </span>
+
+                    <div className="flex items-center gap-1.5">
+                      {/* Audio Mute/Unmute Toggle */}
+                      {isPlaying && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsMuted(!isMuted);
+                          }}
+                          className="p-1.5 rounded-full bg-black/60 backdrop-blur-md hover:bg-[#E5B842] text-white hover:text-black transition-colors"
+                          title={isMuted ? 'Unmute video' : 'Mute video'}
+                        >
+                          {isMuted ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
+                        </button>
+                      )}
+
+                      {/* Modal Expand Button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setModalReel(reel);
+                        }}
+                        className="p-1.5 rounded-full bg-black/40 backdrop-blur-md hover:bg-white/20 text-white transition-colors opacity-0 group-hover:opacity-100"
+                        title="Expand Cinematic View"
+                      >
+                        <Maximize2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Centered Play/Pause Button */}
+                  <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+                    <div
+                      className={`w-12 h-12 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-xl ${
+                        isPlaying
+                          ? 'bg-black/40 text-white opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100'
+                          : 'bg-white/20 group-hover:bg-[#E5B842] text-white group-hover:text-[#1C1A19] scale-100 group-hover:scale-110'
+                      }`}
+                    >
+                      {isPlaying ? (
+                        <Pause className="w-5 h-5 fill-current" />
+                      ) : (
+                        <Play className="w-5 h-5 fill-current ml-0.5" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Bottom Text Information */}
+                  <div className="absolute bottom-3 inset-x-3 text-left z-20">
+                    <p className="text-xs font-serif font-bold text-white line-clamp-1">
+                      {reel.title}
+                    </p>
+                    <div className="flex items-center justify-between text-[10px] text-white/75 font-mono mt-0.5">
+                      <span className="truncate max-w-[70%] font-sans font-light text-white/80">
+                        {reel.subtitle}
+                      </span>
+                      <span>{reel.duration}</span>
+                    </div>
+
+                    {/* Progress Bar when Playing */}
+                    {isPlaying && (
+                      <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden mt-1.5">
+                        <div
+                          className="h-full bg-[#E5B842] transition-all duration-100"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
-
-                <div className="absolute bottom-3 inset-x-3 text-left">
-                  <p className="text-xs font-serif font-bold text-white line-clamp-1">
-                    {reel.title}
-                  </p>
-                  <span className="text-[10px] text-white/70 font-mono mt-0.5 block">
-                    {reel.duration}
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
+
+        {/* Cinematic Reel Modal View */}
+        <AnimatePresence>
+          {modalReel && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-black/90 backdrop-blur-lg flex items-center justify-center p-4 sm:p-6"
+              onClick={() => setModalReel(null)}
+            >
+              <motion.div
+                initial={{ scale: 0.92, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.92, opacity: 0 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                className="relative max-w-sm w-full aspect-[9/16] bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/20"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <video
+                  src={modalReel.videoUrl}
+                  autoPlay
+                  playsInline
+                  loop
+                  controls
+                  className="w-full h-full object-cover"
+                />
+
+                {/* Close Button */}
+                <button
+                  onClick={() => setModalReel(null)}
+                  className="absolute top-4 right-4 z-30 p-2 rounded-full bg-black/60 text-white hover:bg-white/20 transition-colors"
+                  aria-label="Close modal"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+
+                {/* Modal Title Overlay */}
+                <div className="absolute top-4 left-4 z-20 pointer-events-none">
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-[#E5B842] block">
+                    ATELIER REEL
+                  </span>
+                  <h4 className="font-serif text-lg font-bold text-white">
+                    {modalReel.title}
+                  </h4>
+                  <p className="text-xs text-white/70 font-sans">
+                    {modalReel.subtitle}
+                  </p>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* LATEST TRENDS Lookbook Section matching Frames 18, 1210, 1255 */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center text-left">
