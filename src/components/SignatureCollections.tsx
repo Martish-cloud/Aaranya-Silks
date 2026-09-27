@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
+import { WipeText } from './WipeText';
 
 const COLLECTIONS = [
   {
@@ -82,9 +83,13 @@ export const SignatureCollections: React.FC = () => {
             <span>Curated Anthologies</span>
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-[#FAF7F0] tracking-tight">
+          <WipeText
+            as="h2"
+            direction="bottom-to-top"
+            className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-[#FAF7F0] tracking-tight"
+          >
             Signature Collections
-          </h2>
+          </WipeText>
 
           <p className="text-sm sm:text-base text-[#FAF7F0]/70 font-light mt-2">
             Immerse yourself in five distinct universes of Indian haute couture and handloom artistry.

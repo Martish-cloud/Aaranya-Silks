@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Star, CheckCircle, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { CUSTOMER_REVIEWS } from '../data/sarees';
+import { WipeText } from './WipeText';
 
 export const ReviewsCarousel: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -24,9 +25,13 @@ export const ReviewsCarousel: React.FC = () => {
               <Sparkles className="w-3.5 h-3.5 text-[#C8A96B]" />
               <span>Patron Testimonials</span>
             </div>
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-[#651C32] tracking-tight">
+            <WipeText
+              as="h2"
+              direction="bottom-to-top"
+              className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-[#651C32] tracking-tight"
+            >
               Words of Adornment
-            </h2>
+            </WipeText>
             <p className="text-sm md:text-base text-[#1C1A19]/70 font-light mt-2 max-w-lg">
               Read authentic experiences from brides, families, and connoisseurs adorned in Aaranya Silks.
             </p>

@@ -14,6 +14,7 @@ import { ChangeLookStudio } from './components/ChangeLookStudio';
 import { WorthYourAttention } from './components/WorthYourAttention';
 import { LatestTrendsLookbook } from './components/LatestTrendsLookbook';
 import { NewArrivalsGrid } from './components/NewArrivalsGrid';
+import { OutfitGallery } from './components/OutfitGallery';
 import { SignatureCollections } from './components/SignatureCollections';
 import { ReviewsCarousel } from './components/ReviewsCarousel';
 import { InstagramGallery } from './components/InstagramGallery';
@@ -90,7 +91,10 @@ const AppContent: React.FC = () => {
             {/* 13. Curated Masterpiece Saree Collection Grid */}
             <NewArrivalsGrid />
 
-            {/* 14. Signature Handloom Craftsmanship & Heritage Stories */}
+            {/* 14. Complete Handcrafted Outfit Gallery (All 5 Categories: Sarees, Babycon, Blouse, Crop Top, One Shoulder) */}
+            <OutfitGallery />
+
+            {/* 15. Signature Handloom Craftsmanship & Heritage Stories */}
             <SignatureCollections />
 
             {/* 15. Customer Reviews & Social Proof */}

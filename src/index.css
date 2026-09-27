@@ -150,3 +150,61 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Subtle luxury floating animations for outfit cards */
+@keyframes floatSubtleA {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes floatSubtleB {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes floatSubtleC {
+  0%, 100% {
+    transform: translateY(-4px);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+.animate-float-a {
+  animation: floatSubtleA 5.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-b {
+  animation: floatSubtleB 6.2s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-c {
+  animation: floatSubtleC 5.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-a:hover,
+.animate-float-b:hover,
+.animate-float-c:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-a,
+  .animate-float-b,
+  .animate-float-c {
+    animation: none !important;
+  }
+}
+

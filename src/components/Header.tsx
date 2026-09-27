@@ -210,6 +210,25 @@ export const Header: React.FC = () => {
               </button>
 
               <button
+                onClick={() => {
+                  if (activePage !== 'home') {
+                    navigateTo('home');
+                    setTimeout(() => {
+                      document.getElementById('outfit-gallery')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  } else {
+                    document.getElementById('outfit-gallery')?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                className={`text-xs uppercase tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 flex items-center gap-1.5 ${
+                  isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
+                }`}
+              >
+                <span>Outfit Gallery</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C8A96B] animate-pulse" />
+              </button>
+
+              <button
                 onClick={() => navigateTo('story')}
                 className={`text-xs uppercase tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 ${
                   isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
@@ -321,6 +340,24 @@ export const Header: React.FC = () => {
                     className="w-full text-left font-serif text-lg text-[#1C1A19] hover:text-[#651C32] font-semibold py-1.5 border-b border-black/5"
                   >
                     Shop All Sarees
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      if (activePage !== 'home') {
+                        navigateTo('home');
+                        setTimeout(() => {
+                          document.getElementById('outfit-gallery')?.scrollIntoView({ behavior: 'smooth' });
+                        }, 150);
+                      } else {
+                        document.getElementById('outfit-gallery')?.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="w-full text-left font-serif text-lg text-[#1C1A19] hover:text-[#651C32] font-semibold py-1.5 border-b border-black/5 flex items-center justify-between"
+                  >
+                    <span>Outfit Gallery</span>
+                    <span className="text-[10px] px-2 py-0.5 bg-[#651C32] text-white rounded-full">38 Looks</span>
                   </button>
 
                   <div className="pt-2">

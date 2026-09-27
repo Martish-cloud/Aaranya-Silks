@@ -3,6 +3,7 @@ import { Sparkles, ArrowRight } from 'lucide-react';
 import { SAREES_DATA } from '../data/sarees';
 import { ProductCard } from './ProductCard';
 import { useShop } from '../context/ShopContext';
+import { WipeText } from './WipeText';
 
 const TABS = ['All Arrivals', 'Bridal Sarees', 'Banarasi Sarees', 'Silk Sarees', 'Organza Sarees'];
 
@@ -25,9 +26,13 @@ export const NewArrivalsGrid: React.FC = () => {
             <span>Freshly Unveiled</span>
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-[#651C32] tracking-tight">
+          <WipeText
+            as="h2"
+            direction="bottom-to-top"
+            className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-[#651C32] tracking-tight"
+          >
             New Arrivals
-          </h2>
+          </WipeText>
 
           <p className="text-sm sm:text-base text-[#1C1A19]/70 font-light mt-2">
             Discover the latest expressions of timeless elegance, woven for this festive and wedding season.

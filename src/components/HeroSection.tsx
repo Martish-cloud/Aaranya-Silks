@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, ShieldCheck, Award } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { WipeText } from './WipeText';
+import heroImg from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (1).webp';
 
 export const HeroSection: React.FC = () => {
   const { navigateTo } = useShop();
@@ -11,9 +13,11 @@ export const HeroSection: React.FC = () => {
       {/* Background Luxury Virtual Showroom Composition */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=2200&q=90"
+          src={heroImg}
           alt="Aaranya Silks Luxury Saree Boutique"
-          className="w-full h-full object-cover object-center filter brightness-[0.72] contrast-[1.05]"
+          // @ts-expect-error React 18 / browser fetchpriority support
+          fetchpriority="high"
+          className="w-full h-full object-cover object-center filter brightness-[0.68] contrast-[1.05]"
         />
 
         {/* Ambient lighting overlays mimicking the boutique showroom in the reference video */}
@@ -44,15 +48,17 @@ export const HeroSection: React.FC = () => {
             </span>
           </motion.div>
 
-          {/* Main Editorial Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="font-serif text-4xl sm:text-6xl lg:text-7xl font-light text-[#FAF7F0] leading-[1.08] tracking-tight mb-5"
-          >
-            Elegance Woven in Every Thread
-          </motion.h1>
+          {/* Main Editorial Headline with Cinematic Wipe-In Animation */}
+          <div className="mb-5">
+            <WipeText
+              as="h1"
+              direction="left-to-right"
+              duration={0.95}
+              className="font-serif text-4xl sm:text-6xl lg:text-7xl font-light text-[#FAF7F0] leading-[1.08] tracking-tight"
+            >
+              Elegance Woven in Every Thread
+            </WipeText>
+          </div>
 
           {/* Subtitle */}
           <motion.p

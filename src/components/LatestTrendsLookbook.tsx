@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { WipeText } from './WipeText';
+import { resolveOptImage } from '../data/outfits';
 
 const REELS = [
-  { id: 1, title: 'Muhurtham Kanjivaram Draping', image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=85', duration: '0:45' },
-  { id: 2, title: 'Banarasi Brocade Pleat Styling', image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=600&q=85', duration: '0:38' },
-  { id: 3, title: 'Tissue Silk Golden Hour Flow', image: 'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=600&q=85', duration: '0:52' },
-  { id: 4, title: 'Whisper Organza Pallu Toss', image: 'https://images.unsplash.com/photo-1617627143644-84524458f262?auto=format&fit=crop&w=600&q=85', duration: '0:34' }
+  { id: 1, title: 'Muhurtham Kanjivaram Draping', image: resolveOptImage('Sarees Section/Bridal Sarees 1.webp'), duration: '0:45' },
+  { id: 2, title: 'Banarasi Brocade Pleat Styling', image: resolveOptImage('Sarees Section/Banarasi Sarees.webp'), duration: '0:38' },
+  { id: 3, title: 'Tissue Silk Golden Hour Flow', image: resolveOptImage('Sarees Section/Sultana Bronze Rust Tissue Katan Saree 1.webp'), duration: '0:52' },
+  { id: 4, title: 'Whisper Organza Pallu Toss', image: resolveOptImage('Sarees Section/Gulmohar Pastel Peach Embroidered Organza 1.webp'), duration: '0:34' }
 ];
 
 const LOOKBOOK_PAGES = [
@@ -15,21 +17,21 @@ const LOOKBOOK_PAGES = [
     id: 1,
     title: 'The Temple Royalties',
     subtitle: 'Kanjivaram Korvai Anthology',
-    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=85',
+    image: resolveOptImage('Sarees Section/Kanjivaram Sarees 1.webp'),
     categoryTarget: 'Kanjivaram Sarees'
   },
   {
     id: 2,
     title: 'Mughal Courtyard Whispers',
     subtitle: 'Banarasi Kadhwa Brocades',
-    image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=85',
+    image: resolveOptImage('Sarees Section/Banarasi Sarees 2.webp'),
     categoryTarget: 'Banarasi Sarees'
   },
   {
     id: 3,
     title: 'Evening Chandelier Glamour',
     subtitle: 'Tissue Silk & Organza Sheers',
-    image: 'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=800&q=85',
+    image: resolveOptImage('Sarees Section/Organza Sarees 2.webp'),
     categoryTarget: 'Party Wear Sarees'
   }
 ];
@@ -50,9 +52,13 @@ export const LatestTrendsLookbook: React.FC = () => {
               <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] font-bold text-[#8B1E3F]">
                 ATELIER REELS
               </span>
-              <h3 className="font-serif text-2xl sm:text-3xl font-light text-[#1C1A19]">
+              <WipeText
+                as="h3"
+                direction="bottom-to-top"
+                className="font-serif text-2xl sm:text-3xl font-light text-[#1C1A19]"
+              >
                 Draped in Motion
-              </h3>
+              </WipeText>
             </div>
             <span className="text-xs text-[#1C1A19]/60 font-mono">
               02 / 05 REELS
@@ -102,16 +108,22 @@ export const LatestTrendsLookbook: React.FC = () => {
               </span>
 
               {/* Massive 3D Block-Extruded Typography matching Frame 1210 */}
-              <h2
+              <WipeText
+                as="h2"
+                direction="left-to-right"
+                duration={0.9}
                 className="font-sans font-black text-5xl sm:text-7xl tracking-tighter leading-[0.9] text-[#1C1A19] uppercase select-none"
-                style={{
-                  textShadow: '3px 3px 0px #C8A96B, 6px 6px 0px #651C32, 9px 9px 15px rgba(0,0,0,0.2)'
-                }}
               >
-                LATEST
-                <br />
-                TRENDS
-              </h2>
+                <span
+                  style={{
+                    textShadow: '3px 3px 0px #C8A96B, 6px 6px 0px #651C32, 9px 9px 15px rgba(0,0,0,0.2)'
+                  }}
+                >
+                  LATEST
+                  <br />
+                  TRENDS
+                </span>
+              </WipeText>
             </div>
 
             {/* Pill Button from Frame 1210 */}

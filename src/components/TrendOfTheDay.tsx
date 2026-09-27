@@ -3,6 +3,7 @@ import { ShoppingBag, Sparkles, Star } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { SAREES_DATA } from '../data/sarees';
 import { formatINR } from '../utils/formatters';
+import { WipeText } from './WipeText';
 
 const SIZES = ['S', 'M', 'L', 'XL'];
 
@@ -29,9 +30,9 @@ export const TrendOfTheDay: React.FC = () => {
         <div className="flex items-center gap-3 mb-10 text-left">
           <div className="w-1.5 h-8 bg-[#E5B842] rounded-full" />
           <div>
-            <h2 className="font-serif text-2xl sm:text-3xl font-light text-[#1C1A19]">
+            <WipeText as="h2" direction="left-to-right" duration={0.8} className="font-serif text-2xl sm:text-3xl font-light text-[#1C1A19]">
               Trend of the Day
-            </h2>
+            </WipeText>
             <p className="text-xs text-[#1C1A19]/60 font-light">
               Curated daily expressions of bespoke draping with ready-to-wear blouse options.
             </p>
@@ -128,9 +129,9 @@ export const TrendOfTheDay: React.FC = () => {
               <Sparkles className="w-3.5 h-3.5" />
               <span>Seasonal Special Atelier Offer</span>
             </span>
-            <h3 className="font-serif text-2xl sm:text-3xl font-light text-white">
+            <WipeText as="h3" direction="left-to-right" duration={0.8} className="font-serif text-2xl sm:text-3xl font-light text-white">
               Complimentary Pure Silk Blouse Tailoring
-            </h3>
+            </WipeText>
             <p className="text-xs sm:text-sm text-white/80 font-light leading-relaxed">
               Every festive and bridal saree order includes custom padded blouse stitching tailored to your bespoke measurements.
             </p>

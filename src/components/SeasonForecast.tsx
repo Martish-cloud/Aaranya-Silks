@@ -2,27 +2,29 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Compass } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { WipeText } from './WipeText';
+import { resolveOptImage } from '../data/outfits';
 
 const FORECAST_CARDS = [
   {
     id: 1,
     title: 'The Royal Crimson Muhurtham',
     palette: 'Crimson & 24k Gold',
-    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=85',
+    image: resolveOptImage('Sarees Section/Bridal Sarees 1.webp'),
     categoryTarget: 'Bridal Sarees'
   },
   {
     id: 2,
     title: 'Forest Sanctuary Handlooms',
     palette: 'Teal, Emerald & Raw Silk',
-    image: 'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=800&q=85',
+    image: resolveOptImage('Sarees Section/Teal Samriddhi Meenakari Brocade 1.webp'),
     categoryTarget: 'Kanjivaram Sarees'
   },
   {
     id: 3,
     title: 'Chandelier Cocktail Sheers',
     palette: 'Liquid Metallic & Rose Net',
-    image: 'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=800&q=85',
+    image: resolveOptImage('Sarees Section/Gulmohar Pastel Peach Embroidered Organza 2.webp'),
     categoryTarget: 'Party Wear Sarees'
   }
 ];
@@ -33,7 +35,7 @@ export const SeasonForecast: React.FC = () => {
   return (
     <section className="py-20 md:py-28 bg-[#FAF7F0] relative overflow-hidden border-t border-[#C8A96B]/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header matching Frame 12 */}
+        {/* Header with WipeText */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end mb-14 text-left">
           {/* Left Title Area */}
           <div className="lg:col-span-5">
@@ -41,11 +43,9 @@ export const SeasonForecast: React.FC = () => {
               <Compass className="w-3.5 h-3.5 text-[#C8A96B]" />
               <span>SEASON FORECAST</span>
             </div>
-            <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl font-light text-[#1C1A19] leading-[1.08] tracking-tight">
-              Autumn—
-              <br />
-              <span className="text-[#C8A96B]">Winter 2026</span>
-            </h2>
+            <WipeText as="h2" direction="left-to-right" duration={0.85} className="font-serif text-4xl sm:text-5xl md:text-6xl font-light text-[#1C1A19] leading-[1.08] tracking-tight">
+              Autumn—Winter 2026
+            </WipeText>
           </div>
 
           {/* Center Editorial Subtitle */}

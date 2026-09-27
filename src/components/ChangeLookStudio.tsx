@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Heart, ArrowRight, Box } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
+import { WipeText } from './WipeText';
+import { resolveOptImage } from '../data/outfits';
 
 const STUDIO_LOOKS = [
   {
@@ -13,8 +15,8 @@ const STUDIO_LOOKS = [
     originalPrice: 26000,
     rating: 4.8,
     reviews: 128,
-    image: 'https://images.unsplash.com/photo-1617627143644-84524458f262?auto=format&fit=crop&w=1200&q=85',
-    thumbnail: 'https://images.unsplash.com/photo-1617627143644-84524458f262?auto=format&fit=crop&w=300&q=85',
+    image: resolveOptImage('Sarees Section/Pastel Pink Organza Saree 1.webp'),
+    thumbnail: resolveOptImage('Sarees Section/Pastel Pink Organza Saree 1.webp'),
     colorName: 'Rose Pink',
     colors: [
       { name: 'Warm Cream', hex: '#FAF7F0' },
@@ -30,8 +32,8 @@ const STUDIO_LOOKS = [
     originalPrice: 42000,
     rating: 4.9,
     reviews: 184,
-    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85',
-    thumbnail: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=300&q=85',
+    image: resolveOptImage('Sarees Section/Bridal Sarees 1.webp'),
+    thumbnail: resolveOptImage('Sarees Section/Bridal Sarees 1.webp'),
     colorName: 'Crimson Red',
     colors: [
       { name: 'Crimson Red', hex: '#8B1E3F' },
@@ -47,8 +49,8 @@ const STUDIO_LOOKS = [
     originalPrice: 34000,
     rating: 4.95,
     reviews: 96,
-    image: 'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=1200&q=85',
-    thumbnail: 'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=300&q=85',
+    image: resolveOptImage('Sarees Section/Pure Pattu Sarees 1.webp'),
+    thumbnail: resolveOptImage('Sarees Section/Pure Pattu Sarees 1.webp'),
     colorName: 'Liquid Gold',
     colors: [
       { name: 'Liquid Gold', hex: '#C8A96B' },
@@ -189,9 +191,9 @@ export const ChangeLookStudio: React.FC = () => {
 
             {/* Saree Name & Price */}
             <div>
-              <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#1C1A19] mb-1">
+              <WipeText as="h3" direction="left-to-right" duration={0.8} className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#1C1A19] mb-1">
                 {look.headline}
-              </h3>
+              </WipeText>
               <div className="flex items-baseline gap-3">
                 <span className="font-serif text-3xl font-bold text-[#651C32]">
                   {formatINR(look.price)}

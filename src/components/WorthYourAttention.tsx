@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { WipeText } from './WipeText';
+import { resolveOptImage } from '../data/outfits';
 
 const ACCORDION_ITEMS = [
   {
@@ -9,7 +11,7 @@ const ACCORDION_ITEMS = [
     number: '01',
     title: 'The Royal Muhurtham Edit',
     offer: 'Flat 20% Privilege on Certified Bridal Kanjivarams',
-    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85',
+    image: resolveOptImage('Sarees Section/Bridal Sarees 1.webp'),
     categoryTarget: 'Bridal Sarees'
   },
   {
@@ -17,7 +19,7 @@ const ACCORDION_ITEMS = [
     number: '02',
     title: 'Varanasi Kadhwa Brocades',
     offer: 'Complimentary Pure Silk Blouse Tailoring',
-    image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=85',
+    image: resolveOptImage('Sarees Section/Banarasi Sarees.webp'),
     categoryTarget: 'Banarasi Sarees'
   },
   {
@@ -25,7 +27,7 @@ const ACCORDION_ITEMS = [
     number: '03',
     title: 'Whisper Sheer Organza',
     offer: 'Special Debut Privilege with code AARANYA10',
-    image: 'https://images.unsplash.com/photo-1617627143644-84524458f262?auto=format&fit=crop&w=1200&q=85',
+    image: resolveOptImage('Sarees Section/Pastel Pink Organza Saree 1.webp'),
     categoryTarget: 'Organza Sarees'
   },
   {
@@ -33,7 +35,7 @@ const ACCORDION_ITEMS = [
     number: '04',
     title: 'Festive Radiant Colorways',
     offer: 'Free Insured Express Air Delivery Across India',
-    image: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=1200&q=85',
+    image: resolveOptImage('Sarees Section/Pure Pattu Sarees 1.webp'),
     categoryTarget: 'Festive Sarees'
   },
   {
@@ -41,7 +43,7 @@ const ACCORDION_ITEMS = [
     number: '05',
     title: 'Liquid Champagne Tissue',
     offer: 'Archival Cedar & Muslin Keepsake Box Included',
-    image: 'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=1200&q=85',
+    image: resolveOptImage('Sarees Section/Sultana Bronze Rust Tissue Katan Saree 1.webp'),
     categoryTarget: 'Party Wear Sarees'
   },
   {
@@ -49,7 +51,7 @@ const ACCORDION_ITEMS = [
     number: '06',
     title: 'Temple Border Heritage',
     offer: 'Direct Artisan Guild Certified Handlooms',
-    image: 'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=1200&q=85',
+    image: resolveOptImage('Sarees Section/Kanjivaram Sarees 1.webp'),
     categoryTarget: 'Silk Sarees'
   }
 ];
@@ -67,9 +69,9 @@ export const WorthYourAttention: React.FC = () => {
             <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-bold text-[#8B1E3F] block mb-2">
               CURRENT OFFERS
             </span>
-            <h2 className="font-serif text-3xl sm:text-5xl font-light text-[#1C1A19] tracking-tight">
+            <WipeText as="h2" direction="left-to-right" duration={0.85} className="font-serif text-3xl sm:text-5xl font-light text-[#1C1A19] tracking-tight">
               Worth your attention
-            </h2>
+            </WipeText>
           </div>
 
           <button

@@ -4,6 +4,8 @@ import { Sparkles, ShoppingBag, Eye, ArrowRight } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { SAREES_DATA } from '../data/sarees';
 import { formatINR } from '../utils/formatters';
+import { WipeText } from './WipeText';
+import { resolveOptImage } from '../data/outfits';
 
 export const BridalDarkSection: React.FC = () => {
   const { addToCart, openQuickView, navigateTo } = useShop();
@@ -16,15 +18,15 @@ export const BridalDarkSection: React.FC = () => {
       <div className="absolute top-1/3 left-10 w-96 h-96 rounded-full bg-[#8B1E3F]/25 blur-[130px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Layered Double Header matching Frame 8 */}
+        {/* Layered Double Header with WipeText */}
         <div className="relative text-left mb-12 sm:mb-16">
           {/* Ghost / Shadow duplicate text */}
           <div className="text-3xl sm:text-5xl md:text-6xl font-serif font-light text-white/5 select-none absolute -top-4 left-0 pointer-events-none whitespace-nowrap">
             The Bridal Collection
           </div>
-          <h2 className="relative z-10 font-serif text-3xl sm:text-5xl md:text-6xl font-light text-[#FAF7F0] tracking-tight">
+          <WipeText as="h2" direction="left-to-right" duration={0.9} className="relative z-10 font-serif text-3xl sm:text-5xl md:text-6xl font-light text-[#FAF7F0] tracking-tight">
             The Bridal Collection
-          </h2>
+          </WipeText>
           <p className="text-xs sm:text-sm text-[#FAF7F0]/70 font-light mt-2 max-w-lg">
             Certified real gold zari, Kanchipuram Korvai pit looms, and heirloom red brocades.
           </p>
@@ -35,8 +37,10 @@ export const BridalDarkSection: React.FC = () => {
           {/* Left Column: Big Glowing Red Bridal Campaign (5 cols) */}
           <div className="lg:col-span-5 relative rounded-3xl overflow-hidden bg-gradient-to-t from-[#651C32] to-[#8B1E3F] p-8 flex flex-col justify-between shadow-2xl border border-[#C8A96B]/30 group min-h-[460px]">
             <img
-              src="https://images.unsplash.com/photo-1617627143719-74d3209867c0?auto=format&fit=crop&w=1200&q=85"
+              src={resolveOptImage('Sarees Section/Bridal Sarees 1.webp')}
               alt="Bridal Campaign Look"
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 w-full h-full object-cover filter brightness-[0.75] contrast-[1.1] group-hover:scale-105 transition-transform duration-700"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/40" />

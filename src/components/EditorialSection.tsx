@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
+import { WipeText } from './WipeText';
+import { resolveOptImage } from '../data/outfits';
 
 const CURVED_ITEMS = [
   {
@@ -10,7 +12,7 @@ const CURVED_ITEMS = [
     name: 'Ruhani Temple Silk',
     category: 'Kanjivaram Silk',
     price: 38500,
-    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=85',
+    image: resolveOptImage('Sarees Section/Bridal Sarees 1.webp'),
     slug: 'mayurakshi-kanjivaram-bridal-silk-saree'
   },
   {
@@ -18,7 +20,7 @@ const CURVED_ITEMS = [
     name: 'Saanjh Maroon Banarasi',
     category: 'Banarasi Brocade',
     price: 36200,
-    image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=85',
+    image: resolveOptImage('Sarees Section/Banarasi Sarees.webp'),
     slug: 'varanasi-noor-kadhwa-banarasi-brocade'
   },
   {
@@ -26,7 +28,7 @@ const CURVED_ITEMS = [
     name: 'Prerna Festive Silk',
     category: 'Pure Katan Silk',
     price: 31800,
-    image: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=800&q=85',
+    image: resolveOptImage('Sarees Section/Pure Pattu Sarees 1.webp'),
     slug: 'tarangini-rani-pink-festive-brocade-saree'
   },
   {
@@ -34,7 +36,7 @@ const CURVED_ITEMS = [
     name: 'Leela Courtyard Silk',
     category: 'Tissue Silk',
     price: 42000,
-    image: 'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=800&q=85',
+    image: resolveOptImage('Sarees Section/Sultana Bronze Rust Tissue Katan Saree 1.webp'),
     slug: 'swarna-hansa-pure-tissue-silk-saree'
   },
   {
@@ -42,7 +44,7 @@ const CURVED_ITEMS = [
     name: 'Tara Peacock Paithani',
     category: 'Pure Organza',
     price: 24500,
-    image: 'https://images.unsplash.com/photo-1617627143644-84524458f262?auto=format&fit=crop&w=800&q=85',
+    image: resolveOptImage('Sarees Section/Organza Sarees 2.webp'),
     slug: 'chandrika-midnight-flora-pure-organza-saree'
   },
   {
@@ -50,7 +52,7 @@ const CURVED_ITEMS = [
     name: 'Aaranya Emerald Kanjivaram',
     category: 'Kanjivaram Silk',
     price: 52000,
-    image: 'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=800&q=85',
+    image: resolveOptImage('Sarees Section/Kanjivaram Sarees 1.webp'),
     slug: 'rajkumari-emerald-temple-kanjivaram'
   }
 ];
@@ -77,12 +79,12 @@ export const EditorialSection: React.FC = () => {
               THE AARANYA SIGNATURES
             </span>
             <div className="flex items-baseline gap-2 flex-wrap">
-              <h2 className="font-serif text-4xl sm:text-6xl font-light text-[#1C1A19] tracking-tight">
+              <WipeText as="h2" direction="left-to-right" duration={0.85} className="font-serif text-4xl sm:text-6xl font-light text-[#1C1A19] tracking-tight">
                 Woven to Be
-              </h2>
-              <span className="font-script text-5xl sm:text-7xl text-[#C8A96B] leading-none">
+              </WipeText>
+              <WipeText as="span" direction="bottom-to-top" duration={0.85} delay={0.12} className="font-script text-5xl sm:text-7xl text-[#C8A96B] leading-none">
                 Remembered
-              </span>
+              </WipeText>
             </div>
           </div>
 
