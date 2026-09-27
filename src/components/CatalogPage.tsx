@@ -43,7 +43,7 @@ export const CatalogPage: React.FC = () => {
   const [selectedFabrics, setSelectedFabrics] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
-  const [maxPrice, setMaxPrice] = useState<number>(75000);
+  const [maxPrice, setMaxPrice] = useState<number>(28000);
   const [sortBy, setSortBy] = useState<'featured' | 'newest' | 'price-asc' | 'price-desc' | 'rating'>('featured');
 
   // Toggle helpers
@@ -70,7 +70,7 @@ export const CatalogPage: React.FC = () => {
     setSelectedFabrics([]);
     setSelectedColors([]);
     setSelectedOccasions([]);
-    setMaxPrice(75000);
+    setMaxPrice(28000);
   };
 
   // Filter & Sort Logic
@@ -118,7 +118,7 @@ export const CatalogPage: React.FC = () => {
     selectedFabrics.length +
     selectedColors.length +
     selectedOccasions.length +
-    (maxPrice < 75000 ? 1 : 0);
+    (maxPrice < 28000 ? 1 : 0);
 
   return (
     <div className="bg-[#FAF7F0] min-h-screen py-10 sm:py-16">
@@ -261,16 +261,16 @@ export const CatalogPage: React.FC = () => {
               </div>
               <input
                 type="range"
-                min="20000"
-                max="75000"
-                step="2500"
+                min="2000"
+                max="28000"
+                step="500"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(Number(e.target.value))}
                 className="w-full accent-[#651C32] cursor-pointer"
               />
               <div className="flex justify-between text-[10px] text-[#1C1A19]/50 mt-1">
-                <span>₹20,000</span>
-                <span>₹75,000</span>
+                <span>₹2,000</span>
+                <span>₹28,000</span>
               </div>
             </div>
 
@@ -401,9 +401,9 @@ export const CatalogPage: React.FC = () => {
                     </span>
                     <input
                       type="range"
-                      min="20000"
-                      max="75000"
-                      step="2500"
+                      min="2000"
+                      max="28000"
+                      step="500"
                       value={maxPrice}
                       onChange={(e) => setMaxPrice(Number(e.target.value))}
                       className="w-full accent-[#651C32]"

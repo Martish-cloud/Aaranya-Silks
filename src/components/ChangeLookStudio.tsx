@@ -4,7 +4,17 @@ import { Star, Heart, ArrowRight, Box } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
-import { resolveOptImage } from '../data/outfits';
+import roseWarmCream from '../assets/studio/rose-warm-cream.png';
+import roseRosePink from '../assets/studio/rose-pink.png';
+import roseDeepWine from '../assets/studio/rose-deep-wine.png';
+
+import suhaniCrimsonRed from '../assets/studio/suhani-crimson-red.png';
+import suhaniPlumBurgundy from '../assets/studio/suhani-plum-burgundy.png';
+import suhaniChampagneGold from '../assets/studio/suhani-champagne-gold.png';
+
+import swarnaLiquidGold from '../assets/studio/swarna-liquid-gold.png';
+import swarnaWarmIvory from '../assets/studio/swarna-warm-ivory.png';
+import swarnaEmerald from '../assets/studio/swarna-emerald.png';
 
 const STUDIO_LOOKS = [
   {
@@ -12,50 +22,47 @@ const STUDIO_LOOKS = [
     name: 'Rosé Net Embroidered Saree',
     headline: 'ROSÉ NET EMBROIDERED',
     price: 21600,
-    originalPrice: 26000,
+    originalPrice: 25900,
     rating: 4.8,
     reviews: 128,
-    image: resolveOptImage('Sarees Section/Pastel Pink Organza Saree 1.webp'),
-    thumbnail: resolveOptImage('Sarees Section/Pastel Pink Organza Saree 1.webp'),
-    colorName: 'Rose Pink',
+    thumbnail: roseRosePink,
+    defaultColorIdx: 1,
     colors: [
-      { name: 'Warm Cream', hex: '#FAF7F0' },
-      { name: 'Rose Pink', hex: '#E8987E' },
-      { name: 'Deep Wine', hex: '#651C32' }
+      { name: 'Warm Cream', hex: '#FAF7F0', image: roseWarmCream },
+      { name: 'Rose Pink', hex: '#E8987E', image: roseRosePink },
+      { name: 'Deep Wine', hex: '#651C32', image: roseDeepWine }
     ]
   },
   {
     id: 'look-2',
     name: 'Suhani Crimson Zari Saree',
     headline: 'SUHANI CRIMSON ZARI',
-    price: 36500,
-    originalPrice: 42000,
+    price: 26500,
+    originalPrice: 31500,
     rating: 4.9,
     reviews: 184,
-    image: resolveOptImage('Sarees Section/Bridal Sarees 1.webp'),
-    thumbnail: resolveOptImage('Sarees Section/Bridal Sarees 1.webp'),
-    colorName: 'Crimson Red',
+    thumbnail: suhaniCrimsonRed,
+    defaultColorIdx: 0,
     colors: [
-      { name: 'Crimson Red', hex: '#8B1E3F' },
-      { name: 'Plum Burgundy', hex: '#651C32' },
-      { name: 'Champagne Gold', hex: '#C8A96B' }
+      { name: 'Crimson Red', hex: '#8B1E3F', image: suhaniCrimsonRed },
+      { name: 'Plum Burgundy', hex: '#651C32', image: suhaniPlumBurgundy },
+      { name: 'Champagne Gold', hex: '#C8A96B', image: suhaniChampagneGold }
     ]
   },
   {
     id: 'look-3',
     name: 'Swarna Hansa Metallic Tissue',
     headline: 'SWARNA HANSA TISSUE',
-    price: 28900,
-    originalPrice: 34000,
+    price: 24800,
+    originalPrice: 29500,
     rating: 4.95,
     reviews: 96,
-    image: resolveOptImage('Sarees Section/Pure Pattu Sarees 1.webp'),
-    thumbnail: resolveOptImage('Sarees Section/Pure Pattu Sarees 1.webp'),
-    colorName: 'Liquid Gold',
+    thumbnail: swarnaLiquidGold,
+    defaultColorIdx: 0,
     colors: [
-      { name: 'Liquid Gold', hex: '#C8A96B' },
-      { name: 'Warm Ivory', hex: '#FAF7F0' },
-      { name: 'Emerald', hex: '#1B4D3E' }
+      { name: 'Liquid Gold', hex: '#C8A96B', image: swarnaLiquidGold },
+      { name: 'Warm Ivory', hex: '#FAF7F0', image: swarnaWarmIvory },
+      { name: 'Emerald', hex: '#1B4D3E', image: swarnaEmerald }
     ]
   }
 ];
@@ -72,6 +79,8 @@ export const ChangeLookStudio: React.FC = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   const look = STUDIO_LOOKS[activeLookIdx];
+  const activeColor = look.colors[selectedColorIdx] || look.colors[0];
+  const currentImage = activeColor.image;
 
   const handleAddToCart = () => {
     // Construct saree-like object
@@ -82,12 +91,12 @@ export const ChangeLookStudio: React.FC = () => {
       tagline: 'Featured in Atelier Change Look Studio',
       category: 'Designer Sarees' as const,
       fabric: 'Pure Organza' as const,
-      color: look.colors[selectedColorIdx].name,
-      colors: look.colors.map((c) => ({ name: c.name, hex: c.hex, image: look.image })),
+      color: activeColor.name,
+      colors: look.colors.map((c) => ({ name: c.name, hex: c.hex, image: c.image })),
       price: look.price,
       rating: look.rating,
       reviewCount: look.reviews,
-      images: [look.image],
+      images: look.colors.map((c) => c.image),
       description: 'Exclusive runway draping edit crafted for high-fashion celebrations.',
       weaveDetail: 'Pure silk sheer weave with badla embroidery.',
       zariType: 'Antique Silver & Gold Zari',
@@ -99,7 +108,7 @@ export const ChangeLookStudio: React.FC = () => {
       occasions: ['Cocktail' as const, 'Reception' as const],
       inStock: true
     };
-    addToCart(dummySaree, look.colors[selectedColorIdx].name, qty);
+    addToCart(dummySaree, activeColor.name, qty);
   };
 
   return (
@@ -126,7 +135,7 @@ export const ChangeLookStudio: React.FC = () => {
                   key={item.id}
                   onClick={() => {
                     setActiveLookIdx(idx);
-                    setSelectedColorIdx(0);
+                    setSelectedColorIdx(item.defaultColorIdx ?? 0);
                   }}
                   className={`w-16 h-22 sm:w-20 sm:h-28 rounded-xl overflow-hidden border-2 transition-all shadow-md ${
                     activeLookIdx === idx
@@ -145,13 +154,13 @@ export const ChangeLookStudio: React.FC = () => {
             <div className="relative w-full max-w-md aspect-[3/4] sm:aspect-[4/5] rounded-3xl overflow-hidden bg-[#F2EBDD] border border-[#C8A96B]/30 shadow-2xl">
               <AnimatePresence mode="wait">
                 <motion.img
-                  key={look.id}
+                  key={`${look.id}-${selectedColorIdx}`}
                   initial={{ opacity: 0, scale: 1.05 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.5 }}
-                  src={look.image}
-                  alt={look.name}
+                  transition={{ duration: 0.4 }}
+                  src={currentImage}
+                  alt={`${look.name} - ${activeColor.name}`}
                   className="w-full h-full object-cover object-top"
                 />
               </AnimatePresence>
@@ -232,7 +241,7 @@ export const ChangeLookStudio: React.FC = () => {
             {/* Select Colour Swatches matching Frame 14 */}
             <div>
               <span className="text-xs font-semibold uppercase tracking-wider text-[#1C1A19]/70 block mb-2">
-                SELECT COLOUR: <strong className="text-[#651C32]">{look.colors[selectedColorIdx].name}</strong>
+                SELECT COLOUR: <strong className="text-[#651C32]">{activeColor.name}</strong>
               </span>
               <div className="flex items-center gap-2.5">
                 {look.colors.map((c, i) => (

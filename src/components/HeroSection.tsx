@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, ShieldCheck, Award } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { WipeText } from './WipeText';
-import heroImg from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (1).webp';
+import heroImg from '../assets/hero-maroon-saree.png';
 
 export const HeroSection: React.FC = () => {
   const { navigateTo } = useShop();
