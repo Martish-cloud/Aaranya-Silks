@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Eye, ShoppingBag, Star } from 'lucide-react';
 import type { Saree } from '../types';
+import userProductImage from '../assets/user-product-image.png';
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
 
@@ -57,6 +58,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <img
           src={primaryImage}
           alt={product.name}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src = userProductImage;
+          }}
           className={`w-full h-full object-cover transition-all duration-700 ease-out ${
             isHovered && alternateImage !== primaryImage ? 'opacity-0 scale-105' : 'opacity-100 scale-100'
           }`}
@@ -68,6 +72,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <img
             src={alternateImage}
             alt={`${product.name} alternate view`}
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = userProductImage;
+            }}
             className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out ${
               isHovered ? 'opacity-100 scale-105' : 'opacity-0 scale-100'
             }`}

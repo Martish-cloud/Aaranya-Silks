@@ -18,6 +18,7 @@ import { useShop } from '../context/ShopContext';
 import { SAREES_DATA } from '../data/sarees';
 import { formatINR } from '../utils/formatters';
 import { ProductCard } from './ProductCard';
+import userProductImage from '../assets/user-product-image.png';
 
 interface ProductDetailPageProps {
   slug: string;
@@ -112,6 +113,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                 transition={{ duration: 0.4 }}
                 src={product.images[activeImgIdx] || activeColor.image || product.images[0]}
                 alt={product.name}
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = userProductImage;
+                }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               />
 
@@ -153,7 +157,14 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                       : 'border-transparent opacity-75 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt={`${product.name} thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                  <img
+                    src={img}
+                    alt={`${product.name} thumbnail ${idx + 1}`}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = userProductImage;
+                    }}
+                    className="w-full h-full object-cover"
+                  />
                 </button>
               ))}
             </div>

@@ -1,3 +1,4 @@
+import userProductImage from '../assets/user-product-image.png';
 import type { Saree, CategoryInfo, CustomerReview } from '../types';
 
 export const CATEGORIES_DATA: CategoryInfo[] = [
@@ -33,7 +34,7 @@ export const CATEGORIES_DATA: CategoryInfo[] = [
     name: 'Organza Sarees',
     slug: 'organza-sarees',
     description: 'Whisper-light sheer drapes adorned with delicate resham and foil florals.',
-    image: 'https://images.unsplash.com/photo-1617627143644-84524458f262?auto=format&fit=crop&w=800&q=85',
+    image: userProductImage,
     itemCount: 24,
     highlight: 'Airy Contemporary Sheer'
   },
@@ -42,7 +43,7 @@ export const CATEGORIES_DATA: CategoryInfo[] = [
     name: 'Designer Sarees',
     slug: 'designer-sarees',
     description: 'Modern silhouettes, innovative drapes, and bespoke runway embellishments.',
-    image: 'https://images.unsplash.com/photo-1609357605156-fcf42a7f0516?auto=format&fit=crop&w=800&q=85',
+    image: userProductImage,
     itemCount: 30,
     highlight: 'Editorial Statements'
   },
@@ -51,7 +52,7 @@ export const CATEGORIES_DATA: CategoryInfo[] = [
     name: 'Bridal Sarees',
     slug: 'bridal-sarees',
     description: 'Exquisite bridal heirlooms crafted with real gold zari for your unforgettable day.',
-    image: 'https://images.unsplash.com/photo-1617627143719-74d3209867c0?auto=format&fit=crop&w=800&q=85',
+    image: userProductImage,
     itemCount: 18,
     highlight: 'Royal Wedding Trousseau'
   },
@@ -60,7 +61,7 @@ export const CATEGORIES_DATA: CategoryInfo[] = [
     name: 'Party Wear Sarees',
     slug: 'party-wear-sarees',
     description: 'Luminous metallic weaves, cocktail drapes, and glamorous evening silhouettes.',
-    image: 'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=800&q=85',
+    image: userProductImage,
     itemCount: 22,
     highlight: 'Effortless Evening Glamour'
   },
@@ -97,7 +98,7 @@ export const SAREES_DATA: Saree[] = [
     reviewCount: 42,
     images: [
       'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1617627143719-74d3209867c0?auto=format&fit=crop&w=1200&q=85',
+      userProductImage,
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85',
       'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=85'
     ],
@@ -139,7 +140,7 @@ export const SAREES_DATA: Saree[] = [
     reviewCount: 31,
     images: [
       'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1610030469857-e1793540ebf8?auto=format&fit=crop&w=1200&q=85',
+      userProductImage,
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'Handcrafted over 120 artisan hours on traditional wooden pit looms in Varanasi. The Varanasi Noor features painstaking Kadhwa weaving, where each motif is individually carved without floats on the reverse side.',
@@ -168,8 +169,8 @@ export const SAREES_DATA: Saree[] = [
     fabric: 'Tissue Silk',
     color: 'Champagne Gold',
     colors: [
-      { name: 'Champagne Gold', hex: '#C8A96B', image: 'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=1200&q=85' },
-      { name: 'Warm Ivory', hex: '#FAF7F0', image: 'https://images.unsplash.com/photo-1610030469857-e1793540ebf8?auto=format&fit=crop&w=1200&q=85' }
+      { name: 'Champagne Gold', hex: '#C8A96B', image: userProductImage },
+      { name: 'Warm Ivory', hex: '#FAF7F0', image: userProductImage }
     ],
     price: 24800,
     originalPrice: 29500,
@@ -178,7 +179,7 @@ export const SAREES_DATA: Saree[] = [
     rating: 4.88,
     reviewCount: 38,
     images: [
-      'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=1200&q=85',
+      userProductImage,
       'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?auto=format&fit=crop&w=1200&q=85',
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85'
     ],
@@ -207,7 +208,7 @@ export const SAREES_DATA: Saree[] = [
     fabric: 'Pure Organza',
     color: 'Midnight Blue',
     colors: [
-      { name: 'Midnight Blue', hex: '#1C2841', image: 'https://images.unsplash.com/photo-1617627143644-84524458f262?auto=format&fit=crop&w=1200&q=85' },
+      { name: 'Midnight Blue', hex: '#1C2841', image: userProductImage },
       { name: 'Charcoal Black', hex: '#1C1A19', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=85' }
     ],
     price: 16500,
@@ -217,8 +218,8 @@ export const SAREES_DATA: Saree[] = [
     rating: 4.85,
     reviewCount: 19,
     images: [
-      'https://images.unsplash.com/photo-1617627143644-84524458f262?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1609357605156-fcf42a7f0516?auto=format&fit=crop&w=1200&q=85',
+      userProductImage,
+      userProductImage,
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'An ethereal creation woven from high-twist organza silk yarns. Delicate flora motifs are outlined in fine beaten metallic thread, complemented by scalloped resham embroidery along all four borders.',
@@ -285,8 +286,8 @@ export const SAREES_DATA: Saree[] = [
     fabric: 'Pure Katan Silk',
     color: 'Warm Ivory',
     colors: [
-      { name: 'Warm Ivory', hex: '#FAF7F0', image: 'https://images.unsplash.com/photo-1610030469857-e1793540ebf8?auto=format&fit=crop&w=1200&q=85' },
-      { name: 'Champagne Gold', hex: '#C8A96B', image: 'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=1200&q=85' }
+      { name: 'Warm Ivory', hex: '#FAF7F0', image: userProductImage },
+      { name: 'Champagne Gold', hex: '#C8A96B', image: userProductImage }
     ],
     price: 22900,
     originalPrice: 27500,
@@ -295,7 +296,7 @@ export const SAREES_DATA: Saree[] = [
     rating: 4.92,
     reviewCount: 22,
     images: [
-      'https://images.unsplash.com/photo-1610030469857-e1793540ebf8?auto=format&fit=crop&w=1200&q=85',
+      userProductImage,
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85',
       'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?auto=format&fit=crop&w=1200&q=85'
     ],
@@ -360,8 +361,8 @@ export const SAREES_DATA: Saree[] = [
     fabric: 'Pure Organza',
     color: 'Coral Peach',
     colors: [
-      { name: 'Coral Peach', hex: '#E8987E', image: 'https://images.unsplash.com/photo-1609357605156-fcf42a7f0516?auto=format&fit=crop&w=1200&q=85' },
-      { name: 'Warm Ivory', hex: '#FAF7F0', image: 'https://images.unsplash.com/photo-1610030469857-e1793540ebf8?auto=format&fit=crop&w=1200&q=85' }
+      { name: 'Coral Peach', hex: '#E8987E', image: userProductImage },
+      { name: 'Warm Ivory', hex: '#FAF7F0', image: userProductImage }
     ],
     price: 14200,
     originalPrice: 17500,
@@ -370,8 +371,8 @@ export const SAREES_DATA: Saree[] = [
     rating: 4.8,
     reviewCount: 15,
     images: [
-      'https://images.unsplash.com/photo-1609357605156-fcf42a7f0516?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1617627143644-84524458f262?auto=format&fit=crop&w=1200&q=85',
+      userProductImage,
+      userProductImage,
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'Designed for daytime garden weddings and cocktail sundowners. This whispery peach organza combines delicate hand-applied moti pearls with fine badla silver zari embroidery along its sculptural edges.',
@@ -396,7 +397,7 @@ export const SAREES_DATA: Saree[] = [
     fabric: 'Pure Katan Silk',
     color: 'Crimson Red',
     colors: [
-      { name: 'Crimson Red', hex: '#8B1E3F', image: 'https://images.unsplash.com/photo-1617627143719-74d3209867c0?auto=format&fit=crop&w=1200&q=85' },
+      { name: 'Crimson Red', hex: '#8B1E3F', image: userProductImage },
       { name: 'Deep Burgundy', hex: '#651C32', image: 'https://images.unsplash.com/photo-1566737236500-c8ac43014a67?auto=format&fit=crop&w=1200&q=85' }
     ],
     price: 27500,
@@ -406,7 +407,7 @@ export const SAREES_DATA: Saree[] = [
     rating: 5.0,
     reviewCount: 49,
     images: [
-      'https://images.unsplash.com/photo-1617627143719-74d3209867c0?auto=format&fit=crop&w=1200&q=85',
+      userProductImage,
       'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85',
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85'
     ],
@@ -436,7 +437,7 @@ export const SAREES_DATA: Saree[] = [
     color: 'Rust Copper',
     colors: [
       { name: 'Rust Copper', hex: '#B85D38', image: 'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?auto=format&fit=crop&w=1200&q=85' },
-      { name: 'Champagne Gold', hex: '#C8A96B', image: 'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=1200&q=85' }
+      { name: 'Champagne Gold', hex: '#C8A96B', image: userProductImage }
     ],
     price: 18600,
     originalPrice: 22500,
@@ -446,7 +447,7 @@ export const SAREES_DATA: Saree[] = [
     reviewCount: 18,
     images: [
       'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=1200&q=85',
+      userProductImage,
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'Understated nobility defined. The Sultana saree uses antique oxidised copper zari blended into a warm rust silk base, delivering an enchanting glow under festive chandelier lighting.',
@@ -472,7 +473,7 @@ export const SAREES_DATA: Saree[] = [
     color: 'Charcoal Black',
     colors: [
       { name: 'Charcoal Black', hex: '#1C1A19', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=85' },
-      { name: 'Midnight Blue', hex: '#1C2841', image: 'https://images.unsplash.com/photo-1617627143644-84524458f262?auto=format&fit=crop&w=1200&q=85' }
+      { name: 'Midnight Blue', hex: '#1C2841', image: userProductImage }
     ],
     price: 21400,
     originalPrice: 26000,
@@ -507,8 +508,8 @@ export const SAREES_DATA: Saree[] = [
     fabric: 'Tussar Georgette',
     color: 'Forest Emerald',
     colors: [
-      { name: 'Forest Emerald', hex: '#1B4D3E', image: 'https://images.unsplash.com/photo-1610030469796-0e31994b6ceb?auto=format&fit=crop&w=1200&q=85' },
-      { name: 'Warm Ivory', hex: '#FAF7F0', image: 'https://images.unsplash.com/photo-1610030469857-e1793540ebf8?auto=format&fit=crop&w=1200&q=85' }
+      { name: 'Forest Emerald', hex: '#1B4D3E', image: userProductImage },
+      { name: 'Warm Ivory', hex: '#FAF7F0', image: userProductImage }
     ],
     price: 9800,
     originalPrice: 12500,
@@ -517,7 +518,7 @@ export const SAREES_DATA: Saree[] = [
     rating: 4.82,
     reviewCount: 16,
     images: [
-      'https://images.unsplash.com/photo-1610030469796-0e31994b6ceb?auto=format&fit=crop&w=1200&q=85',
+      userProductImage,
       'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=1200&q=85',
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85'
     ],
@@ -544,7 +545,7 @@ export const SAREES_DATA: Saree[] = [
     color: 'Sunset Ochre',
     colors: [
       { name: 'Sunset Ochre', hex: '#C68B27', image: 'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=1200&q=85' },
-      { name: 'Coral Peach', hex: '#E8987E', image: 'https://images.unsplash.com/photo-1609357605156-fcf42a7f0516?auto=format&fit=crop&w=1200&q=85' }
+      { name: 'Coral Peach', hex: '#E8987E', image: userProductImage }
     ],
     price: 11500,
     originalPrice: 14000,
@@ -554,7 +555,7 @@ export const SAREES_DATA: Saree[] = [
     reviewCount: 20,
     images: [
       'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=1200&q=85',
+      userProductImage,
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'Woven in historic Chanderi with centuries-old techniques. Silk warp and pure fine cotton weft create a drape that is crisp, airy, and resplendent with gold ashrafi coins along the borders.',
@@ -615,8 +616,8 @@ export const SAREES_DATA: Saree[] = [
     fabric: 'Banarasi Brocade',
     color: 'Lilac Lavender',
     colors: [
-      { name: 'Lilac Lavender', hex: '#9C88B0', image: 'https://images.unsplash.com/photo-1610030470298-508f654b9d03?auto=format&fit=crop&w=1200&q=85' },
-      { name: 'Warm Ivory', hex: '#FAF7F0', image: 'https://images.unsplash.com/photo-1610030469857-e1793540ebf8?auto=format&fit=crop&w=1200&q=85' }
+      { name: 'Lilac Lavender', hex: '#9C88B0', image: userProductImage },
+      { name: 'Warm Ivory', hex: '#FAF7F0', image: userProductImage }
     ],
     price: 22400,
     originalPrice: 27000,
@@ -625,8 +626,8 @@ export const SAREES_DATA: Saree[] = [
     rating: 4.88,
     reviewCount: 23,
     images: [
-      'https://images.unsplash.com/photo-1610030470298-508f654b9d03?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1610030469857-e1793540ebf8?auto=format&fit=crop&w=1200&q=85',
+      userProductImage,
+      userProductImage,
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'A poetic contemporary colorway brought to life by master weavers. Soft muted lilac silk serves as a canvas for dense silver zari creepers and antique borders.',
@@ -707,7 +708,7 @@ export const EDITORIAL_COLLECTIONS = [
     title: 'Contemporary Classics',
     subtitle: 'Modern Minimalist Luxury',
     description: 'Sheer translucent organza, tissue silks, and refined twilight palettes crafted for the modern Indian connoisseur.',
-    image: 'https://images.unsplash.com/photo-1617627143644-84524458f262?auto=format&fit=crop&w=1200&q=85',
+    image: userProductImage,
     linkCategory: 'Designer Sarees',
     badge: 'Limited Edition'
   },
@@ -725,7 +726,7 @@ export const EDITORIAL_COLLECTIONS = [
     title: 'The Evening Collection',
     subtitle: 'Chandelier Cocktail Drapes',
     description: 'Dramatic obsidian blacks, metallic tissue sheens, and liquid drapes that capture the romance of grand nighttime celebrations.',
-    image: 'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=1200&q=85',
+    image: userProductImage,
     linkCategory: 'Party Wear Sarees',
     badge: 'Evening Soiree'
   }
@@ -799,14 +800,14 @@ export const INSTAGRAM_POSTS = [
   },
   {
     id: 'insta-3',
-    image: 'https://images.unsplash.com/photo-1610030469668-932140131d59?auto=format&fit=crop&w=800&q=85',
+    image: userProductImage,
     handle: '@aaranyasilks',
     tag: '#TissueSilkElegance',
     caption: 'Catching the golden hour in our Swarna Hansa tissue drape.'
   },
   {
     id: 'insta-4',
-    image: 'https://images.unsplash.com/photo-1617627143644-84524458f262?auto=format&fit=crop&w=800&q=85',
+    image: userProductImage,
     handle: '@aaranyasilks',
     tag: '#ContemporaryFlora',
     caption: 'Translucent organza hand-detailed with botanical scalloping.'
@@ -820,7 +821,7 @@ export const INSTAGRAM_POSTS = [
   },
   {
     id: 'insta-6',
-    image: 'https://images.unsplash.com/photo-1610030469857-e1793540ebf8?auto=format&fit=crop&w=800&q=85',
+    image: userProductImage,
     handle: '@aaranyasilks',
     tag: '#WarmIvoryHeritage',
     caption: 'The timeless harmony of ivory silk and antique gold kalga motifs.'
