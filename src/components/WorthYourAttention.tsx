@@ -373,11 +373,10 @@ export const WorthYourAttention: React.FC = () => {
               </span>
             </div>
 
-            {/* Horizontal Scroll Rail of Narrow Vertical Cards */}
+            {/* Horizontal Scroll Rail of 9:16 Portrait Cards */}
             <div
               ref={cardStripRef}
-              className="flex items-stretch gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-3 pt-1 px-1 -mx-2 sm:mx-0 sm:px-0"
-              style={{ minHeight: '480px' }}
+              className="flex items-center gap-4 overflow-x-auto no-scrollbar scroll-smooth py-3 px-1 -mx-2 sm:mx-0 sm:px-0"
             >
               {BRAND_AMBASSADOR_OFFERS.map((item, idx) => {
                 const isActive = item.id === activeId;
@@ -392,12 +391,13 @@ export const WorthYourAttention: React.FC = () => {
                     key={item.id}
                     ref={(el) => { cardItemRefs.current[idx] = el; }}
                     onClick={() => setActiveId(item.id)}
-                    className={`relative flex-shrink-0 w-[115px] sm:w-[130px] md:w-[140px] rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 select-none group border ${floatClass} ${
+                    className={`relative flex-shrink-0 w-[205px] sm:w-[230px] md:w-[255px] aspect-[9/16] rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 select-none group border ${floatClass} ${
                       isActive
                         ? 'ring-2 shadow-2xl scale-[1.02] z-20'
                         : 'shadow-md opacity-85 hover:opacity-100 hover:-translate-y-2 z-10'
                     }`}
                     style={{
+                      aspectRatio: '9 / 16',
                       backgroundColor: THEME.burgundy,
                       borderColor: isActive ? THEME.orange : `${THEME.champagne}35`,
                       // @ts-expect-error custom ring color
@@ -407,39 +407,45 @@ export const WorthYourAttention: React.FC = () => {
                         : undefined
                     }}
                   >
-                    {/* Background Ambassador Image */}
-                    <picture className="absolute inset-0 w-full h-full block">
-                      <source type="image/webp" srcSet={item.imageWebp} />
-                      <img
-                        src={item.imageOrig}
-                        alt={`Aaranya Silks Brand Ambassador ${item.number} - ${item.title}`}
-                        loading="lazy"
-                        className={`w-full h-full object-cover object-top transition-all duration-700 ${
-                          isActive
-                            ? 'scale-108 filter brightness-100 contrast-105'
-                            : 'filter grayscale-[35%] contrast-110 brightness-75 group-hover:scale-105 group-hover:grayscale-0 group-hover:brightness-95'
-                        }`}
-                      />
-                    </picture>
+                    {/* 9:16 Portrait Image Container */}
+                    <div
+                      className="absolute inset-0 w-full h-full overflow-hidden flex items-center justify-center"
+                      style={{ aspectRatio: '9 / 16', backgroundColor: THEME.burgundy }}
+                    >
+                      <picture className="w-full h-full block">
+                        <source type="image/webp" srcSet={item.imageWebp} />
+                        <img
+                          src={item.imageOrig}
+                          alt={`Aaranya Silks Brand Ambassador ${item.number} - ${item.title}`}
+                          loading="lazy"
+                          className={`w-full h-full object-contain object-center transition-all duration-700 ${
+                            isActive
+                              ? 'scale-105 filter brightness-100 contrast-105'
+                              : 'filter grayscale-[25%] contrast-105 brightness-85 group-hover:scale-105 group-hover:grayscale-0 group-hover:brightness-95'
+                          }`}
+                          style={{ aspectRatio: '9 / 16' }}
+                        />
+                      </picture>
+                    </div>
 
                     {/* Gradient scrim with Maroon & Burgundy depth */}
                     <div
-                      className="absolute inset-0 transition-opacity duration-500"
+                      className="absolute inset-0 transition-opacity duration-500 pointer-events-none"
                       style={{
                         background: isActive
-                          ? `linear-gradient(to top, ${THEME.burgundy}EE 0%, ${THEME.maroon}66 40%, transparent 80%)`
-                          : `linear-gradient(to top, ${THEME.burgundy}F2 0%, ${THEME.burgundy}88 50%, rgba(0,0,0,0.3) 100%)`
+                          ? `linear-gradient(to top, ${THEME.burgundy}F8 0%, ${THEME.burgundy}A0 24%, transparent 58%, ${THEME.burgundy}60 100%)`
+                          : `linear-gradient(to top, ${THEME.burgundy}F8 0%, ${THEME.burgundy}85 28%, transparent 62%, rgba(0,0,0,0.35) 100%)`
                       }}
                     />
 
                     {/* Card Content Overlay */}
-                    <div className="absolute inset-0 flex flex-col justify-between p-3.5 z-10">
+                    <div className="absolute inset-0 flex flex-col justify-between p-3.5 z-10 pointer-events-none">
                       {/* Top: Card Number & Active Indicator */}
                       <div className="flex items-center justify-between w-full">
                         <span
                           className="font-mono text-xs font-bold px-2 py-0.5 rounded-md shadow-sm"
                           style={{
-                            backgroundColor: isActive ? THEME.orange : 'rgba(0,0,0,0.5)',
+                            backgroundColor: isActive ? THEME.orange : 'rgba(0,0,0,0.6)',
                             color: isActive ? '#FFFFFF' : THEME.champagne
                           }}
                         >
@@ -447,10 +453,15 @@ export const WorthYourAttention: React.FC = () => {
                         </span>
 
                         {isActive ? (
-                          <span
-                            className="w-2.5 h-2.5 rounded-full animate-ping"
-                            style={{ backgroundColor: THEME.orange }}
-                          />
+                          <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#E87532]/20 border border-[#E87532]/60">
+                            <span
+                              className="w-2 h-2 rounded-full animate-ping"
+                              style={{ backgroundColor: THEME.orange }}
+                            />
+                            <span className="text-[10px] uppercase font-bold tracking-wider" style={{ color: THEME.orange }}>
+                              Selected
+                            </span>
+                          </span>
                         ) : (
                           <span
                             className="w-1.5 h-1.5 rounded-full opacity-60 group-hover:opacity-100"
@@ -459,13 +470,13 @@ export const WorthYourAttention: React.FC = () => {
                         )}
                       </div>
 
-                      {/* Middle: Rotated Label */}
-                      <div className="flex-1 flex items-center justify-center my-4 pointer-events-none">
+                      {/* Middle: Subtle Vertical Badge pinned along the right edge */}
+                      <div className="my-auto self-end pr-1 opacity-70 group-hover:opacity-100 transition-opacity">
                         <span
-                          className="writing-vertical-rl rotate-180 text-[10px] tracking-[0.26em] uppercase font-semibold transition-all duration-300 line-clamp-1"
+                          className="writing-vertical-rl rotate-180 text-[9px] tracking-[0.22em] uppercase font-semibold block"
                           style={{
-                            color: isActive ? THEME.champagne : 'rgba(243, 217, 181, 0.7)',
-                            textShadow: '0 2px 8px rgba(0,0,0,0.8)'
+                            color: isActive ? THEME.champagne : 'rgba(243, 217, 181, 0.65)',
+                            textShadow: '0 2px 6px rgba(0,0,0,0.9)'
                           }}
                         >
                           AMBASSADOR • {item.number}
@@ -473,9 +484,12 @@ export const WorthYourAttention: React.FC = () => {
                       </div>
 
                       {/* Bottom: Title & Highlight Bar */}
-                      <div className="text-left space-y-1">
+                      <div className="text-left space-y-1.5">
+                        <span className="text-[10px] uppercase font-bold tracking-wider block" style={{ color: THEME.orange }}>
+                          {item.categoryTarget}
+                        </span>
                         <p
-                          className="font-serif text-[11px] font-semibold leading-tight line-clamp-2"
+                          className="font-serif text-xs sm:text-sm font-semibold leading-tight line-clamp-2"
                           style={{ color: THEME.champagne }}
                         >
                           {item.title}
@@ -483,7 +497,7 @@ export const WorthYourAttention: React.FC = () => {
                         <div
                           className="h-1 rounded-full transition-all duration-500"
                           style={{
-                            width: isActive ? '100%' : '30%',
+                            width: isActive ? '100%' : '35%',
                             backgroundColor: isActive ? THEME.orange : `${THEME.champagne}50`
                           }}
                         />
