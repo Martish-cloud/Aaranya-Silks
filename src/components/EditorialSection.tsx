@@ -24,14 +24,6 @@ const CURVED_ITEMS = [
     slug: 'varanasi-noor-kadhwa-banarasi-brocade'
   },
   {
-    id: 'saree-prerna',
-    name: 'Prerna Festive Silk',
-    category: 'Pure Katan Silk',
-    price: 31800,
-    image: resolveOptImage('Sarees Section/Pure Pattu Sarees 1.webp'),
-    slug: 'tarangini-rani-pink-festive-brocade-saree'
-  },
-  {
     id: 'saree-leela',
     name: 'Leela Courtyard Silk',
     category: 'Tissue Silk',
