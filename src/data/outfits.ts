@@ -1000,14 +1000,14 @@ const RAW_PRODUCTS: RawProductDef[] = [
     "reviewCount": 38,
     "description": "Radiant auspicious golden yellow saree specially curated for Haldi and Mehendi rituals, woven with fine floral motifs.",
     "optFiles": [
-      "Sarees Section/Yellow Saree (1).webp",
+      "Sarees Section/Yellow Saree (3).webp",
       "Sarees Section/Yellow Saree (2).webp",
-      "Sarees Section/Yellow Saree (3).webp"
+      "Sarees Section/Yellow Saree (1).webp"
     ],
     "origFiles": [
-      "Sarees Section/Yellow Saree (1).jpeg",
+      "Sarees Section/Yellow Saree (3).jpeg",
       "Sarees Section/Yellow Saree (2).jpeg",
-      "Sarees Section/Yellow Saree (3).jpeg"
+      "Sarees Section/Yellow Saree (1).jpeg"
     ]
   }
 ];

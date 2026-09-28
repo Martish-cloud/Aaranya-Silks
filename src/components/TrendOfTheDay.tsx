@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { ShoppingBag, Sparkles, Star } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { SAREES_DATA } from '../data/sarees';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
+
+import trendImg1 from '../assets/Need to Update/Trend of the Day/Kanjivaram Sarees 1.webp';
+import trendImg2 from '../assets/Need to Update/Trend of the Day/Gourgeous (1).jpg';
+import trendImg3 from '../assets/Need to Update/Trend of the Day/Bright colorful saree (3).png';
+import trendImg4 from '../assets/Need to Update/Trend of the Day/Miss Gourgeous.png';
+
+const TREND_IMAGES = [trendImg1, trendImg2, trendImg3, trendImg4];
 
 const SIZES = ['S', 'M', 'L', 'XL'];
 
@@ -39,14 +47,24 @@ export const TrendOfTheDay: React.FC = () => {
           </div>
         </div>
 
-        {/* Horizontal Cards Grid matching Frame 10 */}
+        {/* Horizontal Cards Grid with Premium Staggered Floating Animation */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          {trendProducts.map((product) => {
+          {trendProducts.map((product, idx) => {
             const currentSize = selectedSizes[product.id] || 'M';
+            const cardImg = TREND_IMAGES[idx] || product.images[0];
 
             return (
-              <div
+              <motion.div
                 key={product.id}
+                animate={{
+                  y: [0, -7, 0]
+                }}
+                transition={{
+                  duration: 3.8 + (idx % 4) * 0.6,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: idx * 0.35
+                }}
                 className="group flex flex-col justify-between bg-[#F2EBDD] rounded-2xl p-4 border border-[#C8A96B]/25 hover:border-[#651C32] transition-all shadow-sm hover:shadow-md text-left"
               >
                 {/* Image Stage */}
@@ -55,7 +73,7 @@ export const TrendOfTheDay: React.FC = () => {
                   className="relative aspect-square rounded-xl overflow-hidden bg-white mb-4 cursor-pointer"
                 >
                   <img
-                    src={product.images[0]}
+                    src={cardImg}
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
@@ -117,7 +135,7 @@ export const TrendOfTheDay: React.FC = () => {
                     </button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

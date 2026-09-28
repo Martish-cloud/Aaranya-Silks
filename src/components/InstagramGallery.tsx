@@ -1,11 +1,60 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Heart } from 'lucide-react';
 import { INSTAGRAM_POSTS } from '../data/sarees';
 
 export const InstagramGallery: React.FC = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isUserInteracting, setIsUserInteracting] = useState(false);
+  const interactionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const markUserInteraction = () => {
+    setIsUserInteracting(true);
+    if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
+    interactionTimeoutRef.current = setTimeout(() => {
+      setIsUserInteracting(false);
+    }, 4000);
+  };
+
+  // Continuous, slow, smooth horizontal auto-sliding moving from right to left
+  useEffect(() => {
+    const rail = scrollRef.current;
+    if (!rail) return;
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches) return;
+
+    let animationFrameId: number;
+    const speed = 0.65; // slow, smooth right-to-left velocity
+
+    const scrollLoop = () => {
+      if (!isHovered && !isUserInteracting && rail) {
+        rail.scrollLeft += speed; // moves cards from right to left
+        const halfWidth = rail.scrollWidth / 2;
+        if (rail.scrollLeft >= halfWidth) {
+          rail.scrollLeft -= halfWidth;
+        }
+      }
+      animationFrameId = requestAnimationFrame(scrollLoop);
+    };
+
+    animationFrameId = requestAnimationFrame(scrollLoop);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
+    };
+  }, [isHovered, isUserInteracting]);
+
+  const DISPLAY_POSTS = [...INSTAGRAM_POSTS, ...INSTAGRAM_POSTS];
+
   return (
-    <section className="py-20 md:py-28 bg-[#FAF7F0] relative overflow-hidden">
+    <section
+      id="styled-in-aaranya"
+      className="py-20 md:py-28 bg-[#FAF7F0] relative overflow-hidden"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Header */}
         <div className="max-w-2xl mx-auto mb-12 sm:mb-16">
@@ -23,16 +72,27 @@ export const InstagramGallery: React.FC = () => {
           </p>
         </div>
 
-        {/* 6-Item Image Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-12">
-          {INSTAGRAM_POSTS.map((post, idx) => (
+        {/* Continuous Right-to-Left Auto-Moving Floating Gallery Strip */}
+        <div
+          ref={scrollRef}
+          onTouchStart={markUserInteraction}
+          onScroll={markUserInteraction}
+          className="flex items-center gap-4 sm:gap-5 overflow-x-auto no-scrollbar scroll-smooth py-5 px-1 mb-12 select-none"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {DISPLAY_POSTS.map((post, idx) => (
             <motion.div
-              key={post.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: idx * 0.05 }}
-              className="group relative aspect-[3/4] rounded-2xl overflow-hidden bg-[#F2EBDD] cursor-pointer shadow-sm hover:shadow-xl transition-all"
+              key={`${post.id}-${idx}`}
+              animate={{
+                y: [0, -6, 0]
+              }}
+              transition={{
+                duration: 3.8 + (idx % 4) * 0.6,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: (idx % 4) * 0.35
+              }}
+              className="group relative shrink-0 w-[180px] sm:w-[220px] md:w-[240px] aspect-[3/4] rounded-2xl overflow-hidden bg-[#F2EBDD] cursor-pointer shadow-sm hover:shadow-2xl transition-all"
             >
               <img
                 src={post.image}

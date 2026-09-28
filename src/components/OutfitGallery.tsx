@@ -93,13 +93,13 @@ const OutfitCard = memo<OutfitCardProps>(({
         />
 
         {/* Top Badges */}
-        <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10">
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-[#1C1A19]/80 backdrop-blur-md text-[#FAF7F0] border border-[#C8A96B]/30 shadow-sm">
+        <div className="absolute top-1.5 left-1.5 right-1.5 sm:top-3 sm:left-3 sm:right-3 flex items-center justify-between pointer-events-none z-10">
+          <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-[#1C1A19]/80 backdrop-blur-md text-[#FAF7F0] border border-[#C8A96B]/30 shadow-sm">
             {outfit.category}
           </span>
 
           {outfit.discountBadge && (
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-[#651C32] text-[#FAF7F0] shadow-sm">
+            <span className="px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold tracking-wider uppercase bg-[#651C32] text-[#FAF7F0] shadow-sm ml-auto">
               {outfit.discountBadge}
             </span>
           )}
@@ -110,18 +110,18 @@ const OutfitCard = memo<OutfitCardProps>(({
           type="button"
           onClick={handleWishlistClick}
           aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-          className={`absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${
+          className={`absolute top-1.5 right-1.5 sm:top-3 sm:right-3 z-20 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${
             isWishlisted
               ? 'bg-[#651C32] text-white'
               : 'bg-white/85 text-[#1C1A19] hover:bg-[#651C32] hover:text-white backdrop-blur-sm'
           }`}
         >
-          <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
+          <Heart className={`w-3 h-3 sm:w-4 sm:h-4 ${isWishlisted ? 'fill-current' : ''}`} />
         </button>
 
         {/* Multi-Angle Hover Indicator Dots */}
         {outfit.gallery.length > 1 && (
-          <div className="absolute bottom-3 left-0 right-0 flex justify-center items-center gap-1.5 z-10 pointer-events-auto">
+          <div className="hidden sm:flex absolute bottom-3 left-0 right-0 justify-center items-center gap-1.5 z-10 pointer-events-auto">
             <div className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md flex items-center gap-1.5 border border-white/20">
               <span className="text-[9px] font-medium text-white/80 mr-0.5">
                 {outfit.gallery.length} Angles:
@@ -149,7 +149,7 @@ const OutfitCard = memo<OutfitCardProps>(({
 
         {/* Quick View Overlay Bar */}
         <div
-          className={`absolute inset-x-0 bottom-0 py-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-center justify-center gap-2 transition-all duration-300 ${
+          className={`hidden sm:flex absolute inset-x-0 bottom-0 py-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent items-center justify-center gap-2 transition-all duration-300 ${
             isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3 pointer-events-none'
           }`}
         >
@@ -168,36 +168,35 @@ const OutfitCard = memo<OutfitCardProps>(({
       </div>
 
       {/* 2. Card Content Information */}
-      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between bg-white">
+      <div className="p-2.5 sm:p-4 flex-1 flex flex-col justify-between bg-white text-left">
         <div>
           {/* Rating & Fabric line */}
-          <div className="flex items-center justify-between text-xs text-[#524B48] mb-1.5">
-            <span className="truncate max-w-[170px] text-[11px] uppercase tracking-wider font-medium text-[#C8A96B]">
+          <div className="flex items-center justify-between text-xs text-[#524B48] mb-1">
+            <span className="truncate max-w-[80px] sm:max-w-[140px] text-[9px] sm:text-[11px] uppercase tracking-wider font-medium text-[#C8A96B]">
               {outfit.fabric}
             </span>
-            <div className="flex items-center gap-1 shrink-0">
-              <Star className="w-3.5 h-3.5 fill-[#C8A96B] text-[#C8A96B]" />
-              <span className="font-semibold text-xs text-[#1C1A19]">{outfit.rating}</span>
-              <span className="text-[10px] text-[#524B48]/70">({outfit.reviewCount})</span>
+            <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
+              <Star className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 fill-[#C8A96B] text-[#C8A96B]" />
+              <span className="font-semibold text-[10px] sm:text-xs text-[#1C1A19]">{outfit.rating}</span>
             </div>
           </div>
 
           {/* Product Name */}
           <h3
             onClick={() => onQuickView(outfit)}
-            className="font-serif text-base sm:text-lg text-[#1C1A19] group-hover:text-[#651C32] transition-colors line-clamp-1 cursor-pointer font-medium tracking-tight mb-2"
+            className="font-serif text-xs sm:text-sm lg:text-base text-[#1C1A19] group-hover:text-[#651C32] transition-colors line-clamp-1 cursor-pointer font-medium tracking-tight mb-1 sm:mb-2"
             title={outfit.name}
           >
             {outfit.name}
           </h3>
 
           {/* Price & Savings */}
-          <div className="flex items-baseline gap-2 mb-3">
-            <span className="font-serif font-bold text-lg sm:text-xl text-[#651C32]">
+          <div className="flex items-baseline gap-1 sm:gap-2 mb-2 sm:mb-3">
+            <span className="font-serif font-bold text-xs sm:text-base lg:text-lg text-[#651C32]">
               {formatINR(outfit.price)}
             </span>
             {outfit.originalPrice > outfit.price && (
-              <span className="text-xs text-[#524B48]/60 line-through">
+              <span className="hidden sm:inline-block text-[10px] sm:text-xs text-[#524B48]/60 line-through">
                 {formatINR(outfit.originalPrice)}
               </span>
             )}
@@ -208,7 +207,7 @@ const OutfitCard = memo<OutfitCardProps>(({
         <button
           type="button"
           onClick={handleQuickAdd}
-          className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-2 border ${
+          className={`w-full py-1.5 sm:py-2.5 px-2 sm:px-4 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-semibold tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-1 sm:gap-2 border ${
             justAdded
               ? 'bg-[#1B4D3E] text-white border-[#1B4D3E]'
               : 'bg-[#FAF7F0] hover:bg-[#651C32] text-[#1C1A19] hover:text-white border-[#C8A96B]/40 hover:border-[#651C32] shadow-sm'
@@ -216,13 +215,13 @@ const OutfitCard = memo<OutfitCardProps>(({
         >
           {justAdded ? (
             <>
-              <Check className="w-3.5 h-3.5" />
-              <span>Added to Bag</span>
+              <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              <span className="truncate">Added</span>
             </>
           ) : (
             <>
-              <ShoppingBag className="w-3.5 h-3.5 text-[#C8A96B] group-hover:text-white transition-colors" />
-              <span>Add to Bag</span>
+              <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C8A96B] group-hover:text-white transition-colors" />
+              <span className="truncate">Add to Bag</span>
             </>
           )}
         </button>
@@ -283,7 +282,7 @@ export const OutfitGallery: React.FC = () => {
       <div className="absolute top-10 right-[-100px] w-96 h-96 rounded-full bg-[#C8A96B]/5 blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 left-[-100px] w-96 h-96 rounded-full bg-[#651C32]/5 blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-2 sm:px-6 lg:px-8 relative z-10">
         {/* 1. Header with Wipe-In Animated Headline */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8A96B]/15 border border-[#C8A96B]/30 text-[#651C32] text-xs font-semibold uppercase tracking-widest mb-4">
@@ -424,10 +423,10 @@ export const OutfitGallery: React.FC = () => {
           </div>
         </div>
 
-        {/* 3. Responsive Outfit Cards Grid with Floating Animations */}
+        {/* 3. Responsive Outfit Cards Grid: Exactly 6 on Desktop, 3 on Mobile */}
         <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-7"
+          className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 gap-2 sm:gap-4 lg:gap-4.5"
         >
           <AnimatePresence mode="popLayout">
             {filteredOutfits.map((outfit, index) => (

@@ -64,18 +64,18 @@ export interface AmbassadorOffer {
 // 10 Brand Ambassador sequential offer mappings
 export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
   {
-    id: 1,
-    number: '01',
-    ambassadorName: 'Ambassador 01',
-    title: 'The Royal Muhurtham Edit',
-    tagline: 'Certified Pure Zari Bridal Kanjivaram',
-    offer: 'Flat 20% Privilege on Certified Bridal Kanjivarams',
-    couponCode: 'MUHURTHAM20',
-    categoryTarget: 'Bridal Sarees',
-    highlight: 'Woven with tested 24k gold zari by heritage Korvai guild masters',
-    imageWebp: ba1Webp,
-    imageOrig: ba1Orig,
-    perks: ['Certified 24k Gold Zari', 'Authentic Pit Loom Weave', 'Cedar Keepsake Archival Box']
+    id: 4,
+    number: '04',
+    ambassadorName: 'Ambassador 04',
+    title: 'Festive Radiant Colorways',
+    tagline: 'Auspicious Vermillion & Turmeric Gold',
+    offer: 'Free Insured Express Air Delivery Across India & Velvet Box',
+    couponCode: 'EXPRESSLUXE',
+    categoryTarget: 'Festive Sarees',
+    highlight: 'Tanchoi satin smooth weave with high-luster champagne chevron ripples',
+    imageWebp: ba4Webp,
+    imageOrig: ba4Orig,
+    perks: ['Priority Insured Transit', 'Velvet Protective Sleeve', 'Matching Heavy Blouse Fabric']
   },
   {
     id: 2,
@@ -106,18 +106,18 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     perks: ['Handcrafted Badla Scallops', 'Pastel Blossom Palette', 'Featherweight Breathable Drape']
   },
   {
-    id: 4,
-    number: '04',
-    ambassadorName: 'Ambassador 04',
-    title: 'Festive Radiant Colorways',
-    tagline: 'Auspicious Vermillion & Turmeric Gold',
-    offer: 'Free Insured Express Air Delivery Across India & Velvet Box',
-    couponCode: 'EXPRESSLUXE',
-    categoryTarget: 'Festive Sarees',
-    highlight: 'Tanchoi satin smooth weave with high-luster champagne chevron ripples',
-    imageWebp: ba4Webp,
-    imageOrig: ba4Orig,
-    perks: ['Priority Insured Transit', 'Velvet Protective Sleeve', 'Matching Heavy Blouse Fabric']
+    id: 1,
+    number: '01',
+    ambassadorName: 'Ambassador 01',
+    title: 'The Royal Muhurtham Edit',
+    tagline: 'Certified Pure Zari Bridal Kanjivaram',
+    offer: 'Flat 20% Privilege on Certified Bridal Kanjivarams',
+    couponCode: 'MUHURTHAM20',
+    categoryTarget: 'Bridal Sarees',
+    highlight: 'Woven with tested 24k gold zari by heritage Korvai guild masters',
+    imageWebp: ba1Webp,
+    imageOrig: ba1Orig,
+    perks: ['Certified 24k Gold Zari', 'Authentic Pit Loom Weave', 'Cedar Keepsake Archival Box']
   },
   {
     id: 5,
@@ -207,7 +207,7 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
 
 export const WorthYourAttention: React.FC = () => {
   const { navigateTo, showToast, applyCouponCode } = useShop();
-  const [activeId, setActiveId] = useState<number>(1);
+  const [activeId, setActiveId] = useState<number>(BRAND_AMBASSADOR_OFFERS[0].id);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const cardStripRef = useRef<HTMLDivElement>(null);
   const cardItemRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -216,7 +216,8 @@ export const WorthYourAttention: React.FC = () => {
 
   // Auto-scroll the active narrow card into visible view inside the rail
   useEffect(() => {
-    const activeEl = cardItemRefs.current[activeId - 1];
+    const activeIndex = BRAND_AMBASSADOR_OFFERS.findIndex((item) => item.id === activeId);
+    const activeEl = cardItemRefs.current[activeIndex >= 0 ? activeIndex : 0];
     if (activeEl && cardStripRef.current) {
       const container = cardStripRef.current;
       const elLeft = activeEl.offsetLeft;
@@ -274,12 +275,16 @@ export const WorthYourAttention: React.FC = () => {
 
   const handlePrev = () => {
     markUserInteraction();
-    setActiveId((prev) => (prev === 1 ? BRAND_AMBASSADOR_OFFERS.length : prev - 1));
+    const currentIndex = BRAND_AMBASSADOR_OFFERS.findIndex((item) => item.id === activeId);
+    const prevIndex = (currentIndex - 1 + BRAND_AMBASSADOR_OFFERS.length) % BRAND_AMBASSADOR_OFFERS.length;
+    setActiveId(BRAND_AMBASSADOR_OFFERS[prevIndex].id);
   };
 
   const handleNext = () => {
     markUserInteraction();
-    setActiveId((prev) => (prev === BRAND_AMBASSADOR_OFFERS.length ? 1 : prev + 1));
+    const currentIndex = BRAND_AMBASSADOR_OFFERS.findIndex((item) => item.id === activeId);
+    const nextIndex = (currentIndex + 1) % BRAND_AMBASSADOR_OFFERS.length;
+    setActiveId(BRAND_AMBASSADOR_OFFERS[nextIndex].id);
   };
 
   const handleScrollRail = (direction: 'left' | 'right') => {

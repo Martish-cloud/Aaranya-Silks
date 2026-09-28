@@ -7,6 +7,17 @@ import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
 import { resolveOptImage } from '../data/outfits';
 
+import bridalImg1 from '../assets/Need to Update/The Bridal Collection/Mayurakshi Kanjivaram Bridal Silk Saree 1.jpg';
+import bridalImg2 from '../assets/Need to Update/The Bridal Collection/Padmavati Scarlet Red Katan Bridal Saree 1.jpg';
+import bridalImg3 from '../assets/Need to Update/The Bridal Collection/Bridal Saree 2.jfif';
+import bridalImg4 from '../assets/Need to Update/The Bridal Collection/Silk Sarees 2.jpg';
+
+const BRIDAL_IMAGES_LIST = [bridalImg1, bridalImg2, bridalImg3, bridalImg4];
+const BRIDAL_SLUG_MAP: Record<string, string> = {
+  'mayurakshi-kanjivaram-bridal-silk-saree': bridalImg1,
+  'padmavati-scarlet-red-katan-bridal-saree': bridalImg2,
+};
+
 export const BridalDarkSection: React.FC = () => {
   const { addToCart, openQuickView, navigateTo } = useShop();
 
@@ -73,22 +84,25 @@ export const BridalDarkSection: React.FC = () => {
 
           {/* Right Column: 4 Framed Cards with Golden Buttons (7 cols) */}
           <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {bridalSarees.map((saree) => (
-              <motion.div
-                key={saree.id}
-                whileHover={{ y: -4 }}
-                className="flex flex-col justify-between bg-white/[0.06] backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 hover:border-[#C8A96B] transition-all shadow-xl group text-left"
-              >
-                {/* Image */}
-                <div
-                  onClick={() => navigateTo('product', saree.slug)}
-                  className="relative aspect-[4/3] bg-black/40 overflow-hidden cursor-pointer"
+            {bridalSarees.map((saree, idx) => {
+              const cardImage = BRIDAL_SLUG_MAP[saree.slug] || BRIDAL_IMAGES_LIST[idx] || saree.images[0];
+
+              return (
+                <motion.div
+                  key={saree.id}
+                  whileHover={{ y: -4 }}
+                  className="flex flex-col justify-between bg-white/[0.06] backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 hover:border-[#C8A96B] transition-all shadow-xl group text-left"
                 >
-                  <img
-                    src={saree.images[0]}
-                    alt={saree.name}
-                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
-                  />
+                  {/* Image */}
+                  <div
+                    onClick={() => navigateTo('product', saree.slug)}
+                    className="relative aspect-[4/3] bg-black/40 overflow-hidden cursor-pointer"
+                  >
+                    <img
+                      src={cardImage}
+                      alt={saree.name}
+                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
+                    />
                   <div className="absolute top-2.5 left-2.5">
                     <span className="px-2.5 py-0.5 rounded-full bg-[#8B1E3F] text-white text-[10px] uppercase font-bold tracking-wider">
                       {saree.fabric}
@@ -136,7 +150,8 @@ export const BridalDarkSection: React.FC = () => {
                   </div>
                 </div>
               </motion.div>
-            ))}
+            );
+          })}
           </div>
         </div>
       </div>
