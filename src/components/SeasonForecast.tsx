@@ -5,9 +5,9 @@ import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
 
-import rosePinkImg from '../assets/studio/rose-pink.png';
-import suhaniCrimsonImg from '../assets/studio/suhani-crimson-red.png';
-import swarnaGoldImg from '../assets/studio/swarna-liquid-gold.png';
+import wowImg1 from '../assets/Wow/Image (1).png';
+import wowImg2 from '../assets/Wow/Image (4).png';
+import wowImg3 from '../assets/Wow/Image (5).png';
 
 interface SareePage {
   id: number;
@@ -38,7 +38,7 @@ const AUTUMN_WINTER_PAGES: SareePage[] = [
     zari: 'Subtle Champagne Gold Badla Work',
     price: 21600,
     originalPrice: 25900,
-    image: rosePinkImg,
+    image: wowImg1,
     description:
       'A gossamer-light translucent net sheer adorned with hand-placed micro-sequin florals, scalloped pearl edgings, and an ethereal liquid drape crafted for gala evenings.',
     highlights: ['Micro-Resham Threadwork', 'Handcrafted Scallop Borders', 'Featherweight Evening Drape'],
@@ -55,7 +55,7 @@ const AUTUMN_WINTER_PAGES: SareePage[] = [
     zari: 'Certified 24-Karat Tested Gold Zari',
     price: 26500,
     originalPrice: 31500,
-    image: suhaniCrimsonImg,
+    image: wowImg2,
     description:
       'Auspicious vermillion bridal heirloom woven with certified 24-karat tested gold zari on sacred pit looms. Features centuries-old Korvai interlock motifs for timeless royalty.',
     highlights: ['Certified Pure Gold Zari', 'Dual-Artisan Korvai Interlock', 'Heirloom Trousseau Archival Box'],
@@ -72,7 +72,7 @@ const AUTUMN_WINTER_PAGES: SareePage[] = [
     zari: 'High-Luster Zero-Twist Molten Zari',
     price: 24800,
     originalPrice: 29500,
-    image: swarnaGoldImg,
+    image: wowImg3,
     description:
       'Iridescent high-luster metallic tissue spun with zero-twist zari threads. Radiates a molten gold glow under evening chandeliers with matching heavy woven brocade blouse.',
     highlights: ['Liquid Molten Gold Luster', 'Zero Reverse Thread Floats', 'Heavy Brocade Blouse Piece'],
@@ -223,7 +223,7 @@ export const SeasonForecast: React.FC = () => {
                 <img
                   src={currentPage.image}
                   alt={currentPage.name}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20 pointer-events-none" />
 

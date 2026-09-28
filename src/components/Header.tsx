@@ -164,7 +164,7 @@ export const Header: React.FC = () => {
                             <img
                               src={cat.image}
                               alt={cat.name}
-                              className="w-full h-full object-cover group-hover/item:scale-105 transition-transform duration-500"
+                              className="w-full h-full object-cover object-top group-hover/item:scale-105 transition-transform duration-500"
                               loading="lazy"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />

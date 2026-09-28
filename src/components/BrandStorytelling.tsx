@@ -40,7 +40,7 @@ export const BrandStorytelling: React.FC = () => {
                 <img
                   src="https://images.unsplash.com/photo-1610030469857-e1793540ebf8?auto=format&fit=crop&w=1200&q=85"
                   alt="Aaranya Silks Handloom Craftsmanship"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-top"
                 />
               </div>
 

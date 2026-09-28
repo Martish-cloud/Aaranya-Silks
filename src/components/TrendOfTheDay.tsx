@@ -70,12 +70,12 @@ export const TrendOfTheDay: React.FC = () => {
                 {/* Image Stage */}
                 <div
                   onClick={() => navigateTo('product', product.slug)}
-                  className="relative aspect-square rounded-xl overflow-hidden bg-white mb-4 cursor-pointer"
+                  className="relative aspect-[3/4] sm:aspect-[4/5] rounded-xl overflow-hidden bg-white mb-4 cursor-pointer"
                 >
                   <img
                     src={cardImg}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#FAF7F0]/90 text-[10px] font-semibold text-[#1C1A19]">
                     <Star className="w-3 h-3 text-[#E5B842] fill-current" />

@@ -43,10 +43,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
+      viewport={{ once: false, amount: 0.08 }}
+      transition={{ duration: 0.45 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleCardClick}
@@ -61,7 +61,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).src = userProductImage;
           }}
-          className={`w-full h-full object-cover transition-all duration-700 ease-out ${
+          className={`w-full h-full object-cover object-top transition-all duration-700 ease-out ${
             isHovered && alternateImage !== primaryImage ? 'opacity-0 scale-105' : 'opacity-100 scale-100'
           }`}
           loading="lazy"
@@ -75,7 +75,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src = userProductImage;
             }}
-            className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out ${
+            className={`absolute inset-0 w-full h-full object-cover object-top transition-all duration-700 ease-out ${
               isHovered ? 'opacity-100 scale-105' : 'opacity-0 scale-100'
             }`}
             loading="lazy"

@@ -295,7 +295,7 @@ export const CheckoutModal: React.FC = () => {
                         <img
                           src={item.product.images[0]}
                           alt={item.product.name}
-                          className="w-12 h-16 object-cover rounded-lg bg-white shrink-0 border"
+                          className="w-12 h-16 object-cover object-top rounded-lg bg-white shrink-0 border"
                         />
                         <div className="flex-1 min-w-0">
                           <p className="font-serif font-medium text-[#1C1A19] truncate">

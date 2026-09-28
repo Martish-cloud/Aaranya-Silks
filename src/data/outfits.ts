@@ -21,6 +21,8 @@ export interface OutfitProduct {
   inStock: boolean;
 }
 
+import userProductImage from '../assets/user-product-image.png';
+
 // Dynamic asset loading via Vite import.meta.glob
 const optImages = import.meta.glob<{ default: string }>('../assets/outfits_optimized/**/*.{webp,png,jpg,jpeg,jfif}', { eager: true });
 const origImages = import.meta.glob<{ default: string }>([
@@ -29,16 +31,44 @@ const origImages = import.meta.glob<{ default: string }>([
 ], { eager: true });
 
 export function resolveOptImage(relPath: string): string {
+  if (!relPath) return userProductImage;
   const key = `../assets/outfits_optimized/${relPath}`;
   if (optImages[key]) return optImages[key].default;
   const origKey = `../assets/Outfits/${relPath}`;
   if (origImages[origKey]) return origImages[origKey].default;
   const checkKey = `../assets/Outfits Check/${relPath}`;
   if (origImages[checkKey]) return origImages[checkKey].default;
-  return '';
+
+  // Extension-flexible lookup:
+  const lastDot = relPath.lastIndexOf('.');
+  const baseNoExt = lastDot > 0 ? relPath.substring(0, lastDot) : relPath;
+  for (const k in optImages) {
+    const kDot = k.lastIndexOf('.');
+    const kBase = kDot > 0 ? k.substring(0, kDot) : k;
+    if (kBase.endsWith('/' + baseNoExt)) return optImages[k].default;
+  }
+  for (const k in origImages) {
+    const kDot = k.lastIndexOf('.');
+    const kBase = kDot > 0 ? k.substring(0, kDot) : k;
+    if (kBase.endsWith('/' + baseNoExt)) return origImages[k].default;
+  }
+
+  // Filename lookup:
+  const filename = relPath.split('/').pop() || '';
+  const fDot = filename.lastIndexOf('.');
+  const fBase = fDot > 0 ? filename.substring(0, fDot) : filename;
+  for (const k in optImages) {
+    if (k.includes(fBase)) return optImages[k].default;
+  }
+  for (const k in origImages) {
+    if (k.includes(fBase)) return origImages[k].default;
+  }
+
+  return userProductImage;
 }
 
 export function resolveOrigImage(relPath: string): string {
+  if (!relPath) return userProductImage;
   const key = `../assets/Outfits/${relPath}`;
   if (origImages[key]) return origImages[key].default;
   const checkKey = `../assets/Outfits Check/${relPath}`;
@@ -1012,25 +1042,32 @@ const RAW_PRODUCTS: RawProductDef[] = [
   }
 ];
 
-export const OUTFITS_DATA: OutfitProduct[] = RAW_PRODUCTS.map((p) => ({
-  id: p.id,
-  name: p.name,
-  slug: p.slug,
-  category: p.category,
-  categorySlug: p.categorySlug,
-  price: p.price,
-  originalPrice: p.originalPrice,
-  discountBadge: p.discountBadge,
-  badge: p.badge,
-  fabric: p.fabric,
-  rating: p.rating,
-  reviewCount: p.reviewCount,
-  description: p.description,
-  image: resolveOptImage(p.optFiles[0]),
-  gallery: p.optFiles.map(resolveOptImage).filter(Boolean),
-  originalGallery: p.origFiles.map(resolveOrigImage).filter(Boolean),
-  inStock: true,
-}));
+export const OUTFITS_DATA: OutfitProduct[] = RAW_PRODUCTS.map((p) => {
+  const optGallery = p.optFiles.map(resolveOptImage).filter(Boolean);
+  const origGallery = p.origFiles.map(resolveOrigImage).filter(Boolean);
+  const combinedGallery = optGallery.length > 0 ? optGallery : (origGallery.length > 0 ? origGallery : [userProductImage]);
+  const primaryImg = combinedGallery[0] || resolveOptImage(p.optFiles[0]) || resolveOrigImage(p.origFiles[0]) || userProductImage;
+
+  return {
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    category: p.category,
+    categorySlug: p.categorySlug,
+    price: p.price,
+    originalPrice: p.originalPrice,
+    discountBadge: p.discountBadge,
+    badge: p.badge,
+    fabric: p.fabric,
+    rating: p.rating,
+    reviewCount: p.reviewCount,
+    description: p.description,
+    image: primaryImg,
+    gallery: combinedGallery,
+    originalGallery: origGallery.length > 0 ? origGallery : combinedGallery,
+    inStock: true,
+  };
+});
 
 import type { Saree } from '../types';
 

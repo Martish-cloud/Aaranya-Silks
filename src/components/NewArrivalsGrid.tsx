@@ -1,76 +1,40 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { SAREES_DATA } from '../data/sarees';
 import { ProductCard } from './ProductCard';
 import { useShop } from '../context/ShopContext';
 import { WipeText } from './WipeText';
+import { useAutoScrollRail } from '../utils/useAutoScrollRail';
 
 const TABS = ['All Arrivals', 'Bridal Sarees', 'Banarasi Sarees', 'Silk Sarees', 'Organza Sarees'];
 
 export const NewArrivalsGrid: React.FC = () => {
   const { navigateTo } = useShop();
   const [activeTab, setActiveTab] = useState('All Arrivals');
-  const scrollRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [isUserInteracting, setIsUserInteracting] = useState(false);
-  const interactionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const markUserInteraction = () => {
-    setIsUserInteracting(true);
-    if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
-    interactionTimeoutRef.current = setTimeout(() => {
-      setIsUserInteracting(false);
-    }, 4000);
-  };
+  // Slow, continuous horizontal auto-sliding moving from RIGHT TO LEFT with instant viewport re-triggering
+  const { railRef, markUserInteraction } = useAutoScrollRail({
+    direction: 'right-to-left',
+    speed: 40,
+    isHovered,
+  });
 
   const filteredProducts = SAREES_DATA.filter((item) => {
     if (activeTab === 'All Arrivals') return true;
     return item.category === activeTab;
   });
 
-  // Ensure minimum items for continuous smooth auto-sliding loop
+  // Ensure ample items for continuous, completely seamless loop with zero blank space
   const baseItems = filteredProducts.length >= 4 ? filteredProducts : SAREES_DATA.slice(0, 6);
-  const DISPLAY_PRODUCTS = [...baseItems, ...baseItems];
-
-  // Slow, continuous horizontal auto-sliding moving from left to right
-  useEffect(() => {
-    const rail = scrollRef.current;
-    if (!rail) return;
-
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (mediaQuery.matches) return;
-
-    if (rail.scrollLeft === 0 && rail.scrollWidth > 0) {
-      rail.scrollLeft = rail.scrollWidth / 2;
-    }
-
-    let animationFrameId: number;
-    const speed = 0.65; // slow, smooth left-to-right velocity
-
-    const scrollLoop = () => {
-      if (!isHovered && !isUserInteracting && rail) {
-        rail.scrollLeft -= speed; // moves cards from left to right
-        const halfWidth = rail.scrollWidth / 2;
-        if (rail.scrollLeft <= 0) {
-          rail.scrollLeft += halfWidth;
-        }
-      }
-      animationFrameId = requestAnimationFrame(scrollLoop);
-    };
-
-    animationFrameId = requestAnimationFrame(scrollLoop);
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
-    };
-  }, [isHovered, isUserInteracting, activeTab]);
+  const DISPLAY_PRODUCTS = [...baseItems, ...baseItems, ...baseItems];
 
   const handleScroll = (direction: 'left' | 'right') => {
     markUserInteraction();
-    if (scrollRef.current) {
+    if (railRef.current) {
       const scrollAmount = direction === 'left' ? -320 : 320;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      railRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
 
@@ -142,12 +106,13 @@ export const NewArrivalsGrid: React.FC = () => {
           ))}
         </div>
 
-        {/* Continuous Left-to-Right Auto-Moving Horizontal Product Rail */}
+        {/* Continuous Right-to-Left Auto-Moving Horizontal Product Rail */}
         <div
-          ref={scrollRef}
+          ref={railRef}
           onTouchStart={markUserInteraction}
-          onScroll={markUserInteraction}
-          className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto no-scrollbar scroll-smooth py-5 px-1 select-none"
+          onTouchMove={markUserInteraction}
+          onWheel={markUserInteraction}
+          className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto no-scrollbar py-5 px-1 select-none"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {DISPLAY_PRODUCTS.map((product, idx) => (
@@ -157,10 +122,10 @@ export const NewArrivalsGrid: React.FC = () => {
                 y: [0, -6, 0]
               }}
               transition={{
-                duration: 3.8 + (idx % 4) * 0.6,
+                duration: 4.0 + (idx % 3) * 0.8,
                 repeat: Infinity,
                 ease: 'easeInOut',
-                delay: (idx % 4) * 0.3
+                delay: (idx % 3) * 0.4
               }}
               className="shrink-0 w-[240px] sm:w-[270px] md:w-[290px] xl:w-[310px]"
             >

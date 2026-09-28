@@ -99,7 +99,7 @@ export const WishlistDrawer: React.FC = () => {
                       <img
                         src={saree.images[0]}
                         alt={saree.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-top"
                       />
                     </div>
 

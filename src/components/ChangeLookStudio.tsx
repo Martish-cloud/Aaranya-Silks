@@ -143,7 +143,7 @@ export const ChangeLookStudio: React.FC = () => {
                       : 'border-transparent opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <img src={item.thumbnail} alt={item.name} className="w-full h-full object-cover" />
+                  <img src={item.thumbnail} alt={item.name} className="w-full h-full object-cover object-top" />
                 </button>
               ))}
             </div>

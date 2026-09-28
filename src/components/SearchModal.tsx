@@ -151,7 +151,7 @@ export const SearchModal: React.FC = () => {
                           <img
                             src={saree.images[0]}
                             alt={saree.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform"
                           />
                         </div>
                         <div className="flex-1 min-w-0">

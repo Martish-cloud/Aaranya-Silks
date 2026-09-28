@@ -1,4 +1,9 @@
 import userProductImage from '../assets/user-product-image.png';
+import badImg1 from '../assets/BAD/Image (1).jfif';
+import badImg2 from '../assets/BAD/Image (2).jpeg';
+import badImg3 from '../assets/BAD/Image (3).webp';
+import badImg4 from '../assets/BAD/Image (4).jpeg';
+import badImg5 from '../assets/BAD/Image (5).jfif';
 import type { Saree, CategoryInfo, CustomerReview } from '../types';
 
 export const CATEGORIES_DATA: CategoryInfo[] = [
@@ -86,7 +91,7 @@ export const SAREES_DATA: Saree[] = [
     fabric: 'Kanjivaram Silk',
     color: 'Crimson Red',
     colors: [
-      { name: 'Crimson Red', hex: '#8B1E3F', image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85' },
+      { name: 'Crimson Red', hex: '#8B1E3F', image: badImg1 },
       { name: 'Royal Plum', hex: '#651C32', image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=85' },
       { name: 'Auspicious Emerald', hex: '#1B4D3E', image: 'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=1200&q=85' }
     ],
@@ -97,7 +102,7 @@ export const SAREES_DATA: Saree[] = [
     rating: 4.95,
     reviewCount: 42,
     images: [
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85',
+      badImg1,
       userProductImage,
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85',
       'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=85'
@@ -129,7 +134,7 @@ export const SAREES_DATA: Saree[] = [
     fabric: 'Banarasi Brocade',
     color: 'Wine Plum',
     colors: [
-      { name: 'Wine Plum', hex: '#651C32', image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=85' },
+      { name: 'Wine Plum', hex: '#651C32', image: badImg2 },
       { name: 'Rani Rose', hex: '#A52B50', image: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=1200&q=85' }
     ],
     price: 23500,
@@ -139,7 +144,7 @@ export const SAREES_DATA: Saree[] = [
     rating: 4.9,
     reviewCount: 31,
     images: [
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=85',
+      badImg2,
       userProductImage,
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85'
     ],
@@ -169,7 +174,7 @@ export const SAREES_DATA: Saree[] = [
     fabric: 'Tissue Silk',
     color: 'Champagne Gold',
     colors: [
-      { name: 'Champagne Gold', hex: '#C8A96B', image: userProductImage },
+      { name: 'Champagne Gold', hex: '#C8A96B', image: badImg3 },
       { name: 'Warm Ivory', hex: '#FAF7F0', image: userProductImage }
     ],
     price: 24800,
@@ -179,7 +184,7 @@ export const SAREES_DATA: Saree[] = [
     rating: 4.88,
     reviewCount: 38,
     images: [
-      userProductImage,
+      badImg3,
       'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?auto=format&fit=crop&w=1200&q=85',
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85'
     ],
@@ -208,7 +213,7 @@ export const SAREES_DATA: Saree[] = [
     fabric: 'Pure Organza',
     color: 'Midnight Blue',
     colors: [
-      { name: 'Midnight Blue', hex: '#1C2841', image: userProductImage },
+      { name: 'Midnight Blue', hex: '#1C2841', image: badImg4 },
       { name: 'Charcoal Black', hex: '#1C1A19', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=85' }
     ],
     price: 16500,
@@ -218,7 +223,7 @@ export const SAREES_DATA: Saree[] = [
     rating: 4.85,
     reviewCount: 19,
     images: [
-      userProductImage,
+      badImg4,
       userProductImage,
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85'
     ],
@@ -247,7 +252,7 @@ export const SAREES_DATA: Saree[] = [
     fabric: 'Kanjivaram Silk',
     color: 'Emerald Green',
     colors: [
-      { name: 'Emerald Green', hex: '#0B4D3C', image: 'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=1200&q=85' },
+      { name: 'Emerald Green', hex: '#0B4D3C', image: badImg5 },
       { name: 'Crimson Red', hex: '#8B1E3F', image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85' }
     ],
     price: 27200,
@@ -257,7 +262,7 @@ export const SAREES_DATA: Saree[] = [
     rating: 5.0,
     reviewCount: 26,
     images: [
-      'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=1200&q=85',
+      badImg5,
       'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85',
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1200&q=85'
     ],

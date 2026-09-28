@@ -53,6 +53,8 @@ export const EditorialSection: React.FC = () => {
   const { navigateTo } = useShop();
   const [activeIndex, setActiveIndex] = useState(2);
   const [isHovered, setIsHovered] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isInView, setIsInView] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   const handlePrev = () => {
@@ -63,12 +65,23 @@ export const EditorialSection: React.FC = () => {
     setActiveIndex((prev) => (prev + 1) % CURVED_ITEMS.length);
   };
 
+  // Viewport intersection detection for instant animation re-triggering & zero off-screen work
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   // Continuous slow left-to-right auto-scrolling
   useEffect(() => {
+    if (!isInView || isHovered) return;
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (mediaQuery.matches) return;
-
-    if (isHovered) return;
 
     const interval = setInterval(() => {
       // Moves from left to right (previous card shifts rightward into center)
@@ -76,7 +89,7 @@ export const EditorialSection: React.FC = () => {
     }, 4200);
 
     return () => clearInterval(interval);
-  }, [isHovered]);
+  }, [isInView, isHovered]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -95,6 +108,7 @@ export const EditorialSection: React.FC = () => {
 
   return (
     <section
+      ref={sectionRef}
       className="py-20 md:py-28 bg-[#FAF7F0] relative overflow-hidden"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -203,7 +217,7 @@ export const EditorialSection: React.FC = () => {
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-top"
                     draggable={false}
                   />
 

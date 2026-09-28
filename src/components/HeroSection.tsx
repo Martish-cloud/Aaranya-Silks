@@ -17,7 +17,7 @@ export const HeroSection: React.FC = () => {
           alt="Aaranya Silks Luxury Saree Boutique"
           // @ts-expect-error React 18 / browser fetchpriority support
           fetchpriority="high"
-          className="w-full h-full object-cover object-center filter brightness-[0.68] contrast-[1.05]"
+          className="w-full h-full object-cover object-top filter brightness-[0.68] contrast-[1.05]"
         />
 
         {/* Ambient lighting overlays mimicking the boutique showroom in the reference video */}

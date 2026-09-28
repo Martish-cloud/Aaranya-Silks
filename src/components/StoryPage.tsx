@@ -39,7 +39,7 @@ export const StoryPage: React.FC = () => {
               <img
                 src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=85"
                 alt="Master Weavers of Varanasi"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-top"
               />
             </div>
             <div className="absolute -bottom-6 -right-6 p-5 rounded-2xl bg-[#651C32] text-white shadow-xl max-w-xs hidden sm:block border border-[#C8A96B]/40">
@@ -76,7 +76,7 @@ export const StoryPage: React.FC = () => {
               <img
                 src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85"
                 alt="Pure Gold Zari Testing"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-top"
               />
             </div>
             <div className="absolute -bottom-6 -left-6 p-5 rounded-2xl bg-[#F2EBDD] text-[#1C1A19] shadow-xl max-w-xs hidden sm:block border border-[#C8A96B]/40">

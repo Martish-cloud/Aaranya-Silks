@@ -22,6 +22,7 @@ import {
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
+import userProductImage from '../assets/user-product-image.png';
 
 interface OutfitCardProps {
   outfit: OutfitProduct;
@@ -89,6 +90,9 @@ const OutfitCard = memo<OutfitCardProps>(({
           alt={outfit.name}
           loading="lazy"
           decoding="async"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src = userProductImage;
+          }}
           className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105 will-change-transform"
         />
 

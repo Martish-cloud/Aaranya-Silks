@@ -71,7 +71,7 @@ export const QuickViewModal: React.FC = () => {
                 <img
                   src={product.images[activeImgIdx] || activeColor.image || product.images[0]}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-top"
                 />
                 {product.badge && (
                   <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#651C32] text-white text-[10px] uppercase font-bold tracking-wider shadow">
@@ -90,7 +90,7 @@ export const QuickViewModal: React.FC = () => {
                       activeImgIdx === idx ? 'border-[#651C32] scale-105' : 'border-transparent opacity-70 hover:opacity-100'
                     }`}
                   >
-                    <img src={img} alt="thumbnail" className="w-full h-full object-cover" />
+                    <img src={img} alt="thumbnail" className="w-full h-full object-cover object-top" />
                   </button>
                 ))}
               </div>

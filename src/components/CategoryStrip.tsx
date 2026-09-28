@@ -76,10 +76,10 @@ export const CategoryStrip: React.FC = () => {
           {MOODS.map((mood, idx) => (
             <motion.div
               key={mood.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.08 }}
+              viewport={{ once: false, amount: 0.1 }}
+              transition={{ duration: 0.45, delay: idx * 0.06 }}
               onClick={() => navigateTo('catalog', undefined, mood.categoryTarget)}
               className="group cursor-pointer flex flex-col items-center text-center"
             >
@@ -88,7 +88,7 @@ export const CategoryStrip: React.FC = () => {
                 <img
                   src={mood.image}
                   alt={mood.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700 ease-out"
                   loading="lazy"
                 />
 

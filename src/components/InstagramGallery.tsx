@@ -1,52 +1,59 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Heart } from 'lucide-react';
-import { INSTAGRAM_POSTS } from '../data/sarees';
+import { useAutoScrollRail } from '../utils/useAutoScrollRail';
+import { WipeText } from './WipeText';
+
+import abImg1 from '../assets/AB/Image 1.png';
+import abImg2 from '../assets/AB/Image 2.png';
+import abImg3 from '../assets/AB/Image 3.webp';
+import abImg4 from '../assets/AB/Image 4.png';
+import abImg5 from '../assets/AB/Image 5.jpg';
+
+const STYLED_POSTS = [
+  {
+    id: 'ab-1',
+    image: abImg1,
+    tag: '#AaranyaBride',
+    caption: 'Moments of quiet grace before the vows are spoken.',
+  },
+  {
+    id: 'ab-2',
+    image: abImg2,
+    tag: '#VaranasiHeritage',
+    caption: 'Woven poetry in pure Katan silk and gold zari.',
+  },
+  {
+    id: 'ab-3',
+    image: abImg3,
+    tag: '#TissueSilkElegance',
+    caption: 'Catching the golden hour in our Swarna Hansa tissue drape.',
+  },
+  {
+    id: 'ab-4',
+    image: abImg4,
+    tag: '#ContemporaryFlora',
+    caption: 'Translucent organza hand-detailed with botanical scalloping.',
+  },
+  {
+    id: 'ab-5',
+    image: abImg5,
+    tag: '#FestiveSplendor',
+    caption: 'Radiant magenta and rich chevron brocade for unforgettable celebrations.',
+  },
+];
 
 export const InstagramGallery: React.FC = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [isUserInteracting, setIsUserInteracting] = useState(false);
-  const interactionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const markUserInteraction = () => {
-    setIsUserInteracting(true);
-    if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
-    interactionTimeoutRef.current = setTimeout(() => {
-      setIsUserInteracting(false);
-    }, 4000);
-  };
+  // Slow, continuous horizontal auto-sliding moving from LEFT TO RIGHT with instant viewport re-triggering
+  const { railRef, markUserInteraction } = useAutoScrollRail({
+    direction: 'left-to-right',
+    speed: 38,
+    isHovered,
+  });
 
-  // Continuous, slow, smooth horizontal auto-sliding moving from right to left
-  useEffect(() => {
-    const rail = scrollRef.current;
-    if (!rail) return;
-
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (mediaQuery.matches) return;
-
-    let animationFrameId: number;
-    const speed = 0.65; // slow, smooth right-to-left velocity
-
-    const scrollLoop = () => {
-      if (!isHovered && !isUserInteracting && rail) {
-        rail.scrollLeft += speed; // moves cards from right to left
-        const halfWidth = rail.scrollWidth / 2;
-        if (rail.scrollLeft >= halfWidth) {
-          rail.scrollLeft -= halfWidth;
-        }
-      }
-      animationFrameId = requestAnimationFrame(scrollLoop);
-    };
-
-    animationFrameId = requestAnimationFrame(scrollLoop);
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
-    };
-  }, [isHovered, isUserInteracting]);
-
-  const DISPLAY_POSTS = [...INSTAGRAM_POSTS, ...INSTAGRAM_POSTS];
+  const DISPLAY_POSTS = [...STYLED_POSTS, ...STYLED_POSTS, ...STYLED_POSTS];
 
   return (
     <section
@@ -63,21 +70,26 @@ export const InstagramGallery: React.FC = () => {
             <span>Community of Grace</span>
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-[#651C32] tracking-tight">
+          <WipeText
+            as="h2"
+            direction="left-to-right"
+            className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-[#651C32] tracking-tight"
+          >
             Styled in Aaranya Silks
-          </h2>
+          </WipeText>
 
           <p className="text-sm sm:text-base text-[#1C1A19]/70 font-light mt-2">
             Moments of celebration, heritage, and quiet grandeur captured by our cherished patrons.
           </p>
         </div>
 
-        {/* Continuous Right-to-Left Auto-Moving Floating Gallery Strip */}
+        {/* Continuous Left-to-Right Auto-Moving Floating Gallery Strip */}
         <div
-          ref={scrollRef}
+          ref={railRef}
           onTouchStart={markUserInteraction}
-          onScroll={markUserInteraction}
-          className="flex items-center gap-4 sm:gap-5 overflow-x-auto no-scrollbar scroll-smooth py-5 px-1 mb-12 select-none"
+          onTouchMove={markUserInteraction}
+          onWheel={markUserInteraction}
+          className="flex items-center gap-4 sm:gap-5 overflow-x-auto no-scrollbar py-5 px-1 mb-12 select-none"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {DISPLAY_POSTS.map((post, idx) => (
@@ -87,18 +99,19 @@ export const InstagramGallery: React.FC = () => {
                 y: [0, -6, 0]
               }}
               transition={{
-                duration: 3.8 + (idx % 4) * 0.6,
+                duration: 4.2 + (idx % 3) * 0.8,
                 repeat: Infinity,
                 ease: 'easeInOut',
-                delay: (idx % 4) * 0.35
+                delay: (idx % 3) * 0.4
               }}
-              className="group relative shrink-0 w-[180px] sm:w-[220px] md:w-[240px] aspect-[3/4] rounded-2xl overflow-hidden bg-[#F2EBDD] cursor-pointer shadow-sm hover:shadow-2xl transition-all"
+              className="group relative shrink-0 w-[190px] sm:w-[230px] md:w-[250px] aspect-[3/4] rounded-2xl overflow-hidden bg-[#F2EBDD] cursor-pointer shadow-sm hover:shadow-2xl transition-all"
             >
               <img
                 src={post.image}
                 alt={post.caption}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
                 loading="lazy"
+                decoding="async"
               />
 
               {/* Hover Overlay */}

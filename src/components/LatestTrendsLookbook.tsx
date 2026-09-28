@@ -249,7 +249,7 @@ export const LatestTrendsLookbook: React.FC = () => {
                     src={reel.posterUrl}
                     alt={`${reel.title} - ${reel.subtitle}`}
                     loading="lazy"
-                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+                    className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-700 ${
                       isPlaying && !hasError
                         ? 'opacity-0 pointer-events-none'
                         : 'opacity-85 group-hover:opacity-95 group-hover:scale-105'
@@ -269,7 +269,7 @@ export const LatestTrendsLookbook: React.FC = () => {
                       onError={() => setVideoErrors((prev) => ({ ...prev, [reel.id]: true }))}
                       onTimeUpdate={(e) => handleTimeUpdate(reel.id, e)}
                       onEnded={() => handleVideoEnded(reel.id)}
-                      className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-500 ${
+                      className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-500 ${
                         isPlaying ? 'opacity-100 z-0' : 'opacity-0 pointer-events-none'
                       }`}
                     />
@@ -390,7 +390,7 @@ export const LatestTrendsLookbook: React.FC = () => {
                   playsInline
                   loop
                   controls
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-top"
                 />
 
                 {/* Close Button */}
@@ -485,7 +485,7 @@ export const LatestTrendsLookbook: React.FC = () => {
                   <img
                     src={activeLook.image}
                     alt={activeLook.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Star, CheckCircle, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { CUSTOMER_REVIEWS } from '../data/sarees';
@@ -9,6 +9,8 @@ import devikaImg from '../assets/Need to Update/Words of Adornment/Devika Singha
 import sunitiImg from '../assets/Need to Update/Words of Adornment/Suniti Mehra.avif';
 import meenakshiImg from '../assets/Need to Update/Words of Adornment/Meenakshi Iyer.avif';
 
+import { useAutoScrollRail } from '../utils/useAutoScrollRail';
+
 const AUTHOR_PHOTOS: Record<string, string> = {
   'Radhika S. Rao': radhikaImg,
   'Devika Singhania': devikaImg,
@@ -17,59 +19,21 @@ const AUTHOR_PHOTOS: Record<string, string> = {
 };
 
 export const ReviewsCarousel: React.FC = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [isUserInteracting, setIsUserInteracting] = useState(false);
-  const interactionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const markUserInteraction = () => {
-    setIsUserInteracting(true);
-    if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
-    interactionTimeoutRef.current = setTimeout(() => {
-      setIsUserInteracting(false);
-    }, 4000);
-  };
-
-  // Continuous, slow, smooth horizontal auto-sliding moving from left to right
-  useEffect(() => {
-    const rail = scrollRef.current;
-    if (!rail) return;
-
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (mediaQuery.matches) return;
-
-    // Start in the middle so left-to-right scrolling can immediately happen
-    if (rail.scrollLeft === 0 && rail.scrollWidth > 0) {
-      rail.scrollLeft = rail.scrollWidth / 2;
-    }
-
-    let animationFrameId: number;
-    const speed = 0.65; // slow, smooth left-to-right velocity
-
-    const scrollLoop = () => {
-      if (!isHovered && !isUserInteracting && rail) {
-        rail.scrollLeft -= speed; // moves cards from left to right
-        const halfWidth = rail.scrollWidth / 2;
-        if (rail.scrollLeft <= 0) {
-          rail.scrollLeft += halfWidth;
-        }
-      }
-      animationFrameId = requestAnimationFrame(scrollLoop);
-    };
-
-    animationFrameId = requestAnimationFrame(scrollLoop);
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
-    };
-  }, [isHovered, isUserInteracting]);
+  // Continuous, slow, smooth horizontal auto-sliding moving from left to right with viewport re-triggering
+  const { railRef, markUserInteraction } = useAutoScrollRail({
+    direction: 'left-to-right',
+    speed: 36,
+    isHovered,
+  });
 
   const scroll = (direction: 'left' | 'right') => {
     markUserInteraction();
-    if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
+    if (railRef.current) {
+      const { scrollLeft, clientWidth } = railRef.current;
       const offset = direction === 'left' ? -clientWidth * 0.7 : clientWidth * 0.7;
-      scrollRef.current.scrollTo({ left: scrollLeft + offset, behavior: 'smooth' });
+      railRef.current.scrollTo({ left: scrollLeft + offset, behavior: 'smooth' });
     }
   };
 
@@ -122,10 +86,11 @@ export const ReviewsCarousel: React.FC = () => {
 
         {/* Continuous Left-to-Right Auto-Moving Floating Carousel Strip */}
         <div
-          ref={scrollRef}
+          ref={railRef}
           onTouchStart={markUserInteraction}
-          onScroll={markUserInteraction}
-          className="flex items-stretch gap-6 overflow-x-auto no-scrollbar scroll-smooth pb-4 pt-2 -mx-4 px-4 sm:mx-0 sm:px-0 select-none"
+          onTouchMove={markUserInteraction}
+          onWheel={markUserInteraction}
+          className="flex items-stretch gap-6 overflow-x-auto no-scrollbar pb-4 pt-2 -mx-4 px-4 sm:mx-0 sm:px-0 select-none"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {DISPLAY_REVIEWS.map((rev, idx) => {
@@ -138,10 +103,10 @@ export const ReviewsCarousel: React.FC = () => {
                   y: [0, -6, 0]
                 }}
                 transition={{
-                  duration: 3.8 + (idx % 4) * 0.6,
+                  duration: 4.2 + (idx % 3) * 0.8,
                   repeat: Infinity,
                   ease: 'easeInOut',
-                  delay: (idx % 4) * 0.3
+                  delay: (idx % 3) * 0.4
                 }}
                 className="flex-shrink-0 w-80 sm:w-96 p-7 rounded-3xl bg-[#F2EBDD] border border-[#C8A96B]/30 flex flex-col justify-between text-left shadow-sm hover:shadow-xl transition-all relative"
               >
@@ -172,7 +137,7 @@ export const ReviewsCarousel: React.FC = () => {
                         <img
                           src={authorPhoto}
                           alt={rev.author}
-                          className="w-11 h-11 rounded-full object-cover border-2 border-[#C8A96B]/60 shadow-sm shrink-0"
+                          className="w-11 h-11 rounded-full object-cover object-top border-2 border-[#C8A96B]/60 shadow-sm shrink-0"
                           loading="lazy"
                         />
                       )}

@@ -116,7 +116,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src = userProductImage;
                 }}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
               />
 
               {/* Badges */}
@@ -163,7 +163,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                     onError={(e) => {
                       (e.currentTarget as HTMLImageElement).src = userProductImage;
                     }}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-top"
                   />
                 </button>
               ))}

@@ -19,13 +19,13 @@ export const WipeText: React.FC<WipeTextProps> = ({
   className = '',
   direction = 'left-to-right',
   delay = 0,
-  duration = 0.85,
+  duration = 0.75,
   once = false,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, {
-    margin: '-60px 0px -60px 0px',
-    amount: 0.2,
+    margin: '0px 0px -20px 0px',
+    amount: 0.1,
     once,
   });
   const shouldReduceMotion = useReducedMotion();
@@ -34,9 +34,8 @@ export const WipeText: React.FC<WipeTextProps> = ({
   const getVariants = (): Variants => {
     if (shouldReduceMotion) {
       return {
-        hidden: { opacity: 1, clipPath: 'none', y: 0 },
-        visible: { opacity: 1, clipPath: 'none', y: 0 },
-        exit: { opacity: 1, clipPath: 'none', y: 0 },
+        hidden: { opacity: 1, clipPath: 'none', y: 0, x: 0 },
+        visible: { opacity: 1, clipPath: 'none', y: 0, x: 0 },
       };
     }
 
@@ -45,7 +44,7 @@ export const WipeText: React.FC<WipeTextProps> = ({
         hidden: {
           opacity: 0,
           clipPath: 'inset(100% 0 0% 0)',
-          y: 20,
+          y: 18,
         },
         visible: {
           opacity: 1,
@@ -57,15 +56,6 @@ export const WipeText: React.FC<WipeTextProps> = ({
             ease: LUXURY_EASE,
           },
         },
-        exit: {
-          opacity: 0.3,
-          clipPath: 'inset(0% 0 100% 0)',
-          y: -10,
-          transition: {
-            duration: duration * 0.7,
-            ease: LUXURY_EASE,
-          },
-        },
       };
     }
 
@@ -74,7 +64,7 @@ export const WipeText: React.FC<WipeTextProps> = ({
         hidden: {
           opacity: 0,
           clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)',
-          x: -15,
+          x: -12,
         },
         visible: {
           opacity: 1,
@@ -83,15 +73,6 @@ export const WipeText: React.FC<WipeTextProps> = ({
           transition: {
             duration,
             delay,
-            ease: LUXURY_EASE,
-          },
-        },
-        exit: {
-          opacity: 0.3,
-          clipPath: 'polygon(100% 0, 100% 0, 100% 100%, 100% 100%)',
-          x: 15,
-          transition: {
-            duration: duration * 0.7,
             ease: LUXURY_EASE,
           },
         },
@@ -115,15 +96,6 @@ export const WipeText: React.FC<WipeTextProps> = ({
           ease: LUXURY_EASE,
         },
       },
-      exit: {
-        opacity: 0.25,
-        clipPath: 'inset(0 0 0 100%)',
-        x: 12,
-        transition: {
-          duration: duration * 0.7,
-          ease: LUXURY_EASE,
-        },
-      },
     };
   };
 
@@ -133,7 +105,7 @@ export const WipeText: React.FC<WipeTextProps> = ({
     <div ref={ref} className="overflow-hidden inline-block align-top max-w-full">
       <motion.div
         initial="hidden"
-        animate={isInView ? 'visible' : 'exit'}
+        animate={isInView ? 'visible' : 'hidden'}
         variants={variants}
         className="will-change-transform will-change-[clip-path]"
       >
