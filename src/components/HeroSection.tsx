@@ -29,10 +29,10 @@ export const HeroSection: React.FC = () => {
       </div>
 
       {/* Decorative Gold Frame Border */}
-      <div className="absolute inset-x-6 sm:inset-x-12 top-24 bottom-12 border border-[#C8A96B]/20 pointer-events-none rounded-3xl hidden md:block" />
+      <div className="absolute left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-5xl lg:max-w-6xl top-24 bottom-12 border border-[#C8A96B]/20 pointer-events-none rounded-3xl hidden md:block" />
 
       {/* Main Hero Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 w-full py-16 md:py-24 flex flex-col justify-between min-h-[75vh]">
+      <div className="relative z-10 max-w-5xl lg:max-w-6xl mx-auto px-6 sm:px-10 lg:px-12 w-full py-16 md:py-24 flex flex-col justify-between min-h-[75vh]">
         {/* Upper Center / Left Section */}
         <div className="max-w-2xl text-left pt-6">
           {/* Brand Tag Pill */}

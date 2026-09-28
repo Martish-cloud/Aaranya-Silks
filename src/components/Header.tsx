@@ -107,10 +107,10 @@ export const Header: React.FC = () => {
             </div>
 
             {/* Center: Desktop Navigation Bar */}
-            <nav className="hidden lg:flex items-center space-x-7">
+            <nav className="hidden lg:flex items-center space-x-2.5 xl:space-x-4 2xl:space-x-6">
               <button
                 onClick={() => navigateTo('catalog', undefined, undefined)}
-                className={`text-xs uppercase tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 ${
+                className={`text-[11px] xl:text-xs uppercase tracking-[0.12em] xl:tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 whitespace-nowrap ${
                   isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
                 }`}
               >
@@ -119,7 +119,7 @@ export const Header: React.FC = () => {
 
               <button
                 onClick={() => navigateTo('catalog', undefined, undefined)}
-                className={`text-xs uppercase tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 ${
+                className={`text-[11px] xl:text-xs uppercase tracking-[0.12em] xl:tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 whitespace-nowrap ${
                   isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
                 }`}
               >
@@ -134,7 +134,7 @@ export const Header: React.FC = () => {
               >
                 <button
                   onClick={() => navigateTo('catalog')}
-                  className={`flex items-center gap-1 text-xs uppercase tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 ${
+                  className={`flex items-center gap-1 text-[11px] xl:text-xs uppercase tracking-[0.12em] xl:tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 whitespace-nowrap ${
                     isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
                   }`}
                 >
@@ -184,7 +184,7 @@ export const Header: React.FC = () => {
 
               <button
                 onClick={() => navigateTo('catalog', undefined, 'Silk Sarees')}
-                className={`text-xs uppercase tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 ${
+                className={`hidden xl:inline-block text-[11px] xl:text-xs uppercase tracking-[0.12em] xl:tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 whitespace-nowrap ${
                   isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
                 }`}
               >
@@ -193,7 +193,7 @@ export const Header: React.FC = () => {
 
               <button
                 onClick={() => navigateTo('catalog', undefined, 'Banarasi Sarees')}
-                className={`text-xs uppercase tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 ${
+                className={`hidden xl:inline-block text-[11px] xl:text-xs uppercase tracking-[0.12em] xl:tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 whitespace-nowrap ${
                   isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
                 }`}
               >
@@ -202,7 +202,7 @@ export const Header: React.FC = () => {
 
               <button
                 onClick={() => navigateTo('catalog', undefined, 'Bridal Sarees')}
-                className={`text-xs uppercase tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 ${
+                className={`text-[11px] xl:text-xs uppercase tracking-[0.12em] xl:tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 whitespace-nowrap ${
                   isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
                 }`}
               >
@@ -220,7 +220,7 @@ export const Header: React.FC = () => {
                     document.getElementById('outfit-gallery')?.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
-                className={`text-xs uppercase tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 flex items-center gap-1.5 ${
+                className={`text-[11px] xl:text-xs uppercase tracking-[0.12em] xl:tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 flex items-center gap-1.5 whitespace-nowrap ${
                   isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
                 }`}
               >
@@ -230,7 +230,7 @@ export const Header: React.FC = () => {
 
               <button
                 onClick={() => navigateTo('story')}
-                className={`text-xs uppercase tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 ${
+                className={`text-[11px] xl:text-xs uppercase tracking-[0.12em] xl:tracking-[0.16em] font-medium transition-colors hover:text-[#C8A96B] py-2 whitespace-nowrap ${
                   isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
                 }`}
               >
@@ -239,7 +239,7 @@ export const Header: React.FC = () => {
             </nav>
 
             {/* Right: Actions (Search, Wishlist, Shopping Bag) */}
-            <div className="flex items-center space-x-3 sm:space-x-5">
+            <div className="flex items-center space-x-2 sm:space-x-3.5 shrink-0 ml-2">
               <button
                 onClick={() => setIsSearchOpen(true)}
                 className={`hidden lg:flex items-center gap-1.5 p-2 rounded-full transition-colors ${
@@ -270,10 +270,10 @@ export const Header: React.FC = () => {
               {/* Shopping Bag Button */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#651C32] text-[#FAF7F0] hover:bg-[#8B1E3F] transition-all duration-300 shadow-md border border-[#C8A96B]/30 hover:border-[#C8A96B]"
+                className="relative flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#651C32] text-[#FAF7F0] hover:bg-[#8B1E3F] transition-all duration-300 shadow-md border border-[#C8A96B]/30 hover:border-[#C8A96B] shrink-0"
                 aria-label={`Shopping bag with ${cartTotalCount} items`}
               >
-                <ShoppingBag className="w-4 h-4 text-[#C8A96B]" />
+                <ShoppingBag className="w-4 h-4 text-[#C8A96B] shrink-0" />
                 <span className="text-xs font-semibold tracking-wide">
                   {cartTotalCount}
                 </span>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
@@ -52,6 +52,8 @@ const CURVED_ITEMS = [
 export const EditorialSection: React.FC = () => {
   const { navigateTo } = useShop();
   const [activeIndex, setActiveIndex] = useState(2);
+  const [isHovered, setIsHovered] = useState(false);
+  const touchStartX = useRef<number | null>(null);
 
   const handlePrev = () => {
     setActiveIndex((prev) => (prev - 1 + CURVED_ITEMS.length) % CURVED_ITEMS.length);
@@ -61,8 +63,44 @@ export const EditorialSection: React.FC = () => {
     setActiveIndex((prev) => (prev + 1) % CURVED_ITEMS.length);
   };
 
+  // Continuous slow left-to-right auto-scrolling
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches) return;
+
+    if (isHovered) return;
+
+    const interval = setInterval(() => {
+      // Moves from left to right (previous card shifts rightward into center)
+      setActiveIndex((prev) => (prev - 1 + CURVED_ITEMS.length) % CURVED_ITEMS.length);
+    }, 4200);
+
+    return () => clearInterval(interval);
+  }, [isHovered]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    if (delta > 40) {
+      handlePrev();
+    } else if (delta < -40) {
+      handleNext();
+    }
+    touchStartX.current = null;
+  };
+
   return (
-    <section className="py-20 md:py-28 bg-[#FAF7F0] relative overflow-hidden">
+    <section
+      className="py-20 md:py-28 bg-[#FAF7F0] relative overflow-hidden"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 sm:mb-16">
@@ -89,7 +127,7 @@ export const EditorialSection: React.FC = () => {
           </button>
         </div>
 
-        {/* 3D Cylindrical Curved Arc Carousel matching Frame 6 */}
+        {/* 3D Cylindrical Curved Arc Carousel with Floating Auto-Scrolling */}
         <div className="relative py-8 overflow-hidden">
           {/* Controls */}
           <button
@@ -132,12 +170,25 @@ export const EditorialSection: React.FC = () => {
                   key={item.id}
                   animate={{
                     x: translateX,
+                    y: [0, -6, 0],
                     rotateY: rotateY,
                     z: translateZ,
                     scale: scale,
                     opacity: opacity
                   }}
-                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{
+                    x: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+                    rotateY: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+                    z: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+                    scale: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+                    opacity: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+                    y: {
+                      repeat: Infinity,
+                      duration: 4.2 + (idx % 2) * 0.8,
+                      delay: idx * 0.35,
+                      ease: 'easeInOut'
+                    }
+                  }}
                   style={{ zIndex }}
                   onClick={() => {
                     if (offset === 0) {

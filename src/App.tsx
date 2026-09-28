@@ -35,7 +35,7 @@ const AppContent: React.FC = () => {
   const { activePage, currentProductSlug, toast } = useShop();
 
   return (
-    <div className="min-h-screen bg-[#FAF7F0] text-[#1C1A19] flex flex-col font-sans relative selection:bg-[#651C32] selection:text-[#FAF7F0]">
+    <div className="min-h-screen bg-[#FAF7F0] text-[#1C1A19] flex flex-col font-sans relative selection:bg-[#651C32] selection:text-[#FAF7F0] overflow-x-clip w-full">
       {/* 1. Announcement Bar */}
       <AnnouncementBar />
 

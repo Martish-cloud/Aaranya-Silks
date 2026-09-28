@@ -231,15 +231,59 @@ export const WorthYourAttention: React.FC = () => {
     }
   }, [activeId]);
 
+  const [isHovered, setIsHovered] = useState(false);
+  const [isUserInteracting, setIsUserInteracting] = useState(false);
+  const interactionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const markUserInteraction = () => {
+    setIsUserInteracting(true);
+    if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
+    interactionTimeoutRef.current = setTimeout(() => {
+      setIsUserInteracting(false);
+    }, 4500);
+  };
+
+  // Smooth right-to-left continuous auto-sliding loop with seamless reset
+  useEffect(() => {
+    const strip = cardStripRef.current;
+    if (!strip) return;
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches) return;
+
+    let animationFrameId: number;
+    const speed = 0.65; // slow, smooth right-to-left velocity
+
+    const scrollLoop = () => {
+      if (!isHovered && !isUserInteracting && strip) {
+        strip.scrollLeft += speed;
+        const halfWidth = strip.scrollWidth / 2;
+        if (strip.scrollLeft >= halfWidth) {
+          strip.scrollLeft -= halfWidth;
+        }
+      }
+      animationFrameId = requestAnimationFrame(scrollLoop);
+    };
+
+    animationFrameId = requestAnimationFrame(scrollLoop);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
+    };
+  }, [isHovered, isUserInteracting]);
+
   const handlePrev = () => {
+    markUserInteraction();
     setActiveId((prev) => (prev === 1 ? BRAND_AMBASSADOR_OFFERS.length : prev - 1));
   };
 
   const handleNext = () => {
+    markUserInteraction();
     setActiveId((prev) => (prev === BRAND_AMBASSADOR_OFFERS.length ? 1 : prev + 1));
   };
 
   const handleScrollRail = (direction: 'left' | 'right') => {
+    markUserInteraction();
     if (cardStripRef.current) {
       const scrollAmount = direction === 'left' ? -260 : 260;
       cardStripRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
@@ -373,28 +417,50 @@ export const WorthYourAttention: React.FC = () => {
               </span>
             </div>
 
-            {/* Horizontal Scroll Rail of 9:16 Portrait Cards */}
+            {/* Horizontal Scroll Rail of 9:16 Portrait Cards - Floating Auto-Sliding Loop */}
             <div
               ref={cardStripRef}
-              className="flex items-center gap-4 overflow-x-auto no-scrollbar scroll-smooth py-3 px-1 -mx-2 sm:mx-0 sm:px-0"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              onTouchStart={() => markUserInteraction()}
+              onScroll={() => {
+                const strip = cardStripRef.current;
+                if (strip) {
+                  const halfWidth = strip.scrollWidth / 2;
+                  if (strip.scrollLeft >= halfWidth * 1.9) {
+                    strip.scrollLeft -= halfWidth;
+                  }
+                }
+              }}
+              className="flex items-center gap-4 overflow-x-auto no-scrollbar py-4 px-1 -mx-2 sm:mx-0 sm:px-0 select-none"
             >
-              {BRAND_AMBASSADOR_OFFERS.map((item, idx) => {
+              {[...BRAND_AMBASSADOR_OFFERS, ...BRAND_AMBASSADOR_OFFERS].map((item, idx) => {
                 const isActive = item.id === activeId;
-                const floatClass = idx % 3 === 0
-                  ? 'animate-float-a'
-                  : idx % 3 === 1
-                    ? 'animate-float-b'
-                    : 'animate-float-c';
 
                 return (
                   <motion.div
-                    key={item.id}
-                    ref={(el) => { cardItemRefs.current[idx] = el; }}
-                    onClick={() => setActiveId(item.id)}
-                    className={`relative flex-shrink-0 w-[205px] sm:w-[230px] md:w-[255px] aspect-[9/16] rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 select-none group border ${floatClass} ${
+                    key={`${item.id}-${idx}`}
+                    ref={(el) => {
+                      if (idx < BRAND_AMBASSADOR_OFFERS.length) {
+                        cardItemRefs.current[idx] = el;
+                      }
+                    }}
+                    onClick={() => {
+                      markUserInteraction();
+                      setActiveId(item.id);
+                    }}
+                    animate={{ y: [0, -7, 0] }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 3.8 + (idx % 3) * 0.7,
+                      delay: (idx % 5) * 0.25,
+                      ease: 'easeInOut'
+                    }}
+                    whileHover={{ y: -10, scale: 1.03 }}
+                    className={`relative flex-shrink-0 w-[205px] sm:w-[230px] md:w-[255px] aspect-[9/16] rounded-2xl overflow-hidden cursor-pointer transition-shadow duration-500 select-none group border ${
                       isActive
                         ? 'ring-2 shadow-2xl scale-[1.02] z-20'
-                        : 'shadow-md opacity-85 hover:opacity-100 hover:-translate-y-2 z-10'
+                        : 'shadow-md opacity-85 hover:opacity-100 z-10'
                     }`}
                     style={{
                       aspectRatio: '9 / 16',

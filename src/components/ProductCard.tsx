@@ -102,26 +102,26 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             e.stopPropagation();
             toggleWishlist(product.id);
           }}
-          className={`absolute top-3 right-3 z-10 p-2.5 rounded-full backdrop-blur-md transition-all duration-300 shadow-md ${
+          className={`absolute top-2.5 right-2.5 z-10 p-2 sm:p-2.5 rounded-full backdrop-blur-md transition-all duration-300 shadow-md ${
             isWishlisted
               ? 'bg-[#8B1E3F] text-white scale-110'
               : 'bg-[#FAF7F0]/85 text-[#1C1A19] hover:bg-[#FAF7F0] hover:text-[#8B1E3F]'
           }`}
           aria-label={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
         >
-          <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
+          <Heart className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isWishlisted ? 'fill-current' : ''}`} />
         </button>
 
         {/* Quick Actions Floating Tray on Desktop Hover */}
-        <div className="absolute bottom-3 inset-x-3 z-10 hidden sm:flex items-center gap-2 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+        <div className="absolute bottom-2.5 inset-x-2.5 z-10 hidden sm:flex items-center gap-1.5 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
           <button
             onClick={(e) => {
               e.stopPropagation();
               openQuickView(product);
             }}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#FAF7F0]/95 backdrop-blur-md text-[#1C1A19] hover:text-[#651C32] text-xs font-semibold uppercase tracking-wider shadow-lg border border-[#C8A96B]/30 hover:border-[#651C32] transition-colors"
+            className="flex-1 flex items-center justify-center gap-1 py-2 px-2 rounded-xl bg-[#FAF7F0]/95 backdrop-blur-md text-[#1C1A19] hover:text-[#651C32] text-[10px] sm:text-xs font-semibold uppercase tracking-wider shadow-lg border border-[#C8A96B]/30 hover:border-[#651C32] transition-colors"
           >
-            <Eye className="w-3.5 h-3.5 text-[#C8A96B]" />
+            <Eye className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C8A96B]" />
             <span>Quick View</span>
           </button>
 
@@ -130,16 +130,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               e.stopPropagation();
               addToCart(product, activeColor.name, 1);
             }}
-            className="flex items-center justify-center p-2.5 rounded-xl bg-[#651C32] hover:bg-[#8B1E3F] text-white shadow-lg transition-colors border border-[#C8A96B]/30"
+            className="flex items-center justify-center p-2 rounded-xl bg-[#651C32] hover:bg-[#8B1E3F] text-white shadow-lg transition-colors border border-[#C8A96B]/30"
             aria-label="Add to bag"
           >
-            <ShoppingBag className="w-4 h-4 text-[#C8A96B]" />
+            <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C8A96B]" />
           </button>
         </div>
       </div>
 
       {/* Product Information */}
-      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between text-left">
+      <div className="p-3 sm:p-4 xl:p-3 2xl:p-3.5 flex-1 flex flex-col justify-between text-left">
         <div>
           {/* Category & Rating */}
           <div className="flex items-center justify-between text-xs text-[#1C1A19]/60 mb-1.5">

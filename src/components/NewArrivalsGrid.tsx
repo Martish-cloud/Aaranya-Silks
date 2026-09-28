@@ -14,11 +14,11 @@ export const NewArrivalsGrid: React.FC = () => {
   const filteredProducts = SAREES_DATA.filter((item) => {
     if (activeTab === 'All Arrivals') return true;
     return item.category === activeTab;
-  }).slice(0, 8);
+  }).slice(0, 6);
 
   return (
     <section className="py-20 md:py-28 bg-[#FAF7F0] relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 text-[#8B1E3F] text-xs font-semibold uppercase tracking-[0.25em] mb-2">
@@ -56,8 +56,8 @@ export const NewArrivalsGrid: React.FC = () => {
           ))}
         </div>
 
-        {/* 4-Column Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6 lg:gap-7">
+        {/* 6-Column Responsive Product Grid: 6 cards on large desktop, 4 on laptop, 2-3 on tablet, 2 on mobile */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-4 xl:gap-3.5">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
