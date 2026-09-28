@@ -111,12 +111,6 @@ export const LatestTrendsLookbook: React.FC = () => {
   const [modalReel, setModalReel] = useState<ReelItem | null>(null);
   const [videoErrors, setVideoErrors] = useState<Record<number, boolean>>({});
 
-  // Auto-sliding and user interaction states
-  const reelsRailRef = useRef<HTMLDivElement>(null);
-  const [isReelsHovered, setIsReelsHovered] = useState(false);
-  const [isUserInteracting, setIsUserInteracting] = useState(false);
-  const interactionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
@@ -126,39 +120,29 @@ export const LatestTrendsLookbook: React.FC = () => {
     activePlayingIdRef.current = activePlayingId;
   }, [activePlayingId]);
 
-  const markUserInteraction = () => {
-    setIsUserInteracting(true);
-    if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
-    interactionTimeoutRef.current = setTimeout(() => {
-      setIsUserInteracting(false);
-    }, 4000);
-  };
-
   const playReel = (id: number) => {
     // Pause any other active video
     videoRefs.current.forEach((v) => {
       if (v) v.pause();
     });
 
-    // Play all matching video instances for this reel id
-    videoRefs.current.forEach((v, idx) => {
-      if (v && (idx % REELS.length) === (id - 1)) {
-        v.currentTime = 0;
-        v.muted = isMuted;
-        v.play().catch(() => {
-          v.muted = true;
-          setIsMuted(true);
-          v.play().catch(() => {});
-        });
-      }
-    });
+    const targetVideo = videoRefs.current[id - 1];
+    if (targetVideo) {
+      targetVideo.currentTime = 0;
+      targetVideo.muted = isMuted;
+      targetVideo.play().catch(() => {
+        targetVideo.muted = true;
+        setIsMuted(true);
+        targetVideo.play().catch(() => {});
+      });
+    }
 
     setActivePlayingId(id);
   };
 
   const togglePlay = (id: number) => {
     if (activePlayingId === id) {
-      videoRefs.current.forEach((v) => v?.pause());
+      videoRefs.current[id - 1]?.pause();
       setActivePlayingId(null);
     } else {
       playReel(id);
@@ -196,48 +180,6 @@ export const LatestTrendsLookbook: React.FC = () => {
     return () => observer.disconnect();
   }, [isMuted]);
 
-  // Smooth left-to-right continuous auto-sliding loop with seamless reset
-  useEffect(() => {
-    const rail = reelsRailRef.current;
-    if (!rail) return;
-
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (mediaQuery.matches) return;
-
-    // Start in the middle so left-to-right scrolling can immediately happen
-    if (rail.scrollLeft === 0 && rail.scrollWidth > 0) {
-      rail.scrollLeft = rail.scrollWidth / 2;
-    }
-
-    let animationFrameId: number;
-    const speed = 0.65; // slow, smooth left-to-right movement
-
-    const scrollLoop = () => {
-      if (!isReelsHovered && !isUserInteracting && rail) {
-        rail.scrollLeft -= speed;
-        const halfWidth = rail.scrollWidth / 2;
-        if (rail.scrollLeft <= 0) {
-          rail.scrollLeft += halfWidth;
-        }
-      }
-      animationFrameId = requestAnimationFrame(scrollLoop);
-    };
-
-    animationFrameId = requestAnimationFrame(scrollLoop);
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      if (interactionTimeoutRef.current) clearTimeout(interactionTimeoutRef.current);
-    };
-  }, [isReelsHovered, isUserInteracting]);
-
-  const handleScrollRail = (direction: 'left' | 'right') => {
-    markUserInteraction();
-    if (reelsRailRef.current) {
-      const scrollAmount = direction === 'left' ? -280 : 280;
-      reelsRailRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
-
   const handleTimeUpdate = (id: number, e: React.SyntheticEvent<HTMLVideoElement>) => {
     const vid = e.currentTarget;
     if (vid.duration > 0) {
@@ -247,7 +189,6 @@ export const LatestTrendsLookbook: React.FC = () => {
   };
 
   const activeCounter = activePlayingId !== null ? `0${activePlayingId}` : '01';
-  const DISPLAY_REELS = [...REELS, ...REELS];
 
   return (
     <section
@@ -255,7 +196,7 @@ export const LatestTrendsLookbook: React.FC = () => {
       className="py-20 md:py-32 bg-[#FAF7F0] relative overflow-hidden border-t border-[#C8A96B]/20 text-[#1C1A19]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Video Reels Preview Strip with Left-to-Right Floating Auto-Slider */}
+        {/* Video Reels Preview Strip - Floating Cards with Sequential Autoplay (No Horizontal Sliding) */}
         <div className="mb-20">
           <div className="flex items-center justify-between mb-6 text-left">
             <div>
@@ -274,44 +215,19 @@ export const LatestTrendsLookbook: React.FC = () => {
               <span className="text-xs text-[#1C1A19]/70 font-mono tracking-wider">
                 {activeCounter} / 04 REELS
               </span>
-              {/* Rail Navigation Controls */}
-              <div className="hidden sm:flex items-center gap-1.5 ml-2">
-                <button
-                  onClick={() => handleScrollRail('left')}
-                  className="p-2 rounded-full border border-black/15 hover:bg-[#8B1E3F] hover:text-white hover:border-[#8B1E3F] transition-all"
-                  aria-label="Scroll reels left"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => handleScrollRail('right')}
-                  className="p-2 rounded-full border border-black/15 hover:bg-[#8B1E3F] hover:text-white hover:border-[#8B1E3F] transition-all"
-                  aria-label="Scroll reels right"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
             </div>
           </div>
 
-          {/* Left-to-Right Auto-Sliding Floating Reels Rail */}
-          <div
-            ref={reelsRailRef}
-            onMouseEnter={() => setIsReelsHovered(true)}
-            onMouseLeave={() => setIsReelsHovered(false)}
-            onTouchStart={markUserInteraction}
-            onScroll={markUserInteraction}
-            className="flex items-center gap-4 sm:gap-5 overflow-x-auto no-scrollbar scroll-smooth py-5 px-1 select-none"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {DISPLAY_REELS.map((reel, idx) => {
+          {/* 4 Video Cards Grid with Floating Animation */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 py-2">
+            {REELS.map((reel, idx) => {
               const isPlaying = activePlayingId === reel.id;
               const progress = videoProgress[reel.id] || 0;
               const hasError = videoErrors[reel.id];
 
               return (
                 <motion.div
-                  key={`${reel.id}-${idx}`}
+                  key={reel.id}
                   animate={{
                     y: [0, -7, 0]
                   }}
@@ -319,10 +235,10 @@ export const LatestTrendsLookbook: React.FC = () => {
                     duration: 3.8 + (idx % 4) * 0.6,
                     repeat: Infinity,
                     ease: 'easeInOut',
-                    delay: (idx % 4) * 0.35
+                    delay: idx * 0.35
                   }}
                   onClick={() => setModalReel(reel)}
-                  className={`group relative shrink-0 w-[220px] sm:w-[250px] md:w-[270px] aspect-[9/14] rounded-2xl overflow-hidden bg-black cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 border select-none ${
+                  className={`group relative w-full aspect-[9/14] rounded-2xl overflow-hidden bg-black cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 border select-none ${
                     isPlaying
                       ? 'border-[#E5B842] ring-2 ring-[#E5B842]/50 shadow-2xl scale-[1.01]'
                       : 'border-white/10 hover:-translate-y-1.5 hover:border-[#E5B842]/40'
