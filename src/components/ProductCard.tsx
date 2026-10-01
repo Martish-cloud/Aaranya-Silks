@@ -21,7 +21,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   } = useShop();
 
   const [selectedColorIdx, setSelectedColorIdx] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
 
   const activeColor = product.colors[selectedColorIdx] || {
     name: product.color,
@@ -30,7 +29,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const primaryImage = activeColor.image || product.images[0];
-  const alternateImage = product.images[1] || product.images[0];
   const isWishlisted = isInWishlist(product.id);
 
   const handleCardClick = (e: React.MouseEvent) => {
@@ -47,40 +45,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, amount: 0.08 }}
       transition={{ duration: 0.45 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       onClick={handleCardClick}
       className="group cursor-pointer flex flex-col h-full bg-[#FAF7F0] rounded-2xl overflow-hidden border border-[#C8A96B]/20 hover:border-[#C8A96B]/60 transition-all duration-500 hover:shadow-xl hover:-translate-y-1"
     >
       {/* Product Image Stage */}
       <div className="relative w-full aspect-[3/4] bg-[#F2EBDD] overflow-hidden">
-        {/* Primary Image */}
+        {/* Primary Image - Consistent Source of Truth */}
         <img
           src={primaryImage}
-          alt={product.name}
+          alt={`${product.name} - ${activeColor.name}`}
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).src = userProductImage;
           }}
-          className={`w-full h-full object-cover object-top transition-all duration-700 ease-out ${
-            isHovered && alternateImage !== primaryImage ? 'opacity-0 scale-105' : 'opacity-100 scale-100'
-          }`}
+          className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
           loading="lazy"
         />
-
-        {/* Secondary / Alternate Image on Hover */}
-        {alternateImage !== primaryImage && (
-          <img
-            src={alternateImage}
-            alt={`${product.name} alternate view`}
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = userProductImage;
-            }}
-            className={`absolute inset-0 w-full h-full object-cover object-top transition-all duration-700 ease-out ${
-              isHovered ? 'opacity-100 scale-105' : 'opacity-0 scale-100'
-            }`}
-            loading="lazy"
-          />
-        )}
 
         {/* Badges Overlay */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
@@ -117,7 +96,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              openQuickView(product);
+              openQuickView(product, activeColor.name);
             }}
             className="flex-1 flex items-center justify-center gap-1 py-2 px-2 rounded-xl bg-[#FAF7F0]/95 backdrop-blur-md text-[#1C1A19] hover:text-[#651C32] text-[10px] sm:text-xs font-semibold uppercase tracking-wider shadow-lg border border-[#C8A96B]/30 hover:border-[#651C32] transition-colors"
           >

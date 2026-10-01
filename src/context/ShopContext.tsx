@@ -23,7 +23,8 @@ interface ShopContextType {
   isCheckoutOpen: boolean;
   setIsCheckoutOpen: (open: boolean) => void;
   quickViewProduct: Saree | null;
-  openQuickView: (product: Saree) => void;
+  quickViewSelectedColor: string | null;
+  openQuickView: (product: Saree, selectedColor?: string) => void;
   closeQuickView: () => void;
   
   // Navigation / views
@@ -90,6 +91,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState<Saree | null>(null);
+  const [quickViewSelectedColor, setQuickViewSelectedColor] = useState<string | null>(null);
 
   // Navigation
   const [activePage, setActivePage] = useState<'home' | 'catalog' | 'product' | 'story'>('home');
@@ -195,12 +197,14 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return wishlist.includes(productId);
   };
 
-  const openQuickView = (product: Saree) => {
+  const openQuickView = (product: Saree, selectedColor?: string) => {
     setQuickViewProduct(product);
+    setQuickViewSelectedColor(selectedColor || null);
   };
 
   const closeQuickView = () => {
     setQuickViewProduct(null);
+    setQuickViewSelectedColor(null);
   };
 
   const navigateTo = (
@@ -272,6 +276,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isCheckoutOpen,
         setIsCheckoutOpen,
         quickViewProduct,
+        quickViewSelectedColor,
         openQuickView,
         closeQuickView,
         activePage,

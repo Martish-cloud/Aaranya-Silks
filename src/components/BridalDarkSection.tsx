@@ -131,7 +131,7 @@ export const BridalDarkSection: React.FC = () => {
 
                     <div className="flex items-center gap-1.5">
                       <button
-                        onClick={() => openQuickView(saree)}
+                        onClick={() => openQuickView(saree, saree.color)}
                         className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
                         aria-label="Quick View"
                       >

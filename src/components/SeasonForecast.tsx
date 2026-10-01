@@ -113,12 +113,12 @@ export const SeasonForecast: React.FC = () => {
     touchStartX.current = null;
   };
 
-  // 3D Luxury Lookbook Page-Flip Animation Variants
-  const pageVariants: Variants = {
+  // 3D Luxury Lookbook Image-Only Page-Flip Animation Variants
+  const imageVariants: Variants = {
     enter: (dir: number) => ({
-      rotateY: dir > 0 ? 45 : -45,
+      rotateY: dir > 0 ? 50 : -50,
       opacity: 0,
-      scale: 0.96,
+      scale: 0.95,
       transformOrigin: dir > 0 ? 'left center' : 'right center'
     }),
     center: {
@@ -126,17 +126,17 @@ export const SeasonForecast: React.FC = () => {
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 0.7,
+        duration: 0.6,
         ease: 'easeInOut'
       }
     },
     exit: (dir: number) => ({
-      rotateY: dir > 0 ? -45 : 45,
+      rotateY: dir > 0 ? -50 : 50,
       opacity: 0,
-      scale: 0.96,
+      scale: 0.95,
       transformOrigin: dir > 0 ? 'left center' : 'right center',
       transition: {
-        duration: 0.55,
+        duration: 0.45,
         ease: 'easeInOut'
       }
     })
@@ -145,16 +145,16 @@ export const SeasonForecast: React.FC = () => {
   return (
     <section
       id="autumn-winter-2026"
-      className="py-20 md:py-28 bg-[#FAF7F0] relative overflow-hidden border-t border-[#C8A96B]/20"
+      className="py-10 sm:py-14 bg-[#FAF7F0] relative overflow-hidden border-t border-[#C8A96B]/20"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header with WipeText */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end mb-12 sm:mb-16 text-left">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end mb-6 sm:mb-8 text-left">
           {/* Left Title Area */}
           <div className="lg:col-span-6">
-            <div className="flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-[0.25em] font-bold text-[#8B1E3F] mb-3">
+            <div className="flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-[0.25em] font-bold text-[#8B1E3F] mb-2">
               <Compass className="w-3.5 h-3.5 text-[#C8A96B]" />
               <span>SEASON FORECAST LOOKBOOK</span>
             </div>
@@ -162,7 +162,7 @@ export const SeasonForecast: React.FC = () => {
               as="h2"
               direction="left-to-right"
               duration={0.85}
-              className="font-serif text-4xl sm:text-5xl md:text-6xl font-light text-[#1C1A19] leading-[1.08] tracking-tight"
+              className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-[#1C1A19] leading-[1.1] tracking-tight"
             >
               Autumn—Winter 2026
             </WipeText>
@@ -170,16 +170,16 @@ export const SeasonForecast: React.FC = () => {
 
           {/* Center Editorial Subtitle */}
           <div className="lg:col-span-4">
-            <p className="text-xs sm:text-sm text-[#1C1A19]/75 font-sans font-light leading-relaxed">
+            <p className="text-xs sm:text-[13px] text-[#1C1A19]/75 font-sans font-light leading-relaxed">
               Three readings on how the house is draping the season — an interactive lookbook turning experience from the atelier.
             </p>
           </div>
 
           {/* Right Page Controls & Counter */}
-          <div className="lg:col-span-2 flex items-center justify-start lg:justify-end gap-3">
+          <div className="lg:col-span-2 flex items-center justify-start lg:justify-end gap-2.5">
             <button
               onClick={handlePrevPage}
-              className="p-2.5 sm:p-3 rounded-full border border-[#C8A96B]/40 hover:border-[#651C32] hover:bg-[#651C32] hover:text-[#FAF7F0] text-[#1C1A19] transition-all shadow-sm"
+              className="p-2 sm:p-2.5 rounded-full border border-[#C8A96B]/40 hover:border-[#651C32] hover:bg-[#651C32] hover:text-[#FAF7F0] text-[#1C1A19] transition-all shadow-sm"
               aria-label="Previous lookbook page"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -189,7 +189,7 @@ export const SeasonForecast: React.FC = () => {
             </span>
             <button
               onClick={handleNextPage}
-              className="p-2.5 sm:p-3 rounded-full border border-[#C8A96B]/40 hover:border-[#651C32] hover:bg-[#651C32] hover:text-[#FAF7F0] text-[#1C1A19] transition-all shadow-sm"
+              className="p-2 sm:p-2.5 rounded-full border border-[#C8A96B]/40 hover:border-[#651C32] hover:bg-[#651C32] hover:text-[#FAF7F0] text-[#1C1A19] transition-all shadow-sm"
               aria-label="Next lookbook page"
             >
               <ChevronRight className="w-4 h-4" />
@@ -199,8 +199,7 @@ export const SeasonForecast: React.FC = () => {
 
         {/* 3D Book Lookbook Spread Container */}
         <div
-          className="relative w-full max-w-5xl mx-auto rounded-3xl bg-[#F6F1E5] p-3 sm:p-6 md:p-8 border border-[#C8A96B]/30 shadow-2xl shadow-[#651C32]/5 overflow-hidden"
-          style={{ perspective: '1600px' }}
+          className="relative w-full max-w-4xl lg:max-w-[980px] mx-auto rounded-3xl bg-[#F6F1E5] p-3 sm:p-5 md:p-6 border border-[#C8A96B]/30 shadow-xl shadow-[#651C32]/5 overflow-hidden"
         >
           {/* Book Spine Center Lighting Accent */}
           <div className="hidden md:block absolute left-1/2 inset-y-0 w-8 -translate-x-1/2 bg-gradient-to-r from-black/10 via-white/15 to-black/10 pointer-events-none z-20" />
@@ -208,122 +207,162 @@ export const SeasonForecast: React.FC = () => {
           {/* Gold page edging line */}
           <div className="absolute top-0 inset-x-8 h-1 bg-gradient-to-r from-transparent via-[#C8A96B]/40 to-transparent pointer-events-none" />
 
-          <AnimatePresence custom={direction} mode="wait">
-            <motion.div
-              key={currentPage.id}
-              custom={direction}
-              variants={pageVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10 items-center rounded-2xl bg-white p-5 sm:p-8 lg:p-10 border border-[#C8A96B]/20 shadow-md text-left relative overflow-hidden"
-            >
-              {/* Left Column: Saree Visual Showcase */}
-              <div className="md:col-span-6 relative aspect-[3/4] sm:aspect-[4/5] rounded-2xl overflow-hidden bg-[#FAF7F0] border border-[#C8A96B]/25 shadow-xl group">
-                <img
-                  src={currentPage.image}
-                  alt={currentPage.name}
-                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20 pointer-events-none" />
+          {/* Stable Outer Grid Card */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 lg:gap-8 items-center rounded-2xl bg-white p-4 sm:p-6 lg:p-7 border border-[#C8A96B]/20 shadow-md text-left relative overflow-hidden">
+            {/* Left Column: Saree Visual Showcase with Image-Only 3D Page Flip */}
+            <div className="md:col-span-6 relative" style={{ perspective: '1200px' }}>
+              {/* Image-Side Navigation: Previous Arrow Control */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrevPage();
+                }}
+                aria-label="Previous lookbook image"
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/60 hover:bg-[#651C32] text-white hover:text-[#FAF7F0] backdrop-blur-md border border-[#C8A96B]/50 flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg cursor-pointer"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
 
-                {/* Saree Badge */}
-                <div className="absolute top-4 left-4 z-10">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-[#E5B842] text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-white/20">
-                    <Sparkles className="w-3 h-3 text-[#E5B842]" />
-                    <span>{currentPage.palette}</span>
-                  </span>
-                </div>
+              {/* Image-Side Navigation: Next Arrow Control */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNextPage();
+                }}
+                aria-label="Next lookbook image"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/60 hover:bg-[#651C32] text-white hover:text-[#FAF7F0] backdrop-blur-md border border-[#C8A96B]/50 flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg cursor-pointer"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
 
-                {/* Bottom Overlay Label */}
-                <div className="absolute bottom-4 inset-x-4 text-white z-10">
-                  <span className="text-[10px] font-mono text-[#E5B842] tracking-widest block uppercase mb-0.5">
-                    Plate {currentPage.pageNum} • Autumn—Winter Edit
-                  </span>
-                  <h4 className="font-serif text-xl sm:text-2xl font-light text-white leading-tight">
-                    {currentPage.headline}
-                  </h4>
-                </div>
-              </div>
+              <AnimatePresence custom={direction} mode="wait">
+                <motion.div
+                  key={currentPage.id}
+                  custom={direction}
+                  variants={imageVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="relative aspect-[3/4] sm:aspect-[4/5] max-h-[380px] sm:max-h-[430px] rounded-2xl overflow-hidden bg-[#FAF7F0] border border-[#C8A96B]/25 shadow-xl group mx-auto"
+                >
+                  <img
+                    src={currentPage.image}
+                    alt={currentPage.name}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20 pointer-events-none" />
 
-              {/* Right Column: Editorial Text & Lookbook Story */}
-              <div className="md:col-span-6 flex flex-col justify-between space-y-6">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] sm:text-xs uppercase font-bold tracking-[0.25em] text-[#8B1E3F]">
-                      LOOKBOOK ENTRY
-                    </span>
-                    <span className="text-xs font-mono text-[#1C1A19]/50 tracking-wider">
-                      Page {currentPage.pageNum} of 03
+                  {/* Saree Badge */}
+                  <div className="absolute top-3 left-3 z-10">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-[#E5B842] text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-white/20">
+                      <Sparkles className="w-3 h-3 text-[#E5B842]" />
+                      <span>{currentPage.palette}</span>
                     </span>
                   </div>
 
-                  <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-light text-[#1C1A19] leading-snug mb-3">
-                    {currentPage.name}
-                  </h3>
-
-                  <p className="text-xs sm:text-sm text-[#1C1A19]/75 font-sans font-light leading-relaxed mb-6">
-                    {currentPage.description}
-                  </p>
-
-                  {/* Highlights Grid */}
-                  <div className="space-y-2.5 pt-4 border-t border-[#C8A96B]/25 mb-6">
-                    <span className="text-[10px] uppercase tracking-wider text-[#1C1A19]/60 font-bold block mb-1">
-                      Atelier Specifications
+                  {/* Bottom Overlay Label */}
+                  <div className="absolute bottom-3 inset-x-3 text-white z-10">
+                    <span className="text-[10px] font-mono text-[#E5B842] tracking-widest block uppercase mb-0.5">
+                      Plate {currentPage.pageNum} • Autumn—Winter Edit
                     </span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                      <div className="p-2.5 rounded-xl bg-[#FAF7F0] border border-[#C8A96B]/20">
-                        <span className="text-[#8B1E3F] text-[10px] uppercase font-bold block">Fabric</span>
-                        <span className="font-serif text-[#1C1A19] font-medium truncate block">{currentPage.fabric}</span>
-                      </div>
-                      <div className="p-2.5 rounded-xl bg-[#FAF7F0] border border-[#C8A96B]/20">
-                        <span className="text-[#8B1E3F] text-[10px] uppercase font-bold block">Zari & Weave</span>
-                        <span className="font-serif text-[#1C1A19] font-medium truncate block">{currentPage.zari}</span>
-                      </div>
-                    </div>
+                    <h4 className="font-serif text-lg sm:text-xl font-light text-white leading-tight">
+                      {currentPage.headline}
+                    </h4>
                   </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
 
-                  {/* Highlights Pills */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {currentPage.highlights.map((h, i) => (
-                      <span
-                        key={i}
-                        className="text-[10px] sm:text-[11px] font-sans px-3 py-1 rounded-full bg-[#F2EBDD] text-[#651C32] font-medium border border-[#C8A96B]/30"
-                      >
-                        • {h}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Price & CTA Action Group */}
-                <div className="pt-4 border-t border-[#C8A96B]/25 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            {/* Right Column: Editorial Text & Lookbook Story (Stable, No 3D Rotation) */}
+            <div className="md:col-span-6">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentPage.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                  className="flex flex-col justify-between space-y-4"
+                >
                   <div>
-                    <span className="text-[10px] text-[#1C1A19]/60 uppercase tracking-wider block">Privilege Price</span>
-                    <div className="flex items-baseline gap-2">
-                      <span className="font-serif text-2xl font-bold text-[#651C32]">
-                        {formatINR(currentPage.price)}
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10px] sm:text-xs uppercase font-bold tracking-[0.25em] text-[#8B1E3F]">
+                        LOOKBOOK ENTRY
                       </span>
-                      <span className="text-xs text-[#1C1A19]/50 line-through">
-                        {formatINR(currentPage.originalPrice)}
+                      <span className="text-xs font-mono text-[#1C1A19]/50 tracking-wider">
+                        Page {currentPage.pageNum} of 03
                       </span>
+                    </div>
+
+                    <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl font-light text-[#1C1A19] leading-snug mb-2">
+                      {currentPage.name}
+                    </h3>
+
+                    <p className="text-xs sm:text-[13px] text-[#1C1A19]/75 font-sans font-light leading-relaxed mb-4">
+                      {currentPage.description}
+                    </p>
+
+                    {/* Highlights Grid */}
+                    <div className="space-y-2 pt-3 border-t border-[#C8A96B]/25 mb-4">
+                      <span className="text-[10px] uppercase tracking-wider text-[#1C1A19]/60 font-bold block mb-1">
+                        Atelier Specifications
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <div className="p-2 sm:p-2.5 rounded-xl bg-[#FAF7F0] border border-[#C8A96B]/20">
+                          <span className="text-[#8B1E3F] text-[10px] uppercase font-bold block">Fabric</span>
+                          <span className="font-serif text-[#1C1A19] font-medium truncate block">{currentPage.fabric}</span>
+                        </div>
+                        <div className="p-2 sm:p-2.5 rounded-xl bg-[#FAF7F0] border border-[#C8A96B]/20">
+                          <span className="text-[#8B1E3F] text-[10px] uppercase font-bold block">Zari & Weave</span>
+                          <span className="font-serif text-[#1C1A19] font-medium truncate block">{currentPage.zari}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Highlights Pills */}
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {currentPage.highlights.map((h, i) => (
+                        <span
+                          key={i}
+                          className="text-[10px] sm:text-[11px] font-sans px-2.5 py-0.5 rounded-full bg-[#F2EBDD] text-[#651C32] font-medium border border-[#C8A96B]/30"
+                        >
+                          • {h}
+                        </span>
+                      ))}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2.5">
-                    <button
-                      onClick={() => navigateTo('catalog', undefined, currentPage.categoryTarget)}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#651C32] hover:bg-[#8B1E3F] text-white text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-xl transition-all"
-                    >
-                      <BookOpen className="w-3.5 h-3.5 text-[#E5B842]" />
-                      <span>Discover Saree</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
+                  {/* Price & CTA Action Group */}
+                  <div className="pt-3 border-t border-[#C8A96B]/25 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <span className="text-[10px] text-[#1C1A19]/60 uppercase tracking-wider block">Privilege Price</span>
+                      <div className="flex items-baseline gap-2">
+                        <span className="font-serif text-xl sm:text-2xl font-bold text-[#651C32]">
+                          {formatINR(currentPage.price)}
+                        </span>
+                        <span className="text-xs text-[#1C1A19]/50 line-through">
+                          {formatINR(currentPage.originalPrice)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2.5">
+                      <button
+                        onClick={() => navigateTo('catalog', undefined, currentPage.categoryTarget)}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#651C32] hover:bg-[#8B1E3F] text-white text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-xl transition-all cursor-pointer"
+                      >
+                        <BookOpen className="w-3.5 h-3.5 text-[#E5B842]" />
+                        <span>Discover Saree</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
 
           {/* Page Indicators Dots */}
           <div className="flex items-center justify-center gap-2 mt-5">

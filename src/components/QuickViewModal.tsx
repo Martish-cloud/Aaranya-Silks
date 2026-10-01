@@ -7,6 +7,7 @@ import { formatINR } from '../utils/formatters';
 export const QuickViewModal: React.FC = () => {
   const {
     quickViewProduct,
+    quickViewSelectedColor,
     closeQuickView,
     addToCart,
     isInWishlist,
@@ -21,12 +22,22 @@ export const QuickViewModal: React.FC = () => {
 
   useEffect(() => {
     if (quickViewProduct) {
-      setSelectedColorIdx(0);
-      setActiveImgIdx(0);
-      setCustomActiveImg(null);
+      let initColorIdx = 0;
+      if (quickViewSelectedColor) {
+        const found = quickViewProduct.colors.findIndex(
+          (c) => c.name.toLowerCase() === quickViewSelectedColor.toLowerCase()
+        );
+        if (found >= 0) initColorIdx = found;
+      }
+      setSelectedColorIdx(initColorIdx);
+      const chosenColor = quickViewProduct.colors[initColorIdx];
+      const initialImg = chosenColor?.image || quickViewProduct.images[0];
+      setCustomActiveImg(initialImg);
+      const imgIdx = quickViewProduct.images.indexOf(initialImg);
+      setActiveImgIdx(imgIdx >= 0 ? imgIdx : 0);
       setQuantity(1);
     }
-  }, [quickViewProduct?.id]);
+  }, [quickViewProduct?.id, quickViewSelectedColor]);
 
   if (!quickViewProduct) return null;
 

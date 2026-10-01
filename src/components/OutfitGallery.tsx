@@ -57,7 +57,7 @@ const OutfitCard = memo<OutfitCardProps>(({
 
   return (
     <div
-      className="group relative flex flex-col rounded-2xl bg-white border border-[#C8A96B]/25 shadow-sm hover:shadow-xl hover:shadow-[#651C32]/10 transition-all duration-300 overflow-hidden w-[150px] sm:w-[175px] md:w-[195px] lg:w-[215px] shrink-0 select-none text-left"
+      className="group relative flex flex-col rounded-2xl bg-white border border-[#C8A96B]/25 shadow-sm hover:shadow-xl hover:shadow-[#651C32]/10 transition-all duration-300 overflow-hidden w-[125px] sm:w-[140px] md:w-[155px] lg:w-[170px] shrink-0 select-none text-left"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
         setIsHovered(false);
@@ -88,13 +88,13 @@ const OutfitCard = memo<OutfitCardProps>(({
         </div>
 
         {/* Top Badges */}
-        <div className="absolute top-1.5 left-1.5 right-1.5 sm:top-2.5 sm:left-2.5 sm:right-2.5 flex items-center justify-between pointer-events-none z-10">
-          <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[9px] font-semibold tracking-wider uppercase bg-[#1C1A19]/80 backdrop-blur-md text-[#FAF7F0] border border-[#C8A96B]/30 shadow-xs">
+        <div className="absolute top-1 left-1 right-1 sm:top-2 sm:left-2 sm:right-2 flex items-center justify-between pointer-events-none z-10">
+          <span className="hidden sm:inline-block px-1.5 py-0.5 rounded-full text-[8px] font-semibold tracking-wider uppercase bg-[#1C1A19]/80 backdrop-blur-md text-[#FAF7F0] border border-[#C8A96B]/30 shadow-xs">
             {outfit.category}
           </span>
 
           {outfit.discountBadge && (
-            <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase bg-[#651C32] text-[#FAF7F0] shadow-xs ml-auto">
+            <span className="px-1.5 py-0.5 rounded-full text-[8px] font-bold tracking-wider uppercase bg-[#651C32] text-[#FAF7F0] shadow-xs ml-auto">
               {outfit.discountBadge}
             </span>
           )}
@@ -105,7 +105,7 @@ const OutfitCard = memo<OutfitCardProps>(({
           type="button"
           onClick={handleWishlistClick}
           aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-          className={`absolute top-1.5 right-1.5 sm:top-2.5 sm:right-2.5 z-20 w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm cursor-pointer ${
+          className={`absolute top-1 right-1 sm:top-2 sm:right-2 z-20 w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm cursor-pointer ${
             isWishlisted
               ? 'bg-[#651C32] text-white'
               : 'bg-white/85 text-[#1C1A19] hover:bg-[#651C32] hover:text-white backdrop-blur-sm'
@@ -115,9 +115,9 @@ const OutfitCard = memo<OutfitCardProps>(({
         </button>
 
         {/* Multi-Angle Hover Indicator Dots & Static Views Count */}
-        <div className="hidden sm:flex absolute bottom-2 left-0 right-0 justify-center items-center gap-1 z-10 pointer-events-auto">
-          <div className="px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md flex items-center gap-1 border border-white/20">
-            <span className="text-[8px] font-medium text-white/80 mr-0.5">
+        <div className="hidden sm:flex absolute bottom-1.5 left-0 right-0 justify-center items-center gap-1 z-10 pointer-events-auto">
+          <div className="px-1.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md flex items-center gap-1 border border-white/20">
+            <span className="text-[7.5px] font-medium text-white/80 mr-0.5">
               {outfit.views.toLocaleString()} Views:
             </span>
             {(outfit.gallery.length > 0 ? outfit.gallery : [outfit.image]).map((_, gIdx) => (
@@ -132,7 +132,7 @@ const OutfitCard = memo<OutfitCardProps>(({
                 aria-label={`View angle ${gIdx + 1}`}
                 className={`w-1.5 h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
                   activeAngleIndex === gIdx
-                    ? 'w-3.5 bg-[#C8A96B]'
+                    ? 'w-3 bg-[#C8A96B]'
                     : 'bg-white/50 hover:bg-white'
                 }`}
               />
@@ -142,7 +142,7 @@ const OutfitCard = memo<OutfitCardProps>(({
 
         {/* Quick View Overlay Bar */}
         <div
-          className={`hidden sm:flex absolute inset-x-0 bottom-0 py-2.5 bg-gradient-to-t from-black/80 via-black/40 to-transparent items-center justify-center gap-1.5 transition-all duration-300 ${
+          className={`hidden sm:flex absolute inset-x-0 bottom-0 py-2 bg-gradient-to-t from-black/80 via-black/40 to-transparent items-center justify-center gap-1 transition-all duration-300 ${
             isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
           }`}
         >
@@ -152,41 +152,41 @@ const OutfitCard = memo<OutfitCardProps>(({
               e.stopPropagation();
               onQuickView(outfit);
             }}
-            className="px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-white/90 hover:bg-white text-[#1C1A19] flex items-center gap-1 shadow-sm transition-colors cursor-pointer"
+            className="px-2 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wider bg-white/90 hover:bg-white text-[#1C1A19] flex items-center gap-1 shadow-sm transition-colors cursor-pointer"
           >
-            <Eye className="w-3 h-3 text-[#651C32]" />
+            <Eye className="w-2.5 h-2.5 text-[#651C32]" />
             <span>Quick View</span>
           </button>
         </div>
       </div>
 
       {/* 2. Product Meta Info */}
-      <div className="p-2.5 sm:p-3 flex flex-col justify-between flex-1 space-y-1.5">
+      <div className="p-2 sm:p-2.5 flex flex-col justify-between flex-1 space-y-1">
         <div>
-          <div className="flex items-center justify-between text-[9px] sm:text-[10px] text-[#524B48] mb-0.5">
-            <span className="font-medium truncate max-w-[85px] sm:max-w-[110px] text-[#8B1E3F]">{outfit.fabric}</span>
+          <div className="flex items-center justify-between text-[8.5px] sm:text-[9.5px] text-[#524B48] mb-0.5">
+            <span className="font-medium truncate max-w-[80px] sm:max-w-[95px] text-[#8B1E3F]">{outfit.fabric}</span>
             <div className="flex items-center gap-0.5 text-[#C8A96B]">
-              <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current" />
+              <Star className="w-2.5 h-2.5 fill-current" />
               <span className="font-bold text-[#1C1A19]">{outfit.rating}</span>
             </div>
           </div>
 
           <h3
             onClick={() => onQuickView(outfit)}
-            className="font-serif text-[11px] sm:text-xs md:text-sm font-semibold text-[#1C1A19] group-hover:text-[#651C32] transition-colors line-clamp-1 cursor-pointer leading-snug"
+            className="font-serif text-[10.5px] sm:text-xs font-semibold text-[#1C1A19] group-hover:text-[#651C32] transition-colors line-clamp-1 cursor-pointer leading-snug"
           >
             {outfit.name}
           </h3>
         </div>
 
         {/* Pricing & Add to Bag */}
-        <div className="pt-1.5 border-t border-[#C8A96B]/15 flex items-center justify-between gap-1">
+        <div className="pt-1 border-t border-[#C8A96B]/15 flex items-center justify-between gap-1">
           <div>
-            <div className="font-serif font-bold text-xs sm:text-sm text-[#651C32]">
+            <div className="font-serif font-bold text-xs sm:text-[13px] text-[#651C32]">
               {formatINR(outfit.price)}
             </div>
             {outfit.originalPrice && (
-              <div className="text-[9px] sm:text-[10px] text-[#524B48]/60 line-through">
+              <div className="text-[8.5px] text-[#524B48]/60 line-through">
                 {formatINR(outfit.originalPrice)}
               </div>
             )}
@@ -196,7 +196,7 @@ const OutfitCard = memo<OutfitCardProps>(({
             type="button"
             onClick={handleQuickAdd}
             aria-label="Add to bag"
-            className={`p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-[9px] sm:text-[10px] font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-1 cursor-pointer shadow-xs ${
+            className={`p-1 sm:px-2 sm:py-0.5 rounded-lg text-[8.5px] sm:text-[9.5px] font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-1 cursor-pointer shadow-xs ${
               justAdded
                 ? 'bg-[#1B4D3E] text-white'
                 : 'bg-[#FAF7F0] hover:bg-[#651C32] text-[#651C32] hover:text-white border border-[#651C32]/30'
@@ -204,12 +204,12 @@ const OutfitCard = memo<OutfitCardProps>(({
           >
             {justAdded ? (
               <>
-                <Check className="w-3 h-3 text-white" />
+                <Check className="w-2.5 h-2.5 text-white" />
                 <span className="hidden sm:inline">Added</span>
               </>
             ) : (
               <>
-                <ShoppingBag className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                <ShoppingBag className="w-2.5 h-2.5" />
                 <span className="hidden sm:inline">Add</span>
               </>
             )}
@@ -258,12 +258,12 @@ const SlidingRow: React.FC<SlidingRowProps> = ({
 
   return (
     <div
-      className="relative overflow-hidden w-full py-1.5 select-none"
+      className="relative overflow-hidden w-full py-1 select-none"
       onMouseEnter={() => setIsRowHovered(true)}
       onMouseLeave={() => setIsRowHovered(false)}
     >
       <div
-        className="flex items-stretch gap-2.5 sm:gap-3.5 will-change-transform"
+        className="flex items-stretch gap-2 sm:gap-2.5 will-change-transform"
         style={{
           width: 'max-content',
           animation: `${direction === 'ltr' ? 'outfitSlideLTR' : 'outfitSlideRTL'} ${duration}s linear infinite`,
@@ -291,6 +291,7 @@ export const OutfitGallery: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'featured' | 'price-low' | 'price-high' | 'rating'>('featured');
   const [showAuditInfo, setShowAuditInfo] = useState(false);
+  const [activeRowSet, setActiveRowSet] = useState<'set1' | 'set2' | 'all'>('set1');
 
   // Compute category counts
   const categoryCounts = useMemo(() => {
@@ -332,9 +333,18 @@ export const OutfitGallery: React.FC = () => {
     return result.slice(0, 6);
   }, [filteredOutfits]);
 
+  // Structure 3 rows at a time in view (Set 1: Rows 1-3, Set 2: Rows 4-6, or All 6)
+  const visibleRows = useMemo(() => {
+    if (activeRowSet === 'set1') return rows.slice(0, 3);
+    if (activeRowSet === 'set2') return rows.slice(3, 6);
+    return rows.slice(0, 6);
+  }, [rows, activeRowSet]);
+
+  const rowStartIndex = activeRowSet === 'set2' ? 3 : 0;
+
   const handleOpenQuickView = (outfit: OutfitProduct) => {
     const sareeEquivalent = outfitToSaree(outfit);
-    openQuickView(sareeEquivalent);
+    openQuickView(sareeEquivalent, sareeEquivalent.color);
   };
 
   const handleAddToCart = (outfit: OutfitProduct) => {
@@ -407,7 +417,7 @@ export const OutfitGallery: React.FC = () => {
               <span>{OUTFITS_DATA.length} Exclusive Designs</span>
             </span>
             <span>•</span>
-            <span>6 Continuous Alternating Rails</span>
+            <span>3 Continuous Alternating Rails in View</span>
             <span>•</span>
             <button
               type="button"
@@ -506,18 +516,72 @@ export const OutfitGallery: React.FC = () => {
           </div>
         </div>
 
-        {/* 3. 6-Row Alternating Sliding Rails (6 Columns Per Row on Desktop) */}
-        <div className="space-y-4">
-          {rows.map((rowItems, rIdx) => {
+        {/* 3. 3-Row View Structure Selector (3 Rows at a time in View) */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-5 bg-[#F2EBDD]/60 p-2.5 sm:px-4 sm:py-2.5 rounded-2xl border border-[#C8A96B]/25">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] uppercase tracking-wider font-bold text-[#8B1E3F] flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-[#C8A96B]" />
+              <span>Viewing:</span>
+            </span>
+            <span className="text-xs text-[#524B48] font-medium">
+              {activeRowSet === 'set1'
+                ? 'Rows 1–3 • Signature Handlooms (3 Rows in View)'
+                : activeRowSet === 'set2'
+                ? 'Rows 4–6 • Atelier & Fusion Curations (3 Rows in View)'
+                : 'All 6 Rows • Complete Gallery Archive'}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setActiveRowSet('set1')}
+              className={`px-3 py-1 rounded-xl text-xs font-semibold tracking-wider transition-all cursor-pointer ${
+                activeRowSet === 'set1'
+                  ? 'bg-[#651C32] text-white shadow-sm'
+                  : 'bg-white/80 text-[#524B48] hover:text-[#1C1A19] hover:bg-white border border-[#C8A96B]/20'
+              }`}
+            >
+              Rows 1–3
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveRowSet('set2')}
+              className={`px-3 py-1 rounded-xl text-xs font-semibold tracking-wider transition-all cursor-pointer ${
+                activeRowSet === 'set2'
+                  ? 'bg-[#651C32] text-white shadow-sm'
+                  : 'bg-white/80 text-[#524B48] hover:text-[#1C1A19] hover:bg-white border border-[#C8A96B]/20'
+              }`}
+            >
+              Rows 4–6
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveRowSet('all')}
+              className={`px-3 py-1 rounded-xl text-xs font-semibold tracking-wider transition-all cursor-pointer ${
+                activeRowSet === 'all'
+                  ? 'bg-[#651C32] text-white shadow-sm'
+                  : 'bg-white/80 text-[#524B48] hover:text-[#1C1A19] hover:bg-white border border-[#C8A96B]/20'
+              }`}
+            >
+              All 6 Rows
+            </button>
+          </div>
+        </div>
+
+        {/* 4. Alternating Continuous Sliding Rails */}
+        <div className="space-y-2.5 sm:space-y-3">
+          {visibleRows.map((rowItems, idx) => {
+            const actualRowIdx = rowStartIndex + idx;
             // Alternating direction: Row 1 LTR, Row 2 RTL, Row 3 LTR, Row 4 RTL, Row 5 LTR, Row 6 RTL
-            const direction = rIdx % 2 === 0 ? 'ltr' : 'rtl';
+            const direction = actualRowIdx % 2 === 0 ? 'ltr' : 'rtl';
 
             return (
               <SlidingRow
-                key={`row-${rIdx}-${activeCategory}`}
+                key={`row-${actualRowIdx}-${activeCategory}`}
                 items={rowItems}
                 direction={direction}
-                rowIndex={rIdx}
+                rowIndex={actualRowIdx}
                 onQuickView={handleOpenQuickView}
                 onAddToCart={handleAddToCart}
                 onToggleWishlist={toggleWishlist}

@@ -135,7 +135,7 @@ export const TrendingShowcase: React.FC = () => {
 
                 <div className="flex items-center gap-3">
                   <button
-                    onClick={() => openQuickView(featured)}
+                    onClick={() => openQuickView(featured, featured.color)}
                     className="p-3 rounded-xl bg-[#FAF7F0] hover:bg-[#FAF7F0]/80 border border-[#C8A96B]/40 text-[#1C1A19] transition-colors"
                     aria-label="Quick View"
                   >
