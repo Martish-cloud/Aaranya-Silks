@@ -253,7 +253,7 @@ export const WorthYourAttention: React.FC = () => {
     if (mediaQuery.matches) return;
 
     let animationFrameId: number;
-    const speed = 0.65; // slow, smooth right-to-left velocity
+    const speed = 1.15; // slightly increased, smooth and noticeable right-to-left velocity
 
     const scrollLoop = () => {
       if (!isHovered && !isUserInteracting && strip) {
@@ -454,14 +454,8 @@ export const WorthYourAttention: React.FC = () => {
                       markUserInteraction();
                       setActiveId(item.id);
                     }}
-                    animate={{ y: [0, -7, 0] }}
-                    transition={{
-                      repeat: Infinity,
-                      duration: 3.8 + (idx % 3) * 0.7,
-                      delay: (idx % 5) * 0.25,
-                      ease: 'easeInOut'
-                    }}
-                    whileHover={{ y: -10, scale: 1.03 }}
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.25 }}
                     className={`relative flex-shrink-0 w-[205px] sm:w-[230px] md:w-[255px] aspect-[9/16] rounded-2xl overflow-hidden cursor-pointer transition-shadow duration-500 select-none group border ${
                       isActive
                         ? 'ring-2 shadow-2xl scale-[1.02] z-20'

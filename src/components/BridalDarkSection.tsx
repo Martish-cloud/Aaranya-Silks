@@ -5,12 +5,12 @@ import { useShop } from '../context/ShopContext';
 import { SAREES_DATA } from '../data/sarees';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
-import { resolveOptImage } from '../data/outfits';
 
 import bridalImg1 from '../assets/Need to Update/The Bridal Collection/Mayurakshi Kanjivaram Bridal Silk Saree 1.jpg';
 import bridalImg2 from '../assets/Need to Update/The Bridal Collection/Padmavati Scarlet Red Katan Bridal Saree 1.jpg';
 import bridalImg3 from '../assets/Need to Update/The Bridal Collection/Bridal Saree 2.jfif';
 import bridalImg4 from '../assets/Need to Update/The Bridal Collection/Silk Sarees 2.jpg';
+import suhaniBridalImg from '../assets/Shop All Sarees/Suhani Crimson & Zari Trousseau Heirloom/Suhani Crimson & Zari Trousseau Heirloom (Crimson Red).png';
 
 const BRIDAL_IMAGES_LIST = [bridalImg1, bridalImg2, bridalImg3, bridalImg4];
 const BRIDAL_SLUG_MAP: Record<string, string> = {
@@ -48,8 +48,8 @@ export const BridalDarkSection: React.FC = () => {
           {/* Left Column: Big Glowing Red Bridal Campaign (5 cols) */}
           <div className="lg:col-span-5 relative rounded-3xl overflow-hidden bg-gradient-to-t from-[#651C32] to-[#8B1E3F] p-8 flex flex-col justify-between shadow-2xl border border-[#C8A96B]/30 group min-h-[460px]">
             <img
-              src={resolveOptImage('Sarees Section/Bridal Sarees 1.webp')}
-              alt="Bridal Campaign Look"
+              src={suhaniBridalImg}
+              alt="Suhani Crimson & Zari Trousseau Heirloom"
               loading="lazy"
               decoding="async"
               className="absolute inset-0 w-full h-full object-cover object-top filter brightness-[0.75] contrast-[1.1] group-hover:scale-105 transition-transform duration-700"

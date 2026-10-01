@@ -27,7 +27,9 @@ import userProductImage from '../assets/user-product-image.png';
 const optImages = import.meta.glob<{ default: string }>('../assets/outfits_optimized/**/*.{webp,png,jpg,jpeg,jfif}', { eager: true });
 const origImages = import.meta.glob<{ default: string }>([
   '../assets/Outfits/**/*.{webp,png,jpg,jpeg,jfif}',
-  '../assets/Outfits Check/**/*.{webp,png,jpg,jpeg,jfif}'
+  '../assets/Outfits Check/**/*.{webp,png,jpg,jpeg,jfif}',
+  '../assets/Need to Add/**/*.{webp,png,jpg,jpeg,jfif}',
+  '../assets/Shop All Sarees/**/*.{webp,png,jpg,jpeg,jfif}'
 ], { eager: true });
 
 export function resolveOptImage(relPath: string): string {
@@ -422,48 +424,52 @@ const RAW_PRODUCTS: RawProductDef[] = [
   },
   {
     "id": "outfit-croptop-01",
-    "name": "Aaranya Embroidered Crop Top & Palazzo Combo",
-    "slug": "aaranya-embroidered-crop-top-palazzo-combo",
+    "name": "Top & Jeans Pair",
+    "slug": "top-and-jeans-pair",
     "category": "Crop Tops",
     "categorySlug": "crop-tops",
     "price": 3890,
     "originalPrice": 5200,
     "discountBadge": "25% OFF",
     "badge": "Contemporary Set",
-    "fabric": "Georgette Silk with Resham Embroidery",
+    "fabric": "Tailored Ribbed Top & Structured Jeans",
     "rating": 4.92,
     "reviewCount": 27,
-    "description": "Luxurious co-ord set featuring an intricately embellished cropped blouse paired with fluid, wide-legged palazzo trousers.",
+    "description": "Chic contemporary top and structured jeans ensemble featuring versatile tailoring and modern street-luxe elegance.",
     "optFiles": [
-      "Crop top & Pajama Combo/Croptop A (1).webp",
-      "Crop top & Pajama Combo/Croptop A (2).webp"
+      "Top & Jeans Pair/Image (1).jpeg",
+      "Top & Jeans Pair/Image (2).png",
+      "Top & Jeans Pair/Image (3).png"
     ],
     "origFiles": [
-      "Crop top & Pajama Combo/Croptop A (1).jpeg",
-      "Crop top & Pajama Combo/Croptop A (2).jpeg"
+      "Top & Jeans Pair/Image (1).jpeg",
+      "Top & Jeans Pair/Image (2).png",
+      "Top & Jeans Pair/Image (3).png"
     ]
   },
   {
     "id": "outfit-croptop-02",
-    "name": "Festive Brocade Bustier & Flared Pajama Set",
-    "slug": "festive-brocade-bustier-flared-pajama-set",
+    "name": "Top & Jeans Pair 2",
+    "slug": "top-and-jeans-pair-2",
     "category": "Crop Tops",
     "categorySlug": "crop-tops",
     "price": 4290,
     "originalPrice": 5800,
     "discountBadge": "26% OFF",
     "badge": "Festive Edit",
-    "fabric": "Banarasi Katan Brocade & Crepe",
+    "fabric": "High-Twist Silk Blend & Premium Denim",
     "rating": 4.95,
     "reviewCount": 31,
-    "description": "Sophisticated modern silhouette uniting a woven gold brocade bustier top with tailored pleated trousers.",
+    "description": "Sophisticated modern silhouette uniting a sculpted designer top with tailored straight-fit denim trousers.",
     "optFiles": [
-      "Crop top & Pajama Combo/Croptop B (1).webp",
-      "Crop top & Pajama Combo/Croptop B (2).webp"
+      "Top & Jeans Pair 2/ChatGPT Image Sep 30, 2026, 06_36_43 AM.png",
+      "Top & Jeans Pair 2/ChatGPT Image Sep 30, 2026, 06_39_27 AM.png",
+      "Top & Jeans Pair 2/image (4).jpeg"
     ],
     "origFiles": [
-      "Crop top & Pajama Combo/Croptop B (1).jpeg",
-      "Crop top & Pajama Combo/Croptop B (2).jpeg"
+      "Top & Jeans Pair 2/ChatGPT Image Sep 30, 2026, 06_36_43 AM.png",
+      "Top & Jeans Pair 2/ChatGPT Image Sep 30, 2026, 06_39_27 AM.png",
+      "Top & Jeans Pair 2/image (4).jpeg"
     ]
   },
   {

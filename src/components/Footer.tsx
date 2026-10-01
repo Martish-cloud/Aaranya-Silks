@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useShop } from '../context/ShopContext';
 import confetti from 'canvas-confetti';
 
+import heroMaroonImg from '../assets/hero-maroon-saree.png';
+
 export const Footer: React.FC = () => {
   const { navigateTo } = useShop();
   const [email, setEmail] = useState('');
@@ -23,7 +25,7 @@ export const Footer: React.FC = () => {
   return (
     <footer className="bg-[#FAF7F0] text-[#1C1A19] pt-20 border-t border-[#C8A96B]/25 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Upper Navigation Grid matching Reference Video Frame 1255 */}
+        {/* Upper Navigation Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12 pb-16 text-left">
           {/* Brand Info */}
           <div className="lg:col-span-1 space-y-3">
@@ -68,7 +70,7 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Stay Updated Newsletter matching Frame 1255 */}
+          {/* Stay Updated Newsletter */}
           <div className="space-y-3 text-xs">
             <h4 className="font-serif font-bold text-sm text-[#1C1A19]">Stay updated</h4>
             <p className="text-[11px] text-[#1C1A19]/70 font-light leading-relaxed">
@@ -101,7 +103,7 @@ export const Footer: React.FC = () => {
         </div>
       </div>
 
-      {/* Panoramic Bottom Graphic with Flying Silk Pallu matching Frame 1255 */}
+      {/* Panoramic Bottom Graphic with Flying Silk Ribbon and Hero Saree Image */}
       <div className="relative w-full overflow-hidden mt-6">
         {/* Floating Crimson Silk Ribbon Overlay */}
         <div className="absolute inset-x-0 top-0 h-28 pointer-events-none z-10 opacity-70">
@@ -122,24 +124,45 @@ export const Footer: React.FC = () => {
           </svg>
         </div>
 
-        {/* Panoramic Photograph of Women in Silk Sarees */}
-        <div className="w-full h-56 sm:h-72 md:h-80 relative">
+        {/* Panoramic Banner: Bottom portion of hero-maroon-saree.png with interactive pop-up text */}
+        <div className="w-full h-64 sm:h-80 md:h-96 relative group overflow-hidden cursor-default">
           <img
-            src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=2000&q=85"
-            alt="Aaranya Silks Heritage Gathering"
-            className="w-full h-full object-cover object-center filter brightness-[0.78]"
+            src={heroMaroonImg}
+            alt="Aaranya Silks Heritage Drape"
+            className="w-full h-full object-cover object-bottom filter brightness-[0.72] group-hover:brightness-[0.82] transition-all duration-700 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20" />
 
-          {/* Legal / Copyright Bar inside the panoramic banner */}
-          <div className="absolute bottom-4 inset-x-4 sm:inset-x-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-white/70 text-[11px] font-light">
-            <p>© {new Date().getFullYear()} Aaranya Silks. Handcrafted with pride in India.</p>
+          {/* Centered Editorial Brand Text with Pop-up Animation on Hover */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-4 text-center z-10">
+            <span className="font-serif tracking-[0.3em] uppercase text-xs sm:text-sm text-[#C8A96B] mb-2 transform transition-all duration-500 group-hover:-translate-y-1.5 group-hover:scale-110 drop-shadow-md">
+              Aaranya Silks • Timeless Heirlooms
+            </span>
+            <h3 className="font-serif text-2xl sm:text-4xl md:text-5xl font-light text-white tracking-wide transform transition-all duration-500 delay-75 group-hover:-translate-y-2 group-hover:scale-105 drop-shadow-lg">
+              Woven for Generations to Come
+            </h3>
+            <p className="font-sans text-xs sm:text-sm text-white/80 max-w-md mt-2 opacity-80 group-hover:opacity-100 transform transition-all duration-500 delay-100 group-hover:-translate-y-2 drop-shadow">
+              Crafted in pure Mulberry silk, tested gold zari, and timeless devotion.
+            </p>
+          </div>
+
+          {/* Legal / Copyright Bar inside the panoramic banner with text pop-up animation */}
+          <div className="absolute bottom-4 inset-x-4 sm:inset-x-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-white/70 text-[11px] font-light z-20">
+            <p className="transition-all duration-300 hover:text-white hover:scale-105 hover:-translate-y-0.5 inline-block cursor-default">
+              © {new Date().getFullYear()} Aaranya Silks. Handcrafted with pride in India.
+            </p>
             <div className="flex items-center gap-4">
-              <span className="hover:text-white cursor-pointer">Terms & Conditions</span>
+              <span className="hover:text-[#C8A96B] hover:scale-105 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
+                Terms & Conditions
+              </span>
               <span>•</span>
-              <span className="hover:text-white cursor-pointer">Privacy Policy</span>
+              <span className="hover:text-[#C8A96B] hover:scale-105 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
+                Privacy Policy
+              </span>
               <span>•</span>
-              <span className="hover:text-white cursor-pointer">Silk Mark Authenticity</span>
+              <span className="hover:text-[#C8A96B] hover:scale-105 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
+                Silk Mark Authenticity
+              </span>
             </div>
           </div>
         </div>

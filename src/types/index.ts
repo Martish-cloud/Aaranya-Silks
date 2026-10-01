@@ -16,7 +16,7 @@ export interface Saree {
   price: number;
   originalPrice?: number;
   discountBadge?: string;
-  badge?: 'New Arrival' | 'Bestseller' | 'Heirloom Piece' | 'Handwoven Exclusive' | 'Bridal Masterpiece';
+  badge?: 'New Arrival' | 'Bestseller' | 'Heirloom Piece' | 'Handwoven Exclusive' | 'Bridal Masterpiece' | string;
   rating: number;
   reviewCount: number;
   images: string[];
@@ -28,7 +28,7 @@ export interface Saree {
   blouseDetails: string;
   sareeLength: string;
   careInstructions: string[];
-  occasions: ('Bridal' | 'Wedding Guest' | 'Festive' | 'Reception' | 'Sangeet' | 'Cocktail' | 'Puja & Rituals' | 'Party Wear')[];
+  occasions: ('Bridal' | 'Wedding Guest' | 'Festive' | 'Reception' | 'Sangeet' | 'Cocktail' | 'Puja & Rituals' | 'Party Wear' | string)[];
   inStock: boolean;
   featured?: boolean;
   trending?: boolean;

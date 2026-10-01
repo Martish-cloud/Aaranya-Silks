@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Sparkles, Heart } from 'lucide-react';
 import { useAutoScrollRail } from '../utils/useAutoScrollRail';
 import { WipeText } from './WipeText';
@@ -14,42 +13,47 @@ const STYLED_POSTS = [
   {
     id: 'ab-1',
     image: abImg1,
+    productName: 'Royal Kanjivaram Bridal Drape',
     tag: '#AaranyaBride',
-    caption: 'Moments of quiet grace before the vows are spoken.',
+    caption: 'Moments of quiet grace and golden purity before the vows are spoken.',
   },
   {
     id: 'ab-2',
     image: abImg2,
+    productName: 'Varanasi Katan Brocade',
     tag: '#VaranasiHeritage',
-    caption: 'Woven poetry in pure Katan silk and gold zari.',
+    caption: 'Woven poetry in pure Katan silk and authentic gold kadhwa zari.',
   },
   {
     id: 'ab-3',
     image: abImg3,
+    productName: 'Swarna Hansa Tissue Drape',
     tag: '#TissueSilkElegance',
-    caption: 'Catching the golden hour in our Swarna Hansa tissue drape.',
+    caption: 'Catching the radiant golden hour in liquid gold tissue silk sheen.',
   },
   {
     id: 'ab-4',
     image: abImg4,
+    productName: 'Chandrika Organza Drape',
     tag: '#ContemporaryFlora',
-    caption: 'Translucent organza hand-detailed with botanical scalloping.',
+    caption: 'Translucent organza hand-detailed with scalloped floral resham.',
   },
   {
     id: 'ab-5',
     image: abImg5,
+    productName: 'Tarangini Rani Pink Festive Saree',
     tag: '#FestiveSplendor',
-    caption: 'Radiant magenta and rich chevron brocade for unforgettable celebrations.',
+    caption: 'Radiant fuchsia and rich chevron brocade for grand family celebrations.',
   },
 ];
 
 export const InstagramGallery: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
 
-  // Slow, continuous horizontal auto-sliding moving from LEFT TO RIGHT with instant viewport re-triggering
+  // Smooth, continuous horizontal auto-sliding moving from left to right with no floating
   const { railRef, markUserInteraction } = useAutoScrollRail({
     direction: 'left-to-right',
-    speed: 38,
+    speed: 48,
     isHovered,
   });
 
@@ -79,60 +83,62 @@ export const InstagramGallery: React.FC = () => {
           </WipeText>
 
           <p className="text-sm sm:text-base text-[#1C1A19]/70 font-light mt-2">
-            Moments of celebration, heritage, and quiet grandeur captured by our cherished patrons.
+            Moments of celebration, heritage, and quiet grandeur captured by our cherished patrons across India and abroad.
           </p>
         </div>
 
-        {/* Continuous Left-to-Right Auto-Moving Floating Gallery Strip */}
+        {/* Continuous Left-to-Right Auto-Moving Horizontal Strip (No Floating, Increased Card Size, Fully Visible Info) */}
         <div
           ref={railRef}
           onTouchStart={markUserInteraction}
           onTouchMove={markUserInteraction}
           onWheel={markUserInteraction}
-          className="flex items-center gap-4 sm:gap-5 overflow-x-auto no-scrollbar py-5 px-1 mb-12 select-none"
+          className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto no-scrollbar py-3 px-1 mb-12 select-none"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {DISPLAY_POSTS.map((post, idx) => (
-            <motion.div
+            <div
               key={`${post.id}-${idx}`}
-              animate={{
-                y: [0, -6, 0]
-              }}
-              transition={{
-                duration: 4.2 + (idx % 3) * 0.8,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: (idx % 3) * 0.4
-              }}
-              className="group relative shrink-0 w-[190px] sm:w-[230px] md:w-[250px] aspect-[3/4] rounded-2xl overflow-hidden bg-[#F2EBDD] cursor-pointer shadow-sm hover:shadow-2xl transition-all"
+              className="group relative shrink-0 w-[240px] sm:w-[270px] md:w-[300px] lg:w-[320px] rounded-3xl overflow-hidden bg-white border border-[#C8A96B]/30 shadow-md hover:shadow-2xl transition-all duration-500 flex flex-col justify-between"
             >
-              <img
-                src={post.image}
-                alt={post.caption}
-                className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
-                loading="lazy"
-                decoding="async"
-              />
+              {/* Image Container with Face Always Visible */}
+              <div className="relative w-full aspect-[4/5] bg-[#F2EBDD] overflow-hidden">
+                <img
+                  src={post.image}
+                  alt={post.productName}
+                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
+                  loading="lazy"
+                  decoding="async"
+                />
 
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3.5 text-white text-left">
-                <div className="flex justify-end">
-                  <svg className="w-4 h-4 fill-current text-[#C8A96B]" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                  </svg>
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-1 text-[10px] text-[#C8A96B] font-semibold mb-1">
-                    <Heart className="w-3 h-3 fill-current text-[#C8A96B]" />
+                {/* Always-visible top tag badge */}
+                <div className="absolute top-3 left-3 z-10">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1C1A19]/80 backdrop-blur-md text-[#FAF7F0] border border-[#C8A96B]/30 text-[10px] sm:text-xs font-semibold uppercase tracking-wider">
+                    <Heart className="w-3 h-3 text-[#C8A96B] fill-current" />
                     <span>{post.tag}</span>
-                  </div>
-                  <p className="text-[11px] font-sans font-light leading-snug line-clamp-2 text-white/90">
+                  </span>
+                </div>
+              </div>
+
+              {/* Always-Visible Product Info Card (No Hover Needed) */}
+              <div className="p-4 sm:p-5 text-left bg-white border-t border-[#C8A96B]/20 flex flex-col justify-between flex-1">
+                <div>
+                  <h3 className="font-serif text-base sm:text-lg font-semibold text-[#651C32] mb-1 leading-snug">
+                    {post.productName}
+                  </h3>
+                  <p className="text-xs sm:text-[13px] font-sans font-light leading-relaxed text-[#1C1A19]/80 line-clamp-2">
                     {post.caption}
                   </p>
                 </div>
+
+                <div className="mt-3 pt-2.5 border-t border-[#C8A96B]/15 flex items-center justify-between text-[11px] text-[#C8A96B] font-semibold tracking-wider uppercase">
+                  <span>Aaranya Silks Atelier</span>
+                  <span className="text-[#651C32] group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                    View Look →
+                  </span>
+                </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
@@ -142,12 +148,9 @@ export const InstagramGallery: React.FC = () => {
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 px-7 py-3 rounded-full bg-[#FAF7F0] hover:bg-[#651C32] text-[#651C32] hover:text-[#FAF7F0] border border-[#651C32] text-xs font-semibold uppercase tracking-[0.18em] transition-all shadow-sm hover:shadow-md"
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-white hover:bg-[#651C32] text-[#651C32] hover:text-white border border-[#651C32] text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] transition-all duration-300 shadow hover:shadow-lg cursor-pointer"
           >
-            <svg className="w-4 h-4 fill-current text-[#C8A96B]" viewBox="0 0 24 24">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-            </svg>
-            <span>Follow Our Journey @aaranyasilks</span>
+            <span>Follow @AaranyaSilks on Instagram</span>
           </a>
         </div>
       </div>

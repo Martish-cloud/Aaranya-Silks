@@ -26,7 +26,6 @@ import userProductImage from '../assets/user-product-image.png';
 
 interface OutfitCardProps {
   outfit: OutfitProduct;
-  index: number;
   onQuickView: (outfit: OutfitProduct) => void;
   onAddToCart: (outfit: OutfitProduct) => void;
   onToggleWishlist: (id: string) => void;
@@ -35,7 +34,6 @@ interface OutfitCardProps {
 
 const OutfitCard = memo<OutfitCardProps>(({
   outfit,
-  index,
   onQuickView,
   onAddToCart,
   onToggleWishlist,
@@ -44,13 +42,6 @@ const OutfitCard = memo<OutfitCardProps>(({
   const [activeAngleIndex, setActiveAngleIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
-
-  // Assign alternating subtle float animations for gentle luxury motion
-  const floatClass = index % 3 === 0
-    ? 'animate-float-a'
-    : index % 3 === 1
-      ? 'animate-float-b'
-      : 'animate-float-c';
 
   const currentImage = outfit.gallery[activeAngleIndex] || outfit.image;
 
@@ -67,20 +58,15 @@ const OutfitCard = memo<OutfitCardProps>(({
   };
 
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 25 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.45, delay: Math.min((index % 8) * 0.05, 0.3) }}
-      className={`group relative flex flex-col rounded-2xl bg-white border border-[#C8A96B]/20 shadow-sm hover:shadow-xl hover:shadow-[#651C32]/10 transition-all duration-500 overflow-hidden ${floatClass}`}
+    <div
+      className="group relative flex flex-col rounded-2xl bg-white border border-[#C8A96B]/25 shadow-sm hover:shadow-xl hover:shadow-[#651C32]/10 transition-all duration-300 overflow-hidden w-[180px] sm:w-[220px] md:w-[240px] lg:w-[260px] shrink-0 select-none text-left"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
         setIsHovered(false);
         setActiveAngleIndex(0);
       }}
     >
-      {/* 1. Main Image Container */}
+      {/* 1. Main Image Container - Face Fully Visible with object-top */}
       <div
         className="relative w-full aspect-[3/4] bg-[#F2EBDD]/60 overflow-hidden cursor-pointer"
         onClick={() => onQuickView(outfit)}
@@ -97,13 +83,13 @@ const OutfitCard = memo<OutfitCardProps>(({
         />
 
         {/* Top Badges */}
-        <div className="absolute top-1.5 left-1.5 right-1.5 sm:top-3 sm:left-3 sm:right-3 flex items-center justify-between pointer-events-none z-10">
-          <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-[#1C1A19]/80 backdrop-blur-md text-[#FAF7F0] border border-[#C8A96B]/30 shadow-sm">
+        <div className="absolute top-1.5 left-1.5 right-1.5 sm:top-2.5 sm:left-2.5 sm:right-2.5 flex items-center justify-between pointer-events-none z-10">
+          <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[9px] font-semibold tracking-wider uppercase bg-[#1C1A19]/80 backdrop-blur-md text-[#FAF7F0] border border-[#C8A96B]/30 shadow-xs">
             {outfit.category}
           </span>
 
           {outfit.discountBadge && (
-            <span className="px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold tracking-wider uppercase bg-[#651C32] text-[#FAF7F0] shadow-sm ml-auto">
+            <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase bg-[#651C32] text-[#FAF7F0] shadow-xs ml-auto">
               {outfit.discountBadge}
             </span>
           )}
@@ -114,21 +100,21 @@ const OutfitCard = memo<OutfitCardProps>(({
           type="button"
           onClick={handleWishlistClick}
           aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-          className={`absolute top-1.5 right-1.5 sm:top-3 sm:right-3 z-20 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${
+          className={`absolute top-1.5 right-1.5 sm:top-2.5 sm:right-2.5 z-20 w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm cursor-pointer ${
             isWishlisted
               ? 'bg-[#651C32] text-white'
               : 'bg-white/85 text-[#1C1A19] hover:bg-[#651C32] hover:text-white backdrop-blur-sm'
           }`}
         >
-          <Heart className={`w-3 h-3 sm:w-4 sm:h-4 ${isWishlisted ? 'fill-current' : ''}`} />
+          <Heart className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${isWishlisted ? 'fill-current' : ''}`} />
         </button>
 
         {/* Multi-Angle Hover Indicator Dots */}
         {outfit.gallery.length > 1 && (
-          <div className="hidden sm:flex absolute bottom-3 left-0 right-0 justify-center items-center gap-1.5 z-10 pointer-events-auto">
-            <div className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md flex items-center gap-1.5 border border-white/20">
-              <span className="text-[9px] font-medium text-white/80 mr-0.5">
-                {outfit.gallery.length} Angles:
+          <div className="hidden sm:flex absolute bottom-2 left-0 right-0 justify-center items-center gap-1 z-10 pointer-events-auto">
+            <div className="px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md flex items-center gap-1 border border-white/20">
+              <span className="text-[8px] font-medium text-white/80 mr-0.5">
+                {outfit.gallery.length} Views:
               </span>
               {outfit.gallery.map((_, gIdx) => (
                 <button
@@ -140,9 +126,9 @@ const OutfitCard = memo<OutfitCardProps>(({
                   }}
                   onMouseEnter={() => setActiveAngleIndex(gIdx)}
                   aria-label={`View angle ${gIdx + 1}`}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
                     activeAngleIndex === gIdx
-                      ? 'w-4 bg-[#C8A96B]'
+                      ? 'w-3.5 bg-[#C8A96B]'
                       : 'bg-white/50 hover:bg-white'
                   }`}
                 />
@@ -153,8 +139,8 @@ const OutfitCard = memo<OutfitCardProps>(({
 
         {/* Quick View Overlay Bar */}
         <div
-          className={`hidden sm:flex absolute inset-x-0 bottom-0 py-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent items-center justify-center gap-2 transition-all duration-300 ${
-            isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3 pointer-events-none'
+          className={`hidden sm:flex absolute inset-x-0 bottom-0 py-2.5 bg-gradient-to-t from-black/80 via-black/40 to-transparent items-center justify-center gap-1.5 transition-all duration-300 ${
+            isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
           }`}
         >
           <button
@@ -163,90 +149,153 @@ const OutfitCard = memo<OutfitCardProps>(({
               e.stopPropagation();
               onQuickView(outfit);
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium tracking-wide bg-white/95 text-[#1C1A19] hover:bg-[#C8A96B] hover:text-[#1C1A19] transition-colors shadow-md"
+            className="px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-white/90 hover:bg-white text-[#1C1A19] flex items-center gap-1 shadow-sm transition-colors cursor-pointer"
           >
-            <Eye className="w-3.5 h-3.5" />
-            Quick View
+            <Eye className="w-3 h-3 text-[#651C32]" />
+            <span>Quick View</span>
           </button>
         </div>
       </div>
 
-      {/* 2. Card Content Information */}
-      <div className="p-2.5 sm:p-4 flex-1 flex flex-col justify-between bg-white text-left">
+      {/* 2. Product Meta Info */}
+      <div className="p-3 sm:p-3.5 flex flex-col justify-between flex-1 space-y-2">
         <div>
-          {/* Rating & Fabric line */}
-          <div className="flex items-center justify-between text-xs text-[#524B48] mb-1">
-            <span className="truncate max-w-[80px] sm:max-w-[140px] text-[9px] sm:text-[11px] uppercase tracking-wider font-medium text-[#C8A96B]">
-              {outfit.fabric}
-            </span>
-            <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
-              <Star className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 fill-[#C8A96B] text-[#C8A96B]" />
-              <span className="font-semibold text-[10px] sm:text-xs text-[#1C1A19]">{outfit.rating}</span>
+          <div className="flex items-center justify-between text-[10px] text-[#524B48] mb-1">
+            <span className="font-medium truncate max-w-[120px] text-[#8B1E3F]">{outfit.fabric}</span>
+            <div className="flex items-center gap-0.5 text-[#C8A96B]">
+              <Star className="w-3 h-3 fill-current" />
+              <span className="font-bold text-[#1C1A19]">{outfit.rating}</span>
             </div>
           </div>
 
-          {/* Product Name */}
           <h3
             onClick={() => onQuickView(outfit)}
-            className="font-serif text-xs sm:text-sm lg:text-base text-[#1C1A19] group-hover:text-[#651C32] transition-colors line-clamp-1 cursor-pointer font-medium tracking-tight mb-1 sm:mb-2"
-            title={outfit.name}
+            className="font-serif text-xs sm:text-sm font-semibold text-[#1C1A19] group-hover:text-[#651C32] transition-colors line-clamp-1 cursor-pointer"
           >
             {outfit.name}
           </h3>
-
-          {/* Price & Savings */}
-          <div className="flex items-baseline gap-1 sm:gap-2 mb-2 sm:mb-3">
-            <span className="font-serif font-bold text-xs sm:text-base lg:text-lg text-[#651C32]">
-              {formatINR(outfit.price)}
-            </span>
-            {outfit.originalPrice > outfit.price && (
-              <span className="hidden sm:inline-block text-[10px] sm:text-xs text-[#524B48]/60 line-through">
-                {formatINR(outfit.originalPrice)}
-              </span>
-            )}
-          </div>
         </div>
 
-        {/* Action Button: Quick Add */}
-        <button
-          type="button"
-          onClick={handleQuickAdd}
-          className={`w-full py-1.5 sm:py-2.5 px-2 sm:px-4 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-semibold tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-1 sm:gap-2 border ${
-            justAdded
-              ? 'bg-[#1B4D3E] text-white border-[#1B4D3E]'
-              : 'bg-[#FAF7F0] hover:bg-[#651C32] text-[#1C1A19] hover:text-white border-[#C8A96B]/40 hover:border-[#651C32] shadow-sm'
-          }`}
-        >
-          {justAdded ? (
-            <>
-              <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-              <span className="truncate">Added</span>
-            </>
-          ) : (
-            <>
-              <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C8A96B] group-hover:text-white transition-colors" />
-              <span className="truncate">Add to Bag</span>
-            </>
-          )}
-        </button>
+        {/* Pricing & Add to Bag */}
+        <div className="pt-2 border-t border-[#C8A96B]/15 flex items-center justify-between gap-1">
+          <div>
+            <div className="font-serif font-bold text-xs sm:text-sm text-[#651C32]">
+              {formatINR(outfit.price)}
+            </div>
+            {outfit.originalPrice && (
+              <div className="text-[10px] text-[#524B48]/60 line-through">
+                {formatINR(outfit.originalPrice)}
+              </div>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={handleQuickAdd}
+            aria-label="Add to bag"
+            className={`p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-1 cursor-pointer shadow-xs ${
+              justAdded
+                ? 'bg-[#1B4D3E] text-white'
+                : 'bg-[#FAF7F0] hover:bg-[#651C32] text-[#651C32] hover:text-white border border-[#651C32]/30'
+            }`}
+          >
+            {justAdded ? (
+              <>
+                <Check className="w-3 h-3 text-white" />
+                <span className="hidden sm:inline">Added</span>
+              </>
+            ) : (
+              <>
+                <ShoppingBag className="w-3 h-3" />
+                <span className="hidden sm:inline">Add</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 });
 
-OutfitCard.displayName = 'OutfitCard';
+// Single Sliding Row Component with Alternating Direction & Hover Pause
+interface SlidingRowProps {
+  items: OutfitProduct[];
+  direction: 'ltr' | 'rtl';
+  rowIndex: number;
+  onQuickView: (outfit: OutfitProduct) => void;
+  onAddToCart: (outfit: OutfitProduct) => void;
+  onToggleWishlist: (id: string) => void;
+  isInWishlist: (id: string) => boolean;
+}
+
+const SlidingRow: React.FC<SlidingRowProps> = ({
+  items,
+  direction,
+  rowIndex,
+  onQuickView,
+  onAddToCart,
+  onToggleWishlist,
+  isInWishlist
+}) => {
+  const [isRowHovered, setIsRowHovered] = useState(false);
+
+  // Stagger speeds slightly so rows slide organically
+  const duration = 38 + (rowIndex % 5) * 3;
+
+  // Build repeated array so 50% shift creates a seamless, continuous infinite loop
+  const displayItems = useMemo(() => {
+    // If fewer than 6 items (e.g. row 7 with 2 items), repeat items to reach at least 6 per half
+    let base = [...items];
+    while (base.length < 6) {
+      base = [...base, ...items];
+    }
+    // Duplicate once so second half is identical to first half
+    return [...base, ...base];
+  }, [items]);
+
+  return (
+    <div
+      className="relative overflow-hidden w-full py-1.5 select-none"
+      onMouseEnter={() => setIsRowHovered(true)}
+      onMouseLeave={() => setIsRowHovered(false)}
+    >
+      <div
+        className="flex items-stretch gap-3 sm:gap-4 will-change-transform"
+        style={{
+          width: 'max-content',
+          animation: `${direction === 'ltr' ? 'outfitSlideLTR' : 'outfitSlideRTL'} ${duration}s linear infinite`,
+          animationPlayState: isRowHovered ? 'paused' : 'running',
+        }}
+      >
+        {displayItems.map((outfit, idx) => (
+          <OutfitCard
+            key={`${outfit.id}-r${rowIndex}-${idx}`}
+            outfit={outfit}
+            onQuickView={onQuickView}
+            onAddToCart={onAddToCart}
+            onToggleWishlist={onToggleWishlist}
+            isWishlisted={isInWishlist(outfit.id)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export const OutfitGallery: React.FC = () => {
-  const { openQuickView, addToCart, toggleWishlist, isInWishlist } = useShop();
+  const { openQuickView, addToCart, isInWishlist, toggleWishlist } = useShop();
+
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'featured' | 'price-low' | 'price-high' | 'rating'>('featured');
-  const [showAuditInfo, setShowAuditInfo] = useState<boolean>(false);
+  const [showAuditInfo, setShowAuditInfo] = useState(false);
 
   // Compute category counts
   const categoryCounts = useMemo(() => {
-    const counts: Record<string, number> = { all: OUTFITS_DATA.length };
+    const counts: Record<string, number> = {};
     OUTFIT_CATEGORIES.forEach((cat) => {
-      if (cat.id !== 'all') {
+      if (cat.id === 'all') {
+        counts[cat.id] = OUTFITS_DATA.length;
+      } else {
         counts[cat.id] = OUTFITS_DATA.filter((o) => o.categorySlug === cat.id).length;
       }
     });
@@ -270,6 +319,16 @@ export const OutfitGallery: React.FC = () => {
     return items;
   }, [activeCategory, sortBy]);
 
+  // Chunk items into rows of 6 for desktop 6-column layout (7 rows for 38 products)
+  const rows = useMemo(() => {
+    const chunkSize = 6;
+    const result: OutfitProduct[][] = [];
+    for (let i = 0; i < filteredOutfits.length; i += chunkSize) {
+      result.push(filteredOutfits.slice(i, i + chunkSize));
+    }
+    return result;
+  }, [filteredOutfits]);
+
   const handleOpenQuickView = (outfit: OutfitProduct) => {
     const sareeEquivalent = outfitToSaree(outfit);
     openQuickView(sareeEquivalent);
@@ -282,6 +341,23 @@ export const OutfitGallery: React.FC = () => {
 
   return (
     <section id="outfit-gallery" className="py-16 sm:py-24 bg-[#FAF7F0] relative overflow-hidden">
+      {/* Dynamic Keyframes for Alternating Infinite Sliding Animation */}
+      <style>{`
+        @keyframes outfitSlideLTR {
+          0% { transform: translate3d(-50%, 0, 0); }
+          100% { transform: translate3d(0%, 0, 0); }
+        }
+        @keyframes outfitSlideRTL {
+          0% { transform: translate3d(0%, 0, 0); }
+          100% { transform: translate3d(-50%, 0, 0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .outfit-slide-row {
+            animation: none !important;
+          }
+        }
+      `}</style>
+
       {/* Decorative background watermark */}
       <div className="absolute top-10 right-[-100px] w-96 h-96 rounded-full bg-[#C8A96B]/5 blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 left-[-100px] w-96 h-96 rounded-full bg-[#651C32]/5 blur-3xl pointer-events-none" />
@@ -325,15 +401,15 @@ export const OutfitGallery: React.FC = () => {
           <div className="mt-4 flex items-center justify-center gap-4 text-xs text-[#524B48]/80 font-medium">
             <span className="flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-[#C8A96B]" />
-              <span>38 Exclusive Designs</span>
+              <span>{OUTFITS_DATA.length} Exclusive Designs</span>
             </span>
             <span>•</span>
-            <span>101 Verified Gallery Perspectives</span>
+            <span>7 Continuous Alternating Rails</span>
             <span>•</span>
             <button
               type="button"
               onClick={() => setShowAuditInfo(!showAuditInfo)}
-              className="text-[#651C32] hover:text-[#C8A96B] transition-colors underline flex items-center gap-1"
+              className="text-[#651C32] hover:text-[#C8A96B] transition-colors underline flex items-center gap-1 cursor-pointer"
             >
               <Info className="w-3 h-3" />
               <span>Deduplication Report</span>
@@ -354,7 +430,7 @@ export const OutfitGallery: React.FC = () => {
                   Exact Image Organization & Deduplication Audit:
                 </div>
                 <p className="mb-2">
-                  All 103 source images in <code className="bg-[#FAF7F0] px-1 py-0.5 rounded">src/assets/Outfits/</code> are preserved. 101 distinct angles are active across 38 unique designs:
+                  All 103 source images in <code className="bg-[#FAF7F0] px-1 py-0.5 rounded">src/assets/Outfits/</code> and <code className="bg-[#FAF7F0] px-1 py-0.5 rounded">Need to Add/</code> are preserved across unique designs:
                 </p>
                 <ul className="list-disc pl-5 space-y-1 mb-2">
                   {DUPLICATE_IMAGES_AUDIT.map((audit, i) => (
@@ -364,7 +440,7 @@ export const OutfitGallery: React.FC = () => {
                   ))}
                 </ul>
                 <div className="text-[11px] text-[#524B48]/70 italic">
-                  Multi-angle shots (such as Babycon A-E, Blouse A-F, Kurta A, Saree angles) are grouped into single outfits with interactive angle selectors to prevent repetitive clutter.
+                  Multi-angle shots are grouped into single outfits with interactive angle selectors to prevent repetitive clutter.
                 </div>
               </motion.div>
             )}
@@ -372,8 +448,8 @@ export const OutfitGallery: React.FC = () => {
         </div>
 
         {/* 2. Interactive Category Filter Bar */}
-        <div className="mb-10 flex flex-col md:flex-row items-center justify-between gap-4 border-b border-[#C8A96B]/20 pb-5">
-          {/* Category Tabs with smooth layoutId animation */}
+        <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4 border-b border-[#C8A96B]/20 pb-5">
+          {/* Category Tabs */}
           <div className="w-full md:w-auto overflow-x-auto no-scrollbar flex items-center gap-2 py-1">
             {OUTFIT_CATEGORIES.map((cat) => {
               const isActive = activeCategory === cat.id;
@@ -384,7 +460,7 @@ export const OutfitGallery: React.FC = () => {
                   key={cat.id}
                   type="button"
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`relative px-4 py-2 rounded-full text-xs font-semibold tracking-wider whitespace-nowrap transition-all duration-300 flex items-center gap-1.5 ${
+                  className={`relative px-4 py-2 rounded-full text-xs font-semibold tracking-wider whitespace-nowrap transition-all duration-300 flex items-center gap-1.5 cursor-pointer ${
                     isActive
                       ? 'text-[#FAF7F0] shadow-md'
                       : 'bg-white/80 text-[#524B48] hover:text-[#1C1A19] hover:bg-white border border-[#C8A96B]/20'
@@ -417,7 +493,7 @@ export const OutfitGallery: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-white text-xs text-[#1C1A19] font-medium border border-[#C8A96B]/30 rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#651C32]"
+              className="bg-white text-xs text-[#1C1A19] font-medium border border-[#C8A96B]/30 rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#651C32] cursor-pointer"
             >
               <option value="featured">Featured Handloom</option>
               <option value="price-low">Price: Low to High</option>
@@ -427,25 +503,26 @@ export const OutfitGallery: React.FC = () => {
           </div>
         </div>
 
-        {/* 3. Responsive Outfit Cards Grid: Exactly 6 on Desktop, 3 on Mobile */}
-        <motion.div
-          layout
-          className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 gap-2 sm:gap-4 lg:gap-4.5"
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredOutfits.map((outfit, index) => (
-              <OutfitCard
-                key={outfit.id}
-                outfit={outfit}
-                index={index}
+        {/* 3. 7-Row Alternating Sliding Rails (6 Columns Per Row on Desktop) */}
+        <div className="space-y-4">
+          {rows.map((rowItems, rIdx) => {
+            // Alternating direction: Row 1 LTR, Row 2 RTL, Row 3 LTR, Row 4 RTL, Row 5 LTR, Row 6 RTL, Row 7 LTR
+            const direction = rIdx % 2 === 0 ? 'ltr' : 'rtl';
+
+            return (
+              <SlidingRow
+                key={`row-${rIdx}-${activeCategory}`}
+                items={rowItems}
+                direction={direction}
+                rowIndex={rIdx}
                 onQuickView={handleOpenQuickView}
                 onAddToCart={handleAddToCart}
                 onToggleWishlist={toggleWishlist}
-                isWishlisted={isInWishlist(outfit.id)}
+                isInWishlist={isInWishlist}
               />
-            ))}
-          </AnimatePresence>
-        </motion.div>
+            );
+          })}
+        </div>
 
         {/* 4. Bottom View Catalog CTA */}
         <div className="mt-16 text-center">
@@ -465,7 +542,7 @@ export const OutfitGallery: React.FC = () => {
                   const el = document.getElementById('consultation');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="shrink-0 px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider bg-[#651C32] text-white hover:bg-[#8B1E3F] transition-colors shadow-md flex items-center gap-2"
+                className="shrink-0 px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider bg-[#651C32] text-white hover:bg-[#8B1E3F] transition-colors shadow-md flex items-center gap-2 cursor-pointer"
               >
                 <span>Book Consultation</span>
                 <ChevronRight className="w-4 h-4" />

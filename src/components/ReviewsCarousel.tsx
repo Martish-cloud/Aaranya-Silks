@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Sparkles, Star, CheckCircle, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { CUSTOMER_REVIEWS } from '../data/sarees';
 import { WipeText } from './WipeText';
@@ -97,18 +96,9 @@ export const ReviewsCarousel: React.FC = () => {
             const authorPhoto = AUTHOR_PHOTOS[rev.author];
 
             return (
-              <motion.div
+              <div
                 key={`${rev.id}-${idx}`}
-                animate={{
-                  y: [0, -6, 0]
-                }}
-                transition={{
-                  duration: 4.2 + (idx % 3) * 0.8,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: (idx % 3) * 0.4
-                }}
-                className="flex-shrink-0 w-80 sm:w-96 p-7 rounded-3xl bg-[#F2EBDD] border border-[#C8A96B]/30 flex flex-col justify-between text-left shadow-sm hover:shadow-xl transition-all relative"
+                className="flex-shrink-0 w-[330px] sm:w-[420px] p-8 rounded-3xl bg-[#F2EBDD] border border-[#C8A96B]/30 flex flex-col justify-between text-left shadow-sm hover:shadow-xl transition-all duration-300 relative"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
@@ -162,7 +152,7 @@ export const ReviewsCarousel: React.FC = () => {
                     Purchased: {rev.sareePurchased}
                   </p>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>
