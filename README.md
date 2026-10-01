@@ -2,61 +2,67 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/AI%20Fashion-Brand%20Ambassador-9B59B6?style=for-the-badge" alt="AI Fashion Brand Ambassador"/>
-  <img src="https://img.shields.io/badge/Visual%20Showcase-10%20Images-FF69B4?style=for-the-badge" alt="10 Images"/>
+  <img src="https://img.shields.io/badge/Visual%20Showcase-10%20Looks-FF69B4?style=for-the-badge" alt="10 Looks"/>
+  <img src="https://img.shields.io/badge/Creative%20Direction-Fashion%20%26%20Elegance-8E44AD?style=for-the-badge" alt="Creative Direction"/>
 </p>
+
+<p align="center">
+  <a href="#-meet-our-brand-ambassador">About</a> •
+  <a href="#-the-collection">Collection</a> •
+  <a href="#-style-highlights">Style</a> •
+  <a href="#-creative-vision">Vision</a>
+</p>
+
+---
 
 <h2 align="center">💖 Meet Our Brand Ambassador</h2>
 
 <p align="center">
-  A stunning visual collection showcasing fashion, elegance, traditional Indian attire, and modern style through a curated series of AI-generated portraits.
+  <i>
+    A curated AI fashion visual experience blending traditional Indian elegance,
+    contemporary styling, timeless beauty, and modern creative direction.
+  </i>
 </p>
 
----
+<p align="center">
+  ✦ ───────────────────────────── ✦
+</p>
 
 ## 🌸 The Collection
 
 <p align="center">
-  <img src="./Brand%20Ambassador%20%281%29.png" width="48%" alt="Brand Ambassador – Lavender Outfit"/>
-  <img src="./Brand%20Ambassador%20%282%29.jpeg" width="48%" alt="Brand Ambassador – Casual Portrait"/>
+
+`01` ✦ **Lavender Elegance**  
+`02` ✦ **Contemporary Casual**  
+`03` ✦ **Traditional Heritage**  
+`04` ✦ **Midnight Black**  
+`05` ✦ **Modern Grace**
+
+<br>
+
+`06` ✦ **Emerald Saree**  
+`07` ✦ **Maroon Heritage**  
+`08` ✦ **Beige Classic**  
+`09` ✦ **Bridal Elegance**  
+`10` ✦ **Modern Lifestyle**
+
 </p>
 
 <p align="center">
-  <img src="./Brand%20Ambassador%20%283%29.jpeg" width="48%" alt="Brand Ambassador – Traditional Look"/>
-  <img src="./Brand%20Ambassador%20%284%29.jpeg" width="48%" alt="Brand Ambassador – Black Outfit"/>
+  <b>━━━━━━━━━━━━━━━ ✦ ━━━━━━━━━━━━━━━</b>
 </p>
 
-<p align="center">
-  <img src="./Brand%20Ambassador%20%285%29.png" width="48%" alt="Brand Ambassador – Elegant Dress"/>
-  <img src="./Brand%20Ambassador%20%286%29.png" width="48%" alt="Brand Ambassador – Green Saree"/>
-</p>
+### 🎭 Visual Direction
 
-<p align="center">
-  <img src="./Brand%20Ambassador%20%287%29.png" width="48%" alt="Brand Ambassador – Maroon Saree"/>
-  <img src="./Brand%20Ambassador%20%288%29.png" width="48%" alt="Brand Ambassador – Beige Saree"/>
-</p>
-
-<p align="center">
-  <img src="./Brand%20Ambassador%20%289%29.png" width="48%" alt="Brand Ambassador – Traditional Bridal Style"/>
-  <img src="./Brand%20Ambassador%20%2810%29.png" width="48%" alt="Brand Ambassador – Modern Casual Look"/>
-</p>
-
----
-
-## 🎨 Style Highlights
-
-| Category | Description |
-|:---|:---|
-| 👗 Fashion | Modern, casual, and traditional Indian outfits |
-| 💎 Aesthetics | Elegant styling and detailed accessories |
-| 📸 Photography | Portraits, lifestyle shots, and fashion poses |
-| 🌷 Theme | Beauty, elegance, and contemporary fashion |
-
----
-
-<p align="center">
-  <b>✨ Elegance in Every Frame. Style in Every Story. ✨</b>
-</p>
-
-<p align="center">
-  Made with 💖 and creativity.
-</p>
+```text
+                    BRAND AMBASSADOR
+                           │
+             ┌─────────────┼─────────────┐
+             │             │             │
+          FASHION       HERITAGE      MODERNITY
+             │             │             │
+          Styling       Tradition      Lifestyle
+             │             │             │
+             └─────────────┼─────────────┘
+                           │
+                     ✦ ELEGANCE ✦
