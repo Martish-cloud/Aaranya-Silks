@@ -1,5 +1,5 @@
 // Aaranya Silks - Complete Integrated Outfits Catalog
-// All 103 outfit images organized across 38 unique products with multi-angle galleries
+// All outfit images organized across 36 unique products with multi-angle galleries
 
 export interface OutfitProduct {
   id: string;
@@ -994,56 +994,6 @@ const RAW_PRODUCTS: RawProductDef[] = [
     "origFiles": [
       "Sarees Section/Sultana Bronze Rust Tissue Katan Saree 1.webp",
       "Sarees Section/Sultana Bronze Rust Tissue Katan Saree 2.jpg"
-    ]
-  },
-  {
-    "id": "outfit-saree-22",
-    "name": "Teal Samriddhi Meenakari Brocade Saree",
-    "slug": "teal-samriddhi-meenakari-brocade-saree",
-    "category": "Sarees",
-    "categorySlug": "sarees",
-    "price": 23800,
-    "originalPrice": 29000,
-    "discountBadge": "18% OFF",
-    "badge": "Meenakari Masterpiece",
-    "fabric": "Pure Mashroo Silk with Multicolor Enamel Weave",
-    "rating": 4.97,
-    "reviewCount": 49,
-    "description": "Regal deep teal brocade saree featuring vibrant meenakari floral motifs woven in pure gold thread.",
-    "optFiles": [
-      "Sarees Section/Teal Samriddhi Meenakari Brocade 1.webp",
-      "Sarees Section/Teal Samriddhi Meenakari Brocade 2.webp",
-      "Sarees Section/Teal Silk Mashroo Banarosi brocade saree.webp"
-    ],
-    "origFiles": [
-      "Sarees Section/Teal Samriddhi Meenakari Brocade 1.jpeg",
-      "Sarees Section/Teal Samriddhi Meenakari Brocade 2.jpeg",
-      "Sarees Section/Teal Silk Mashroo Banarosi brocade saree.jfif"
-    ]
-  },
-  {
-    "id": "outfit-saree-23",
-    "name": "Haldi Swarnam Pure Katan Silk Saree",
-    "slug": "haldi-swarnam-pure-katan-silk-saree",
-    "category": "Sarees",
-    "categorySlug": "sarees",
-    "price": 15800,
-    "originalPrice": 19000,
-    "discountBadge": "17% OFF",
-    "badge": "Haldi Special",
-    "fabric": "Pure Katan Silk with Golden Zari",
-    "rating": 4.91,
-    "reviewCount": 38,
-    "description": "Radiant auspicious golden yellow saree specially curated for Haldi and Mehendi rituals, woven with fine floral motifs.",
-    "optFiles": [
-      "Sarees Section/Yellow Saree (3).webp",
-      "Sarees Section/Yellow Saree (2).webp",
-      "Sarees Section/Yellow Saree (1).webp"
-    ],
-    "origFiles": [
-      "Sarees Section/Yellow Saree (3).jpeg",
-      "Sarees Section/Yellow Saree (2).jpeg",
-      "Sarees Section/Yellow Saree (1).jpeg"
     ]
   }
 ];

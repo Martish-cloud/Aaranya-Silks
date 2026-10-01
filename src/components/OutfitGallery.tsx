@@ -244,7 +244,7 @@ const SlidingRow: React.FC<SlidingRowProps> = ({
 
   // Build repeated array so 50% shift creates a seamless, continuous infinite loop
   const displayItems = useMemo(() => {
-    // If fewer than 6 items (e.g. row 7 with 2 items), repeat items to reach at least 6 per half
+    // If fewer than 6 items, repeat items to reach at least 6 per half
     let base = [...items];
     while (base.length < 6) {
       base = [...base, ...items];
@@ -319,14 +319,14 @@ export const OutfitGallery: React.FC = () => {
     return items;
   }, [activeCategory, sortBy]);
 
-  // Chunk items into rows of 6 for desktop 6-column layout (7 rows for 38 products)
+  // Chunk items into rows of 6 for desktop 6-column layout (strictly Rows 1–6)
   const rows = useMemo(() => {
     const chunkSize = 6;
     const result: OutfitProduct[][] = [];
     for (let i = 0; i < filteredOutfits.length; i += chunkSize) {
       result.push(filteredOutfits.slice(i, i + chunkSize));
     }
-    return result;
+    return result.slice(0, 6);
   }, [filteredOutfits]);
 
   const handleOpenQuickView = (outfit: OutfitProduct) => {
@@ -404,7 +404,7 @@ export const OutfitGallery: React.FC = () => {
               <span>{OUTFITS_DATA.length} Exclusive Designs</span>
             </span>
             <span>•</span>
-            <span>7 Continuous Alternating Rails</span>
+            <span>6 Continuous Alternating Rails</span>
             <span>•</span>
             <button
               type="button"
@@ -503,10 +503,10 @@ export const OutfitGallery: React.FC = () => {
           </div>
         </div>
 
-        {/* 3. 7-Row Alternating Sliding Rails (6 Columns Per Row on Desktop) */}
+        {/* 3. 6-Row Alternating Sliding Rails (6 Columns Per Row on Desktop) */}
         <div className="space-y-4">
           {rows.map((rowItems, rIdx) => {
-            // Alternating direction: Row 1 LTR, Row 2 RTL, Row 3 LTR, Row 4 RTL, Row 5 LTR, Row 6 RTL, Row 7 LTR
+            // Alternating direction: Row 1 LTR, Row 2 RTL, Row 3 LTR, Row 4 RTL, Row 5 LTR, Row 6 RTL
             const direction = rIdx % 2 === 0 ? 'ltr' : 'rtl';
 
             return (
