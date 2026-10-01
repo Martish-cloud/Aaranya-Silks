@@ -137,14 +137,14 @@ const RAW_PRODUCTS: RawProductDef[] = [
     "reviewCount": 24,
     "description": "Tailored in lustrous champagne ros\u00e9 duchess satin, this modern babycon mini-dress combines sculpted architectural pleats with a body-contouring silhouette.",
     "optFiles": [
-      "Babycon Mini-Dress/Babycon A (1).webp",
+      "Babycon Mini-Dress/Babycon A (3).webp",
       "Babycon Mini-Dress/Babycon A (2).webp",
-      "Babycon Mini-Dress/Babycon A (3).webp"
+      "Babycon Mini-Dress/Babycon A (1).webp"
     ],
     "origFiles": [
-      "Babycon Mini-Dress/Babycon A (1).jpeg",
+      "Babycon Mini-Dress/Babycon A (3).jpeg",
       "Babycon Mini-Dress/Babycon A (2).jpeg",
-      "Babycon Mini-Dress/Babycon A (3).jpeg"
+      "Babycon Mini-Dress/Babycon A (1).jpeg"
     ]
   },
   {
@@ -337,13 +337,13 @@ const RAW_PRODUCTS: RawProductDef[] = [
     "reviewCount": 29,
     "description": "Rich jewel-toned emerald green velvet blouse encrusted with hand-stitched shisha mirror motifs and delicate golden beads.",
     "optFiles": [
-      "Blouse/Blouse E (1).webp",
       "Blouse/Blouse E (2).webp",
+      "Blouse/Blouse E (1).webp",
       "Blouse/Blouse E (3).webp"
     ],
     "origFiles": [
-      "Blouse/Blouse E (1).jpeg",
       "Blouse/Blouse E (2).jpeg",
+      "Blouse/Blouse E (1).jpeg",
       "Blouse/Blouse E (3).jpeg"
     ]
   },
@@ -362,13 +362,13 @@ const RAW_PRODUCTS: RawProductDef[] = [
     "reviewCount": 33,
     "description": "Auspicious red silk blouse adorned with Korvai temple border sleeve cuffs, intricate hand aari embroidery, and scalloped hemline.",
     "optFiles": [
-      "Blouse/Blouse F (1).webp",
       "Blouse/Blouse F (2).webp",
+      "Blouse/Blouse F (1).webp",
       "Blouse/Blouse F (3).webp"
     ],
     "origFiles": [
-      "Blouse/Blouse F (1).jpeg",
       "Blouse/Blouse F (2).jpeg",
+      "Blouse/Blouse F (1).jpeg",
       "Blouse/Blouse F (3).jpeg"
     ]
   },
@@ -462,14 +462,14 @@ const RAW_PRODUCTS: RawProductDef[] = [
     "reviewCount": 31,
     "description": "Sophisticated modern silhouette uniting a sculpted designer top with tailored straight-fit denim trousers.",
     "optFiles": [
-      "Top & Jeans Pair 2/ChatGPT Image Sep 30, 2026, 06_36_43 AM.png",
+      "Top & Jeans Pair 2/image (4).jpeg",
       "Top & Jeans Pair 2/ChatGPT Image Sep 30, 2026, 06_39_27 AM.png",
-      "Top & Jeans Pair 2/image (4).jpeg"
+      "Top & Jeans Pair 2/ChatGPT Image Sep 30, 2026, 06_36_43 AM.png"
     ],
     "origFiles": [
-      "Top & Jeans Pair 2/ChatGPT Image Sep 30, 2026, 06_36_43 AM.png",
+      "Top & Jeans Pair 2/image (4).jpeg",
       "Top & Jeans Pair 2/ChatGPT Image Sep 30, 2026, 06_39_27 AM.png",
-      "Top & Jeans Pair 2/image (4).jpeg"
+      "Top & Jeans Pair 2/ChatGPT Image Sep 30, 2026, 06_36_43 AM.png"
     ]
   },
   {
@@ -487,15 +487,15 @@ const RAW_PRODUCTS: RawProductDef[] = [
     "reviewCount": 22,
     "description": "Striking one-shoulder silhouette fusing Indian handloom drape elements with dramatic runway asymmetry and gold metallic accents.",
     "optFiles": [
-      "One Shoulder Tops/Kurta A (1).webp",
-      "One Shoulder Tops/Kurta A (2).webp",
       "One Shoulder Tops/Kurta A (3).webp",
+      "One Shoulder Tops/Kurta A (2).webp",
+      "One Shoulder Tops/Kurta A (1).webp",
       "One Shoulder Tops/Kurta A (4).webp"
     ],
     "origFiles": [
-      "One Shoulder Tops/Kurta A (1).jpeg",
-      "One Shoulder Tops/Kurta A (2).jpeg",
       "One Shoulder Tops/Kurta A (3).jpeg",
+      "One Shoulder Tops/Kurta A (2).jpeg",
+      "One Shoulder Tops/Kurta A (1).jpeg",
       "One Shoulder Tops/Kurta A (4).jpeg"
     ]
   },
@@ -562,16 +562,16 @@ const RAW_PRODUCTS: RawProductDef[] = [
     "reviewCount": 36,
     "description": "Captivating rainbow of traditional festive hues accented by delicate silver zari buttas and a lustrous hand-dyed pallu.",
     "optFiles": [
-      "Sarees Section/Bright colorful saree (1).webp",
+      "Sarees Section/Bright colorful saree (1)_alt.webp",
       "Sarees Section/Bright colorful saree (2).webp",
       "Sarees Section/Bright colorful saree (3).webp",
-      "Sarees Section/Bright colorful saree (1)_alt.webp"
+      "Sarees Section/Bright colorful saree (1).webp"
     ],
     "origFiles": [
-      "Sarees Section/Bright colorful saree (1).png",
+      "Sarees Section/Bright colorful saree (1).jfif",
       "Sarees Section/Bright colorful saree (2).png",
       "Sarees Section/Bright colorful saree (3).png",
-      "Sarees Section/Bright colorful saree (1).jfif"
+      "Sarees Section/Bright colorful saree (1).png"
     ]
   },
   {
@@ -656,14 +656,14 @@ const RAW_PRODUCTS: RawProductDef[] = [
     "reviewCount": 25,
     "description": "Light-as-air editorial silhouette combining diaphanous silk textures with modern minimalist gold borders.",
     "optFiles": [
-      "Sarees Section/Fashion (1).webp",
+      "Sarees Section/Fashion (3).webp",
       "Sarees Section/Fashion (2).webp",
-      "Sarees Section/Fashion (3).webp"
+      "Sarees Section/Fashion (1).webp"
     ],
     "origFiles": [
-      "Sarees Section/Fashion (1).jpeg",
+      "Sarees Section/Fashion (3).jpeg",
       "Sarees Section/Fashion (2).jpeg",
-      "Sarees Section/Fashion (3).jpeg"
+      "Sarees Section/Fashion (1).jpeg"
     ]
   },
   {
@@ -681,14 +681,14 @@ const RAW_PRODUCTS: RawProductDef[] = [
     "reviewCount": 27,
     "description": "Handspun Chanderi silk drape woven on traditional wooden pit looms with delicate geometric border and pallu motifs.",
     "optFiles": [
-      "Sarees Section/Fatista (1).webp",
+      "Sarees Section/Fatista (3).webp",
       "Sarees Section/Fatista (2).webp",
-      "Sarees Section/Fatista (3).webp"
+      "Sarees Section/Fatista (1).webp"
     ],
     "origFiles": [
-      "Sarees Section/Fatista (1).jpeg",
+      "Sarees Section/Fatista (3).jpeg",
       "Sarees Section/Fatista (2).jpeg",
-      "Sarees Section/Fatista (3).jpeg"
+      "Sarees Section/Fatista (1).jpeg"
     ]
   },
   {

@@ -43,8 +43,6 @@ const OutfitCard = memo<OutfitCardProps>(({
   const [isHovered, setIsHovered] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
 
-  const currentImage = outfit.gallery[activeAngleIndex] || outfit.image;
-
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
     onAddToCart(outfit);
@@ -71,16 +69,23 @@ const OutfitCard = memo<OutfitCardProps>(({
         className="relative w-full aspect-[3/4] bg-[#F2EBDD]/60 overflow-hidden cursor-pointer"
         onClick={() => onQuickView(outfit)}
       >
-        <img
-          src={currentImage}
-          alt={outfit.name}
-          loading="lazy"
-          decoding="async"
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).src = userProductImage;
-          }}
-          className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105 will-change-transform"
-        />
+        <div className="absolute inset-0 w-full h-full transition-transform duration-700 ease-out group-hover:scale-105 will-change-transform">
+          {(outfit.gallery.length > 0 ? outfit.gallery : [outfit.image]).map((img, idx) => (
+            <img
+              key={idx}
+              src={img}
+              alt={`${outfit.name} view ${idx + 1}`}
+              loading={idx === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = userProductImage;
+              }}
+              className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-500 ease-in-out will-change-transform ${
+                activeAngleIndex === idx ? 'opacity-100 z-1' : 'opacity-0 z-0 pointer-events-none'
+              }`}
+            />
+          ))}
+        </div>
 
         {/* Top Badges */}
         <div className="absolute top-1.5 left-1.5 right-1.5 sm:top-2.5 sm:left-2.5 sm:right-2.5 flex items-center justify-between pointer-events-none z-10">
