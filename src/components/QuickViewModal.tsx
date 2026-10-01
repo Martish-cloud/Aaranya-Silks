@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Star, ShoppingBag, Heart, ArrowRight, ShieldCheck } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
@@ -16,7 +16,17 @@ export const QuickViewModal: React.FC = () => {
 
   const [activeImgIdx, setActiveImgIdx] = useState(0);
   const [selectedColorIdx, setSelectedColorIdx] = useState(0);
+  const [customActiveImg, setCustomActiveImg] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
+
+  useEffect(() => {
+    if (quickViewProduct) {
+      setSelectedColorIdx(0);
+      setActiveImgIdx(0);
+      setCustomActiveImg(null);
+      setQuantity(1);
+    }
+  }, [quickViewProduct?.id]);
 
   if (!quickViewProduct) return null;
 
@@ -31,8 +41,24 @@ export const QuickViewModal: React.FC = () => {
 
   const handleColorChange = (index: number) => {
     setSelectedColorIdx(index);
-    setActiveImgIdx(0);
+    const colorObj = product.colors[index];
+    if (colorObj?.image) {
+      setCustomActiveImg(colorObj.image);
+      const imgIdx = product.images.indexOf(colorObj.image);
+      if (imgIdx >= 0) setActiveImgIdx(imgIdx);
+    }
   };
+
+  const handleThumbnailClick = (img: string, idx: number) => {
+    setActiveImgIdx(idx);
+    setCustomActiveImg(img);
+    const colorIdx = product.colors.findIndex((c) => c.image === img);
+    if (colorIdx >= 0) {
+      setSelectedColorIdx(colorIdx);
+    }
+  };
+
+  const currentDisplayImg = customActiveImg || activeColor.image || product.images[activeImgIdx] || product.images[0];
 
   return (
     <AnimatePresence>
@@ -69,7 +95,7 @@ export const QuickViewModal: React.FC = () => {
               {/* Main Image */}
               <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-white shadow-md mb-4 border border-[#C8A96B]/20">
                 <img
-                  src={product.images[activeImgIdx] || activeColor.image || product.images[0]}
+                  src={currentDisplayImg}
                   alt={product.name}
                   className="w-full h-full object-cover object-top"
                 />
@@ -85,9 +111,11 @@ export const QuickViewModal: React.FC = () => {
                 {product.images.map((img, idx) => (
                   <button
                     key={idx}
-                    onClick={() => setActiveImgIdx(idx)}
+                    onClick={() => handleThumbnailClick(img, idx)}
                     className={`w-14 h-18 rounded-lg overflow-hidden shrink-0 border-2 transition-all ${
-                      activeImgIdx === idx ? 'border-[#651C32] scale-105' : 'border-transparent opacity-70 hover:opacity-100'
+                      currentDisplayImg === img
+                        ? 'border-[#651C32] ring-2 ring-[#C8A96B] scale-105 opacity-100'
+                        : 'border-transparent opacity-70 hover:opacity-100'
                     }`}
                   >
                     <img src={img} alt="thumbnail" className="w-full h-full object-cover object-top" />

@@ -37,7 +37,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     // Check if target is not a button or action
     const target = e.target as HTMLElement;
     if (!target.closest('button')) {
-      navigateTo('product', product.slug);
+      navigateTo('product', product.slug, undefined, activeColor.name);
     }
   };
 

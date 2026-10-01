@@ -143,13 +143,21 @@ export const CartDrawer: React.FC = () => {
                     key={`${item.product.id}-${item.selectedColor}`}
                     className="flex gap-4 p-3 rounded-2xl bg-[#F2EBDD]/60 border border-[#C8A96B]/25"
                   >
-                    {/* Saree Thumbnail */}
+                    {/* Saree Thumbnail matching selected variant */}
                     <div className="w-20 h-26 rounded-xl overflow-hidden bg-white shrink-0 border border-[#C8A96B]/20">
-                      <img
-                        src={item.product.images[0]}
-                        alt={item.product.name}
-                        className="w-full h-full object-cover object-top"
-                      />
+                      {(() => {
+                        const matchingColor = item.product.colors?.find(
+                          (c) => c.name.toLowerCase() === item.selectedColor.toLowerCase()
+                        );
+                        const itemImg = matchingColor?.image || item.product.images[0];
+                        return (
+                          <img
+                            src={itemImg}
+                            alt={`${item.product.name} - ${item.selectedColor}`}
+                            className="w-full h-full object-cover object-top"
+                          />
+                        );
+                      })()}
                     </div>
 
                     {/* Details */}

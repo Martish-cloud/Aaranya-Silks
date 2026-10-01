@@ -28,8 +28,9 @@ interface ShopContextType {
   
   // Navigation / views
   activePage: 'home' | 'catalog' | 'product' | 'story';
-  navigateTo: (page: 'home' | 'catalog' | 'product' | 'story', productSlug?: string, categoryFilter?: string) => void;
+  navigateTo: (page: 'home' | 'catalog' | 'product' | 'story', productSlug?: string, categoryFilter?: string, selectedColor?: string) => void;
   currentProductSlug: string | null;
+  selectedVariantColor: string | null;
   currentCategoryFilter: string | null;
   setCurrentCategoryFilter: (cat: string | null) => void;
 
@@ -93,6 +94,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Navigation
   const [activePage, setActivePage] = useState<'home' | 'catalog' | 'product' | 'story'>('home');
   const [currentProductSlug, setCurrentProductSlug] = useState<string | null>(null);
+  const [selectedVariantColor, setSelectedVariantColor] = useState<string | null>(null);
   const [currentCategoryFilter, setCurrentCategoryFilter] = useState<string | null>(null);
 
   // Discount & Perks
@@ -204,7 +206,8 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const navigateTo = (
     page: 'home' | 'catalog' | 'product' | 'story',
     productSlug?: string,
-    categoryFilter?: string
+    categoryFilter?: string,
+    selectedColor?: string
   ) => {
     setActivePage(page);
     if (productSlug) {
@@ -212,6 +215,11 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     if (categoryFilter !== undefined) {
       setCurrentCategoryFilter(categoryFilter);
+    }
+    if (selectedColor !== undefined) {
+      setSelectedVariantColor(selectedColor);
+    } else {
+      setSelectedVariantColor(null);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -269,6 +277,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         activePage,
         navigateTo,
         currentProductSlug,
+        selectedVariantColor,
         currentCategoryFilter,
         setCurrentCategoryFilter,
         cartSubtotal,

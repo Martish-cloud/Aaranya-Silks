@@ -5,24 +5,8 @@ import { ProductCard } from './ProductCard';
 import { useShop } from '../context/ShopContext';
 import { WipeText } from './WipeText';
 import { useAutoScrollRail } from '../utils/useAutoScrollRail';
-import type { Saree } from '../types';
-
-import badImg1 from '../assets/BAD/Image (1).jfif';
-import badImg2 from '../assets/BAD/Image (2).jpeg';
-import badImg3 from '../assets/BAD/Image (3).webp';
-import badImg4 from '../assets/BAD/Image (4).jpeg';
-import badImg5 from '../assets/BAD/Image (5).jfif';
 
 const TABS = ['All Arrivals', 'Bridal Sarees', 'Banarasi Sarees', 'Silk Sarees', 'Organza Sarees'];
-
-// Sequential mapping of BAD folder images to authentic traditional sarees
-const BAD_IMAGES_MAP = [
-  { slug: 'mayurakshi-kanjivaram-bridal-silk-saree', image: badImg1, colorName: 'Crimson Red' },
-  { slug: 'varanasi-noor-kadhwa-banarasi-brocade', image: badImg2, colorName: 'Wine Plum' },
-  { slug: 'swarna-hansa-pure-tissue-silk-saree', image: badImg3, colorName: 'Champagne Gold' },
-  { slug: 'chandrika-midnight-flora-pure-organza-saree', image: badImg4, colorName: 'Midnight Blue' },
-  { slug: 'rajkumari-emerald-temple-kanjivaram', image: badImg5, colorName: 'Emerald Green' }
-];
 
 export const NewArrivalsGrid: React.FC = () => {
   const { navigateTo } = useShop();
@@ -36,32 +20,64 @@ export const NewArrivalsGrid: React.FC = () => {
     isHovered,
   });
 
-  // Map products strictly using BAD images for the 5 traditional sarees
-  const badArrivals: Saree[] = useMemo(() => {
-    return BAD_IMAGES_MAP.map(({ slug, image, colorName }) => {
-      const original = SAREES_DATA.find((s) => s.slug === slug);
-      if (!original) return null;
-      return {
-        ...original,
-        color: colorName,
-        images: [image, ...original.images.filter((img) => img !== image)],
-        colors: original.colors.map((c) =>
-          c.name.toLowerCase() === colorName.toLowerCase() ? { ...c, image } : c
-        )
-      };
-    }).filter(Boolean) as Saree[];
-  }, []);
-
   const filteredProducts = useMemo(() => {
-    if (activeTab === 'All Arrivals') return badArrivals;
-    const tabFiltered = badArrivals.filter((item) => item.category === activeTab);
-    return tabFiltered.length > 0 ? tabFiltered : badArrivals;
-  }, [activeTab, badArrivals]);
+    switch (activeTab) {
+      case 'Bridal Sarees': {
+        const list = SAREES_DATA.filter(
+          (item) =>
+            item.category === 'Bridal Sarees' ||
+            item.category === 'Kanjivaram Sarees' ||
+            item.occasions.includes('Bridal') ||
+            item.name.toLowerCase().includes('bridal')
+        );
+        return list.length > 0 ? list : SAREES_DATA;
+      }
+      case 'Banarasi Sarees': {
+        const list = SAREES_DATA.filter(
+          (item) =>
+            item.category === 'Banarasi Sarees' ||
+            item.fabric === 'Banarasi Brocade' ||
+            item.name.toLowerCase().includes('banarasi')
+        );
+        return list.length > 0 ? list : SAREES_DATA;
+      }
+      case 'Silk Sarees': {
+        const list = SAREES_DATA.filter(
+          (item) =>
+            item.category === 'Silk Sarees' ||
+            item.category === 'Kanjivaram Sarees' ||
+            item.fabric.includes('Silk')
+        );
+        return list.length > 0 ? list : SAREES_DATA;
+      }
+      case 'Organza Sarees': {
+        const list = SAREES_DATA.filter(
+          (item) =>
+            item.category === 'Organza Sarees' ||
+            item.fabric === 'Pure Organza' ||
+            item.name.toLowerCase().includes('organza')
+        );
+        return list.length > 0 ? list : SAREES_DATA;
+      }
+      case 'All Arrivals':
+      default:
+        return SAREES_DATA;
+    }
+  }, [activeTab]);
 
-  // Triple items for seamless, continuous looping with zero blank spaces
-  const DISPLAY_PRODUCTS = useMemo(() => {
-    return [...filteredProducts, ...filteredProducts, ...filteredProducts, ...filteredProducts];
+  // Ensure enough items for seamless, continuous looping with zero blank spaces
+  const baseProducts = useMemo(() => {
+    let list = filteredProducts;
+    if (list.length === 0) list = SAREES_DATA;
+    while (list.length < 8) {
+      list = [...list, ...list];
+    }
+    return list;
   }, [filteredProducts]);
+
+  const DISPLAY_PRODUCTS = useMemo(() => {
+    return [...baseProducts, ...baseProducts, ...baseProducts];
+  }, [baseProducts]);
 
   const handleScroll = (direction: 'left' | 'right') => {
     markUserInteraction();

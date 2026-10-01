@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Star,
@@ -22,12 +22,45 @@ interface ProductDetailPageProps {
 }
 
 export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) => {
-  const { addToCart, isInWishlist, toggleWishlist, setIsCheckoutOpen, showToast, navigateTo } = useShop();
+  const { addToCart, isInWishlist, toggleWishlist, setIsCheckoutOpen, showToast, navigateTo, selectedVariantColor } = useShop();
 
   const product: Saree = SAREES_DATA.find((s) => s.slug === slug) || SAREES_DATA[0];
 
+  const [selectedColorIdx, setSelectedColorIdx] = useState(() => {
+    if (selectedVariantColor) {
+      const idx = product.colors.findIndex(
+        (c) => c.name.toLowerCase() === selectedVariantColor.toLowerCase()
+      );
+      if (idx >= 0) return idx;
+    }
+    return 0;
+  });
+
+  const [activeImg, setActiveImg] = useState<string | null>(() => {
+    if (selectedVariantColor) {
+      const col = product.colors.find(
+        (c) => c.name.toLowerCase() === selectedVariantColor.toLowerCase()
+      );
+      if (col?.image) return col.image;
+    }
+    return product.colors[0]?.image || product.images[0];
+  });
+
+  useEffect(() => {
+    let colIdx = 0;
+    if (selectedVariantColor) {
+      const idx = product.colors.findIndex(
+        (c) => c.name.toLowerCase() === selectedVariantColor.toLowerCase()
+      );
+      if (idx >= 0) colIdx = idx;
+    }
+    setSelectedColorIdx(colIdx);
+    const chosenColor = product.colors[colIdx];
+    setActiveImg(chosenColor?.image || product.images[0]);
+    setActiveImgIdx(0);
+  }, [slug, selectedVariantColor, product]);
+
   const [activeImgIdx, setActiveImgIdx] = useState(0);
-  const [selectedColorIdx, setSelectedColorIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [pincodeInput, setPincodeInput] = useState('');
   const [pincodeStatus, setPincodeStatus] = useState<string | null>(null);
@@ -45,13 +78,22 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
 
   const handleColorSelect = (index: number) => {
     setSelectedColorIdx(index);
-    // Find matching image in product.images or color.image
     const colorObj = product.colors[index];
     if (colorObj?.image) {
+      setActiveImg(colorObj.image);
       const imgIdx = product.images.indexOf(colorObj.image);
       if (imgIdx >= 0) {
         setActiveImgIdx(imgIdx);
       }
+    }
+  };
+
+  const handleThumbnailSelect = (img: string, idx: number) => {
+    setActiveImgIdx(idx);
+    setActiveImg(img);
+    const colorIdx = product.colors.findIndex((c) => c.image === img);
+    if (colorIdx >= 0) {
+      setSelectedColorIdx(colorIdx);
     }
   };
 
@@ -86,7 +128,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
     (s) => s.id !== product.id && (s.category === product.category || s.fabric === product.fabric)
   ).slice(0, 4);
 
-  const displayedImage = product.images[activeImgIdx] || activeColor.image || product.images[0];
+  const displayedImage = activeImg || activeColor.image || product.images[activeImgIdx] || product.images[0];
 
   return (
     <div className="bg-[#FAF7F0] min-h-screen py-4 lg:py-6 pb-24 lg:pb-12">
@@ -154,9 +196,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                 {product.images.map((img, idx) => (
                   <button
                     key={idx}
-                    onClick={() => setActiveImgIdx(idx)}
+                    onClick={() => handleThumbnailSelect(img, idx)}
                     className={`w-14 h-16 sm:w-16 sm:h-18 rounded-lg overflow-hidden shrink-0 border-2 transition-all shadow-xs ${
-                      activeImgIdx === idx
+                      displayedImage === img || (activeImgIdx === idx && !activeImg)
                         ? 'border-[#651C32] ring-2 ring-[#C8A96B] scale-105 opacity-100'
                         : 'border-transparent opacity-70 hover:opacity-100'
                     }`}
