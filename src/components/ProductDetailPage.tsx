@@ -46,6 +46,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
     return product.colors[0]?.image || product.images[0];
   });
 
+  const [activeImgIdx, setActiveImgIdx] = useState(0);
+
   useEffect(() => {
     let colIdx = 0;
     if (selectedVariantColor) {
@@ -60,7 +62,6 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
     setActiveImgIdx(0);
   }, [slug, selectedVariantColor, product]);
 
-  const [activeImgIdx, setActiveImgIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [pincodeInput, setPincodeInput] = useState('');
   const [pincodeStatus, setPincodeStatus] = useState<string | null>(null);
