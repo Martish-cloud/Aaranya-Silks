@@ -112,8 +112,10 @@ export const SignatureCollections: React.FC = () => {
   const { navigateTo } = useShop();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isInView, setIsInView] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const thumbnailStripRef = useRef<HTMLDivElement>(null);
 
   const activePhoto = GALLERY_ITEMS[currentIndex];
@@ -126,39 +128,60 @@ export const SignatureCollections: React.FC = () => {
     setCurrentIndex((prev) => (prev - 1 + GALLERY_ITEMS.length) % GALLERY_ITEMS.length);
   }, []);
 
-  // Auto-slideshow timer (5 seconds)
+  // Monitor section visibility so slideshow timer only runs when user is looking at this section
   useEffect(() => {
-    if (isPaused || lightboxOpen) return;
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Auto-slideshow timer (5 seconds) - only runs when gallery is active in viewport
+  useEffect(() => {
+    if (isPaused || lightboxOpen || !isInView) return;
     const interval = setInterval(() => {
       handleNext();
     }, 5000);
     return () => clearInterval(interval);
-  }, [isPaused, lightboxOpen, handleNext]);
+  }, [isPaused, lightboxOpen, isInView, handleNext]);
 
-  // Smooth scroll active thumbnail into view
+  // Smooth scroll active thumbnail horizontally within its container ONLY (never affects window/page scrolling)
   useEffect(() => {
-    if (thumbnailStripRef.current) {
-      const activeThumb = thumbnailStripRef.current.children[currentIndex] as HTMLElement;
+    const container = thumbnailStripRef.current;
+    if (container) {
+      const activeThumb = container.children[currentIndex] as HTMLElement;
       if (activeThumb) {
-        activeThumb.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'center',
+        const thumbLeft = activeThumb.offsetLeft;
+        const thumbWidth = activeThumb.offsetWidth;
+        const containerWidth = container.clientWidth;
+        const targetScroll = thumbLeft - containerWidth / 2 + thumbWidth / 2;
+        container.scrollTo({
+          left: Math.max(0, targetScroll),
+          behavior: 'smooth'
         });
       }
     }
   }, [currentIndex]);
 
-  // Keyboard navigation
+  // Keyboard navigation (only active when section is in view or lightbox is open)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
+      if (!isInView && !lightboxOpen) return;
+
       if (e.key === 'ArrowRight') handleNext();
       if (e.key === 'ArrowLeft') handlePrev();
       if (e.key === 'Escape' && lightboxOpen) setLightboxOpen(false);
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleNext, handlePrev, lightboxOpen]);
+  }, [handleNext, handlePrev, lightboxOpen, isInView]);
 
   // Mouse tilt effect calculation
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -175,6 +198,7 @@ export const SignatureCollections: React.FC = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="photo-gallery"
       className="py-20 md:py-32 bg-[#0F0A09] text-[#FAF7F0] relative overflow-hidden select-none"
     >
