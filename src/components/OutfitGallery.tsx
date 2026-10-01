@@ -59,7 +59,7 @@ const OutfitCard = memo<OutfitCardProps>(({
 
   return (
     <div
-      className="group relative flex flex-col rounded-2xl bg-white border border-[#C8A96B]/25 shadow-sm hover:shadow-xl hover:shadow-[#651C32]/10 transition-all duration-300 overflow-hidden w-[180px] sm:w-[220px] md:w-[240px] lg:w-[260px] shrink-0 select-none text-left"
+      className="group relative flex flex-col rounded-2xl bg-white border border-[#C8A96B]/25 shadow-sm hover:shadow-xl hover:shadow-[#651C32]/10 transition-all duration-300 overflow-hidden w-[150px] sm:w-[175px] md:w-[195px] lg:w-[215px] shrink-0 select-none text-left"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
         setIsHovered(false);
@@ -158,32 +158,32 @@ const OutfitCard = memo<OutfitCardProps>(({
       </div>
 
       {/* 2. Product Meta Info */}
-      <div className="p-3 sm:p-3.5 flex flex-col justify-between flex-1 space-y-2">
+      <div className="p-2.5 sm:p-3 flex flex-col justify-between flex-1 space-y-1.5">
         <div>
-          <div className="flex items-center justify-between text-[10px] text-[#524B48] mb-1">
-            <span className="font-medium truncate max-w-[120px] text-[#8B1E3F]">{outfit.fabric}</span>
+          <div className="flex items-center justify-between text-[9px] sm:text-[10px] text-[#524B48] mb-0.5">
+            <span className="font-medium truncate max-w-[85px] sm:max-w-[110px] text-[#8B1E3F]">{outfit.fabric}</span>
             <div className="flex items-center gap-0.5 text-[#C8A96B]">
-              <Star className="w-3 h-3 fill-current" />
+              <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current" />
               <span className="font-bold text-[#1C1A19]">{outfit.rating}</span>
             </div>
           </div>
 
           <h3
             onClick={() => onQuickView(outfit)}
-            className="font-serif text-xs sm:text-sm font-semibold text-[#1C1A19] group-hover:text-[#651C32] transition-colors line-clamp-1 cursor-pointer"
+            className="font-serif text-[11px] sm:text-xs md:text-sm font-semibold text-[#1C1A19] group-hover:text-[#651C32] transition-colors line-clamp-1 cursor-pointer leading-snug"
           >
             {outfit.name}
           </h3>
         </div>
 
         {/* Pricing & Add to Bag */}
-        <div className="pt-2 border-t border-[#C8A96B]/15 flex items-center justify-between gap-1">
+        <div className="pt-1.5 border-t border-[#C8A96B]/15 flex items-center justify-between gap-1">
           <div>
             <div className="font-serif font-bold text-xs sm:text-sm text-[#651C32]">
               {formatINR(outfit.price)}
             </div>
             {outfit.originalPrice && (
-              <div className="text-[10px] text-[#524B48]/60 line-through">
+              <div className="text-[9px] sm:text-[10px] text-[#524B48]/60 line-through">
                 {formatINR(outfit.originalPrice)}
               </div>
             )}
@@ -193,7 +193,7 @@ const OutfitCard = memo<OutfitCardProps>(({
             type="button"
             onClick={handleQuickAdd}
             aria-label="Add to bag"
-            className={`p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-1 cursor-pointer shadow-xs ${
+            className={`p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-[9px] sm:text-[10px] font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-1 cursor-pointer shadow-xs ${
               justAdded
                 ? 'bg-[#1B4D3E] text-white'
                 : 'bg-[#FAF7F0] hover:bg-[#651C32] text-[#651C32] hover:text-white border border-[#651C32]/30'
@@ -206,7 +206,7 @@ const OutfitCard = memo<OutfitCardProps>(({
               </>
             ) : (
               <>
-                <ShoppingBag className="w-3 h-3" />
+                <ShoppingBag className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                 <span className="hidden sm:inline">Add</span>
               </>
             )}
@@ -239,8 +239,8 @@ const SlidingRow: React.FC<SlidingRowProps> = ({
 }) => {
   const [isRowHovered, setIsRowHovered] = useState(false);
 
-  // Stagger speeds slightly so rows slide organically
-  const duration = 38 + (rowIndex % 5) * 3;
+  // Stagger speeds slightly so rows slide organically at improved faster tempo
+  const duration = 20 + (rowIndex % 5) * 2;
 
   // Build repeated array so 50% shift creates a seamless, continuous infinite loop
   const displayItems = useMemo(() => {
@@ -260,7 +260,7 @@ const SlidingRow: React.FC<SlidingRowProps> = ({
       onMouseLeave={() => setIsRowHovered(false)}
     >
       <div
-        className="flex items-stretch gap-3 sm:gap-4 will-change-transform"
+        className="flex items-stretch gap-2.5 sm:gap-3.5 will-change-transform"
         style={{
           width: 'max-content',
           animation: `${direction === 'ltr' ? 'outfitSlideLTR' : 'outfitSlideRTL'} ${duration}s linear infinite`,
