@@ -116,7 +116,6 @@ export const SignatureCollections: React.FC = () => {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const thumbnailStripRef = useRef<HTMLDivElement>(null);
 
   const activePhoto = GALLERY_ITEMS[currentIndex];
 
@@ -142,32 +141,14 @@ export const SignatureCollections: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-slideshow timer (1 second interval) - only runs when gallery is active in viewport
+  // Auto-slideshow timer (2 seconds interval) - only runs when gallery is active in viewport
   useEffect(() => {
     if (isPaused || lightboxOpen || !isInView) return;
     const interval = setInterval(() => {
       handleNext();
-    }, 1000);
+    }, 2000);
     return () => clearInterval(interval);
   }, [isPaused, lightboxOpen, isInView, handleNext]);
-
-  // Smooth scroll active thumbnail horizontally within its container ONLY (never affects window/page scrolling)
-  useEffect(() => {
-    const container = thumbnailStripRef.current;
-    if (container) {
-      const activeThumb = container.children[currentIndex] as HTMLElement;
-      if (activeThumb) {
-        const thumbLeft = activeThumb.offsetLeft;
-        const thumbWidth = activeThumb.offsetWidth;
-        const containerWidth = container.clientWidth;
-        const targetScroll = thumbLeft - containerWidth / 2 + thumbWidth / 2;
-        container.scrollTo({
-          left: Math.max(0, targetScroll),
-          behavior: 'smooth'
-        });
-      }
-    }
-  }, [currentIndex]);
 
   // Keyboard navigation (only active when section is in view or lightbox is open)
   useEffect(() => {
@@ -200,29 +181,30 @@ export const SignatureCollections: React.FC = () => {
     <section
       ref={sectionRef}
       id="photo-gallery"
-      className="py-20 md:py-32 bg-[#0F0A09] text-[#FAF7F0] relative overflow-hidden select-none"
+      className="py-16 md:py-24 bg-[#0F0A09] text-[#FAF7F0] relative overflow-hidden select-none"
     >
-      {/* Dynamic Layered Ambient Glow reflecting the currently selected photo */}
+      {/* Full Section Background - Same Selected Image Enlarged with Subtle 15-20% Blur */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <AnimatePresence>
           <motion.div
-            key={`ambient-${activePhoto.id}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.35 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.45, ease: 'easeInOut' }}
-            className="absolute inset-0 flex items-center justify-center"
+            key={`section-bg-${activePhoto.id}`}
+            initial={{ opacity: 0, scale: 1.04 }}
+            animate={{ opacity: 0.38, scale: 1.08 }}
+            exit={{ opacity: 0, scale: 1.1 }}
+            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-0 w-full h-full"
           >
             <img
               src={activePhoto.src}
               alt=""
               aria-hidden="true"
-              className="w-full h-full object-cover filter blur-[90px] scale-125 opacity-30 transform-gpu"
+              className="w-full h-full object-cover object-center filter blur-[7px] transform-gpu"
             />
           </motion.div>
         </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F0A09] via-transparent to-[#0F0A09]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,#0F0A09_85%)]" />
+        {/* Soft dark vignette overlays ensuring impeccable text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F0A09]/85 via-[#0F0A09]/55 to-[#0F0A09]/85" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,#0F0A09_85%)]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -449,54 +431,6 @@ export const SignatureCollections: React.FC = () => {
             </div>
           </div>
 
-          {/* Thumbnail Carousel Strip (Strict 9:10 Aspect, All 9 Photos) */}
-          <div className="mt-14 pt-8 border-t border-white/10">
-            <div className="flex items-center justify-between mb-4 px-1">
-              <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C8A96B]">
-                Curated Gallery Thumbnails
-              </span>
-              <span className="text-xs text-white/50 font-mono">
-                {currentIndex + 1} of {GALLERY_ITEMS.length}
-              </span>
-            </div>
-
-            <div
-              ref={thumbnailStripRef}
-              className="flex items-center gap-3.5 overflow-x-auto no-scrollbar pb-3 pt-1 px-1"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            >
-              {GALLERY_ITEMS.map((item, idx) => {
-                const isActive = idx === currentIndex;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => setCurrentIndex(idx)}
-                    className={`relative flex-shrink-0 w-16 sm:w-20 md:w-24 aspect-[9/10] rounded-xl overflow-hidden transition-all duration-300 transform ${
-                      isActive
-                        ? 'ring-2 ring-[#C8A96B] scale-105 shadow-xl opacity-100 border border-[#C8A96B]'
-                        : 'border border-white/20 opacity-50 hover:opacity-90 hover:scale-100 hover:border-[#C8A96B]/60'
-                    }`}
-                    aria-label={`View photo ${idx + 1}: ${item.title}`}
-                  >
-                    <img
-                      src={item.src}
-                      alt={item.title}
-                      className="w-full h-full object-cover object-top"
-                      loading="lazy"
-                    />
-                    <div
-                      className={`absolute inset-0 transition-opacity ${
-                        isActive ? 'bg-[#8B1E3F]/20' : 'bg-black/30'
-                      }`}
-                    />
-                    <span className="absolute bottom-1 right-1 text-[9px] font-mono font-bold text-white bg-black/60 px-1 rounded">
-                      0{idx + 1}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
         </div>
       </div>
 
