@@ -114,33 +114,31 @@ const OutfitCard = memo<OutfitCardProps>(({
           <Heart className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${isWishlisted ? 'fill-current' : ''}`} />
         </button>
 
-        {/* Multi-Angle Hover Indicator Dots */}
-        {outfit.gallery.length > 1 && (
-          <div className="hidden sm:flex absolute bottom-2 left-0 right-0 justify-center items-center gap-1 z-10 pointer-events-auto">
-            <div className="px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md flex items-center gap-1 border border-white/20">
-              <span className="text-[8px] font-medium text-white/80 mr-0.5">
-                {outfit.gallery.length} Views:
-              </span>
-              {outfit.gallery.map((_, gIdx) => (
-                <button
-                  key={gIdx}
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveAngleIndex(gIdx);
-                  }}
-                  onMouseEnter={() => setActiveAngleIndex(gIdx)}
-                  aria-label={`View angle ${gIdx + 1}`}
-                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                    activeAngleIndex === gIdx
-                      ? 'w-3.5 bg-[#C8A96B]'
-                      : 'bg-white/50 hover:bg-white'
-                  }`}
-                />
-              ))}
-            </div>
+        {/* Multi-Angle Hover Indicator Dots & Static Views Count */}
+        <div className="hidden sm:flex absolute bottom-2 left-0 right-0 justify-center items-center gap-1 z-10 pointer-events-auto">
+          <div className="px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md flex items-center gap-1 border border-white/20">
+            <span className="text-[8px] font-medium text-white/80 mr-0.5">
+              {outfit.views.toLocaleString()} Views:
+            </span>
+            {(outfit.gallery.length > 0 ? outfit.gallery : [outfit.image]).map((_, gIdx) => (
+              <button
+                key={gIdx}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveAngleIndex(gIdx);
+                }}
+                onMouseEnter={() => setActiveAngleIndex(gIdx)}
+                aria-label={`View angle ${gIdx + 1}`}
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                  activeAngleIndex === gIdx
+                    ? 'w-3.5 bg-[#C8A96B]'
+                    : 'bg-white/50 hover:bg-white'
+                }`}
+              />
+            ))}
           </div>
-        )}
+        </div>
 
         {/* Quick View Overlay Bar */}
         <div

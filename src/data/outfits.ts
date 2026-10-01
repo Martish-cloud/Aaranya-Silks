@@ -14,6 +14,7 @@ export interface OutfitProduct {
   fabric: string;
   rating: number;
   reviewCount: number;
+  views: number;
   description: string;
   image: string;
   gallery: string[];
@@ -998,6 +999,45 @@ const RAW_PRODUCTS: RawProductDef[] = [
   }
 ];
 
+export const OUTFIT_VIEWS_MAP: Record<string, number> = {
+  'outfit-babycon-01': 743,
+  'outfit-babycon-02': 927,
+  'outfit-babycon-03': 431,
+  'outfit-babycon-04': 856,
+  'outfit-babycon-05': 618,
+  'outfit-blouse-01': 1043,
+  'outfit-blouse-02': 574,
+  'outfit-blouse-03': 389,
+  'outfit-blouse-04': 812,
+  'outfit-blouse-05': 1087,
+  'outfit-blouse-06': 467,
+  'outfit-blouse-07': 695,
+  'outfit-croptop-01': 358,
+  'outfit-croptop-02': 1154,
+  'outfit-top-01': 879,
+  'outfit-saree-01': 1186,
+  'outfit-saree-02': 964,
+  'outfit-saree-03': 523,
+  'outfit-saree-04': 342,
+  'outfit-saree-05': 781,
+  'outfit-saree-06': 416,
+  'outfit-saree-07': 1068,
+  'outfit-saree-08': 647,
+  'outfit-saree-09': 912,
+  'outfit-saree-10': 738,
+  'outfit-saree-11': 1123,
+  'outfit-saree-12': 495,
+  'outfit-saree-13': 863,
+  'outfit-saree-14': 379,
+  'outfit-saree-15': 1019,
+  'outfit-saree-16': 582,
+  'outfit-saree-17': 794,
+  'outfit-saree-18': 365,
+  'outfit-saree-19': 947,
+  'outfit-saree-20': 1168,
+  'outfit-saree-21': 684,
+};
+
 export const OUTFITS_DATA: OutfitProduct[] = RAW_PRODUCTS.map((p) => {
   const optGallery = p.optFiles.map(resolveOptImage).filter(Boolean);
   const origGallery = p.origFiles.map(resolveOrigImage).filter(Boolean);
@@ -1017,6 +1057,7 @@ export const OUTFITS_DATA: OutfitProduct[] = RAW_PRODUCTS.map((p) => {
     fabric: p.fabric,
     rating: p.rating,
     reviewCount: p.reviewCount,
+    views: OUTFIT_VIEWS_MAP[p.id] ?? 574,
     description: p.description,
     image: primaryImg,
     gallery: combinedGallery,
