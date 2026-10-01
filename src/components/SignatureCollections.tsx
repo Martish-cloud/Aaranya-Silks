@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ChevronLeft, ChevronRight, Pause, Play, ArrowRight, Expand } from 'lucide-react';
+import { Sparkles, ChevronLeft, ChevronRight, ArrowRight, Expand } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { WipeText } from './WipeText';
+import { preloadImage } from '../utils/imagePreloader';
 
 import photo1 from '../assets/Photo Gallery/1.jfif';
 import photo2 from '../assets/Photo Gallery/2.jpg';
@@ -111,11 +112,11 @@ const GALLERY_ITEMS: GalleryItem[] = [
 export const SignatureCollections: React.FC = () => {
   const { navigateTo } = useShop();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [isInView, setIsInView] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const cardRectRef = useRef<DOMRect | null>(null);
 
   const activePhoto = GALLERY_ITEMS[currentIndex];
 
@@ -126,6 +127,14 @@ export const SignatureCollections: React.FC = () => {
   const handlePrev = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + GALLERY_ITEMS.length) % GALLERY_ITEMS.length);
   }, []);
+
+  // Predictive preloading: Keep upcoming (next) and previous images ready in memory before transition
+  useEffect(() => {
+    const nextIdx = (currentIndex + 1) % GALLERY_ITEMS.length;
+    const prevIdx = (currentIndex - 1 + GALLERY_ITEMS.length) % GALLERY_ITEMS.length;
+    preloadImage(GALLERY_ITEMS[nextIdx].src);
+    preloadImage(GALLERY_ITEMS[prevIdx].src);
+  }, [currentIndex]);
 
   // Monitor section visibility so slideshow timer only runs when user is looking at this section
   useEffect(() => {
@@ -141,14 +150,14 @@ export const SignatureCollections: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-slideshow timer (2 seconds interval) - only runs when gallery is active in viewport
+  // Auto-slideshow timer (2 seconds interval) - ALWAYS continues autoplaying when in view
   useEffect(() => {
-    if (isPaused || lightboxOpen || !isInView) return;
+    if (lightboxOpen || !isInView) return;
     const interval = setInterval(() => {
       handleNext();
     }, 2000);
     return () => clearInterval(interval);
-  }, [isPaused, lightboxOpen, isInView, handleNext]);
+  }, [lightboxOpen, isInView, handleNext]);
 
   // Keyboard navigation (only active when section is in view or lightbox is open)
   useEffect(() => {
@@ -164,17 +173,24 @@ export const SignatureCollections: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNext, handlePrev, lightboxOpen, isInView]);
 
-  // Mouse tilt effect calculation
+  // Mouse tilt effect calculation with cached rect to avoid forced reflow
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    cardRectRef.current = e.currentTarget.getBoundingClientRect();
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    if (!cardRectRef.current) {
+      cardRectRef.current = e.currentTarget.getBoundingClientRect();
+    }
+    const rect = cardRectRef.current;
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
     setTilt({ x: x * 6, y: -y * 6 });
   };
 
   const handleMouseLeave = () => {
+    cardRectRef.current = null;
     setTilt({ x: 0, y: 0 });
-    setIsPaused(false);
   };
 
   return (
@@ -231,7 +247,7 @@ export const SignatureCollections: React.FC = () => {
         {/* Main Editorial Presentation Frame */}
         <div
           className="relative max-w-5xl mx-auto"
-          onMouseEnter={() => setIsPaused(true)}
+          onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
           {/* Main 9:10 Aspect Ratio Showcase Container */}
@@ -239,13 +255,13 @@ export const SignatureCollections: React.FC = () => {
             {/* Left/Center Column: Strict 9:10 Main Image with Synchronized Depth Background */}
             <div className="lg:col-span-7 flex justify-center">
               <div className="relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[450px] aspect-[9/10] flex items-center justify-center">
-                {/* Background Depth Layer - Same Image, Visibly Larger / Enlarged Behind Main Image */}
+                {/* Background Depth Layer - Subtly recognizable rear card (90-95% opacity, 5-10% transparency) */}
                 <div className="absolute -inset-4 sm:-inset-6 md:-inset-8 rounded-[2.5rem] overflow-hidden pointer-events-none -z-10">
                   <AnimatePresence>
                     <motion.div
                       key={`bg-depth-${activePhoto.id}`}
                       initial={{ opacity: 0, scale: 1.08 }}
-                      animate={{ opacity: 0.45, scale: 1.15 }}
+                      animate={{ opacity: 0.92, scale: 1.15 }}
                       exit={{ opacity: 0, scale: 1.2 }}
                       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                       className="absolute inset-0 w-full h-full"
@@ -254,11 +270,11 @@ export const SignatureCollections: React.FC = () => {
                         src={activePhoto.src}
                         alt=""
                         aria-hidden="true"
-                        className="w-full h-full object-cover object-top filter blur-lg sm:blur-xl opacity-90 transform-gpu"
+                        className="w-full h-full object-cover object-top filter blur-lg sm:blur-xl opacity-95 transform-gpu"
                       />
                     </motion.div>
                   </AnimatePresence>
-                  <div className="absolute inset-0 bg-[#0F0A09]/30" />
+                  <div className="absolute inset-0 bg-[#0F0A09]/10" />
                 </div>
 
                 {/* Main Foreground Card with 3D Tilt */}
@@ -322,7 +338,7 @@ export const SignatureCollections: React.FC = () => {
                       {/* Top Right Expand / Lightbox Trigger */}
                       <button
                         onClick={() => setLightboxOpen(true)}
-                        className="absolute top-4 right-4 p-2.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 hover:border-[#C8A96B] hover:text-[#C8A96B] text-white/80 transition-all opacity-0 group-hover:opacity-100"
+                        className="absolute top-4 right-4 p-2.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 hover:border-[#C8A96B] hover:text-[#C8A96B] text-white/80 transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
                         aria-label="View fullscreen photo"
                       >
                         <Expand className="w-4 h-4" />
@@ -382,29 +398,20 @@ export const SignatureCollections: React.FC = () => {
                   <div className="pt-4 flex flex-wrap items-center gap-3">
                     <button
                       onClick={() => navigateTo('catalog', undefined, 'Silk Sarees')}
-                      className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#8B1E3F] hover:bg-[#651C32] text-white text-xs font-semibold uppercase tracking-[0.2em] transition-all shadow-lg hover:shadow-xl border border-[#C8A96B]/50 hover:border-[#C8A96B]"
+                      className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#8B1E3F] hover:bg-[#651C32] text-white text-xs font-semibold uppercase tracking-[0.2em] transition-all shadow-lg hover:shadow-xl border border-[#C8A96B]/50 hover:border-[#C8A96B] cursor-pointer"
                     >
                       <span>Explore Saree Collection</span>
                       <ArrowRight className="w-4 h-4 text-[#C8A96B]" />
-                    </button>
-
-                    <button
-                      onClick={() => setIsPaused(!isPaused)}
-                      className="p-3 rounded-full bg-white/[0.05] hover:bg-white/10 border border-white/20 text-[#FAF7F0]/80 hover:text-white transition-all"
-                      aria-label={isPaused ? 'Resume auto-slideshow' : 'Pause auto-slideshow'}
-                      title={isPaused ? 'Resume slideshow' : 'Pause slideshow'}
-                    >
-                      {isPaused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
                     </button>
                   </div>
                 </motion.div>
               </AnimatePresence>
 
-              {/* Prev / Next Slide Controls */}
+              {/* Prev / Next Slide Controls (Only Left and Right arrows as required) */}
               <div className="flex items-center gap-3 pt-2">
                 <button
                   onClick={handlePrev}
-                  className="p-3 rounded-full bg-white/[0.05] hover:bg-[#8B1E3F] border border-[#C8A96B]/40 hover:border-[#C8A96B] text-white transition-all shadow-md group"
+                  className="p-3 rounded-full bg-white/[0.05] hover:bg-[#8B1E3F] border border-[#C8A96B]/40 hover:border-[#C8A96B] text-white transition-all shadow-md group cursor-pointer"
                   aria-label="Previous photograph"
                 >
                   <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
@@ -412,7 +419,7 @@ export const SignatureCollections: React.FC = () => {
 
                 <button
                   onClick={handleNext}
-                  className="p-3 rounded-full bg-white/[0.05] hover:bg-[#8B1E3F] border border-[#C8A96B]/40 hover:border-[#C8A96B] text-white transition-all shadow-md group"
+                  className="p-3 rounded-full bg-white/[0.05] hover:bg-[#8B1E3F] border border-[#C8A96B]/40 hover:border-[#C8A96B] text-white transition-all shadow-md group cursor-pointer"
                   aria-label="Next photograph"
                 >
                   <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />

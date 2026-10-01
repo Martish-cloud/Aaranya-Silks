@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import type { Saree, CartItem } from '../types';
 import { SAREES_DATA } from '../data/sarees';
 import confetti from 'canvas-confetti';
@@ -30,6 +30,7 @@ interface ShopContextType {
   // Navigation / views
   activePage: 'home' | 'catalog' | 'product' | 'story';
   navigateTo: (page: 'home' | 'catalog' | 'product' | 'story', productSlug?: string, categoryFilter?: string, selectedColor?: string) => void;
+  goBack: () => void;
   currentProductSlug: string | null;
   selectedVariantColor: string | null;
   currentCategoryFilter: string | null;
@@ -48,6 +49,15 @@ interface ShopContextType {
   // Toast
   toast: { message: string; type: 'success' | 'info' } | null;
   showToast: (message: string, type?: 'success' | 'info') => void;
+}
+
+interface HistoryStatePayload {
+  page: 'home' | 'catalog' | 'product' | 'story';
+  productSlug?: string | null;
+  categoryFilter?: string | null;
+  selectedColor?: string | null;
+  scrollY?: number;
+  historyIndex: number;
 }
 
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
@@ -94,10 +104,122 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [quickViewSelectedColor, setQuickViewSelectedColor] = useState<string | null>(null);
 
   // Navigation
-  const [activePage, setActivePage] = useState<'home' | 'catalog' | 'product' | 'story'>('home');
-  const [currentProductSlug, setCurrentProductSlug] = useState<string | null>(null);
+  const [activePage, setActivePage] = useState<'home' | 'catalog' | 'product' | 'story'>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const product = params.get('product');
+      if (product) return 'product';
+      const page = params.get('page');
+      if (page === 'catalog' || page === 'story') return page;
+    }
+    return 'home';
+  });
+  const [currentProductSlug, setCurrentProductSlug] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('product');
+    }
+    return null;
+  });
   const [selectedVariantColor, setSelectedVariantColor] = useState<string | null>(null);
-  const [currentCategoryFilter, setCurrentCategoryFilter] = useState<string | null>(null);
+  const [currentCategoryFilter, setCurrentCategoryFilter] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('category');
+    }
+    return null;
+  });
+
+  const isNavigatingRef = useRef(false);
+  const historyIndexRef = useRef(0);
+
+  // Setup History API and Scroll Restoration
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    const currentState = window.history.state as HistoryStatePayload | null;
+    if (currentState && typeof currentState.historyIndex === 'number') {
+      historyIndexRef.current = currentState.historyIndex;
+    } else {
+      const initialPayload: HistoryStatePayload = {
+        page: activePage,
+        productSlug: currentProductSlug,
+        categoryFilter: currentCategoryFilter,
+        selectedColor: selectedVariantColor,
+        scrollY: window.scrollY || 0,
+        historyIndex: 0
+      };
+      window.history.replaceState(initialPayload, '');
+      historyIndexRef.current = 0;
+    }
+
+    let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
+    const handleScrollDebounced = () => {
+      if (isNavigatingRef.current) return;
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        if (window.history.state && !isNavigatingRef.current) {
+          window.history.replaceState({
+            ...window.history.state,
+            scrollY: window.scrollY
+          }, '');
+        }
+      }, 100);
+    };
+
+    const handlePopState = (e: PopStateEvent) => {
+      const state = e.state as HistoryStatePayload | null;
+      if (state) {
+        historyIndexRef.current = state.historyIndex ?? 0;
+        isNavigatingRef.current = true;
+
+        setActivePage(state.page);
+        setCurrentProductSlug(state.productSlug || null);
+        setCurrentCategoryFilter(state.categoryFilter ?? null);
+        setSelectedVariantColor(state.selectedColor ?? null);
+
+        // Close any active modal overlays
+        setQuickViewProduct(null);
+        setQuickViewSelectedColor(null);
+        setIsCartOpen(false);
+        setIsWishlistOpen(false);
+        setIsSearchOpen(false);
+        setIsCheckoutOpen(false);
+
+        const targetY = state.scrollY ?? 0;
+        const restoreScroll = () => {
+          window.scrollTo({ top: targetY, behavior: 'instant' });
+        };
+
+        restoreScroll();
+        requestAnimationFrame(restoreScroll);
+        setTimeout(restoreScroll, 40);
+        setTimeout(restoreScroll, 120);
+
+        setTimeout(() => {
+          isNavigatingRef.current = false;
+        }, 150);
+      } else {
+        setActivePage('home');
+        setCurrentProductSlug(null);
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }
+    };
+
+    window.addEventListener('scroll', handleScrollDebounced, { passive: true });
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      window.removeEventListener('scroll', handleScrollDebounced);
+      window.removeEventListener('popstate', handlePopState);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Discount & Perks
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>('AARANYA10');
@@ -213,6 +335,52 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     categoryFilter?: string,
     selectedColor?: string
   ) => {
+    isNavigatingRef.current = true;
+
+    // 1. Record current scroll position to current history state before pushing next state
+    if (typeof window !== 'undefined') {
+      const currentScrollY = window.scrollY;
+      const currentState = window.history.state as HistoryStatePayload | null;
+      if (currentState) {
+        window.history.replaceState({
+          ...currentState,
+          scrollY: currentScrollY
+        }, '');
+      }
+
+      const nextIndex = (historyIndexRef.current || 0) + 1;
+      historyIndexRef.current = nextIndex;
+
+      const nextState: HistoryStatePayload = {
+        page,
+        productSlug: productSlug || null,
+        categoryFilter: categoryFilter ?? null,
+        selectedColor: selectedColor ?? null,
+        scrollY: 0,
+        historyIndex: nextIndex
+      };
+
+      let nextUrl = window.location.pathname;
+      if (page === 'product' && productSlug) {
+        nextUrl += `?product=${encodeURIComponent(productSlug)}`;
+      } else if (page === 'catalog') {
+        nextUrl += categoryFilter ? `?page=catalog&category=${encodeURIComponent(categoryFilter)}` : '?page=catalog';
+      } else if (page === 'story') {
+        nextUrl += '?page=story';
+      }
+
+      window.history.pushState(nextState, '', nextUrl);
+    }
+
+    // 2. Close any open overlays
+    setQuickViewProduct(null);
+    setQuickViewSelectedColor(null);
+    setIsCartOpen(false);
+    setIsWishlistOpen(false);
+    setIsSearchOpen(false);
+    setIsCheckoutOpen(false);
+
+    // 3. Update React states
     setActivePage(page);
     if (productSlug) {
       setCurrentProductSlug(productSlug);
@@ -225,7 +393,24 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else {
       setSelectedVariantColor(null);
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 4. Scroll to top for new view
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    setTimeout(() => {
+      isNavigatingRef.current = false;
+    }, 150);
+  };
+
+  const goBack = () => {
+    if (typeof window !== 'undefined') {
+      const currentState = window.history.state as HistoryStatePayload | null;
+      if (currentState && currentState.historyIndex > 0) {
+        window.history.back();
+        return;
+      }
+    }
+    navigateTo('home');
   };
 
   // Calculations
@@ -281,6 +466,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         closeQuickView,
         activePage,
         navigateTo,
+        goBack,
         currentProductSlug,
         selectedVariantColor,
         currentCategoryFilter,

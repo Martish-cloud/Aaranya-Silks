@@ -1036,9 +1036,14 @@ export const OUTFIT_VIEWS_MAP: Record<string, number> = {
   'outfit-saree-19': 947,
   'outfit-saree-20': 1168,
   'outfit-saree-21': 684,
+  'aaranya-17': 945,
+  'aaranya-06': 862,
+  'aaranya-19': 1084,
 };
 
-export const OUTFITS_DATA: OutfitProduct[] = RAW_PRODUCTS.map((p) => {
+import { SAREES_DATA } from './sarees';
+
+const RAW_OUTFITS_DATA: OutfitProduct[] = RAW_PRODUCTS.map((p) => {
   const optGallery = p.optFiles.map(resolveOptImage).filter(Boolean);
   const origGallery = p.origFiles.map(resolveOrigImage).filter(Boolean);
   const combinedGallery = optGallery.length > 0 ? optGallery : (origGallery.length > 0 ? origGallery : [userProductImage]);
@@ -1066,9 +1071,98 @@ export const OUTFITS_DATA: OutfitProduct[] = RAW_PRODUCTS.map((p) => {
   };
 });
 
+// Three canonical sarees required in The Complete Outfit Gallery:
+// 1. Maroon Banarasi Silk Saree with Gold Zari Border
+// 2. Ananya Ivory & Gold Shalu Heritage Saree
+// 3. Red Banarasi Silk Saree with Gold Zari Border
+const CANONICAL_THREE_SAREES: OutfitProduct[] = [
+  (() => {
+    const s = SAREES_DATA.find((item) => item.name === 'Maroon Banarasi Silk Saree with Gold Zari Border')!;
+    return {
+      id: s.id,
+      name: s.name,
+      slug: s.slug,
+      category: 'Sarees' as const,
+      categorySlug: 'sarees' as const,
+      price: s.price,
+      originalPrice: s.originalPrice ?? s.price,
+      discountBadge: s.discountBadge ?? '',
+      badge: s.badge || 'New Addition',
+      fabric: s.fabric,
+      rating: s.rating,
+      reviewCount: s.reviewCount,
+      views: OUTFIT_VIEWS_MAP[s.id] ?? 945,
+      description: s.description,
+      image: s.images[0] || userProductImage,
+      gallery: s.images,
+      originalGallery: s.images,
+      inStock: s.inStock,
+    };
+  })(),
+  (() => {
+    const s = SAREES_DATA.find((item) => item.name === 'Ananya Ivory & Gold Shalu Heritage Saree')!;
+    return {
+      id: s.id,
+      name: s.name,
+      slug: s.slug,
+      category: 'Sarees' as const,
+      categorySlug: 'sarees' as const,
+      price: s.price,
+      originalPrice: s.originalPrice ?? s.price,
+      discountBadge: s.discountBadge ?? '',
+      badge: s.badge || 'Classic Heritage',
+      fabric: s.fabric,
+      rating: s.rating,
+      reviewCount: s.reviewCount,
+      views: OUTFIT_VIEWS_MAP[s.id] ?? 862,
+      description: s.description,
+      image: s.images[0] || userProductImage,
+      gallery: s.images,
+      originalGallery: s.images,
+      inStock: s.inStock,
+    };
+  })(),
+  (() => {
+    const s = SAREES_DATA.find((item) => item.name === 'Red Banarasi Silk Saree with Gold Zari Border')!;
+    return {
+      id: s.id,
+      name: s.name,
+      slug: s.slug,
+      category: 'Sarees' as const,
+      categorySlug: 'sarees' as const,
+      price: s.price,
+      originalPrice: s.originalPrice ?? s.price,
+      discountBadge: s.discountBadge ?? '',
+      badge: s.badge || 'Trousseau Essential',
+      fabric: s.fabric,
+      rating: s.rating,
+      reviewCount: s.reviewCount,
+      views: OUTFIT_VIEWS_MAP[s.id] ?? 1084,
+      description: s.description,
+      image: s.images[0] || userProductImage,
+      gallery: s.images,
+      originalGallery: s.images,
+      inStock: s.inStock,
+    };
+  })(),
+];
+
+export const OUTFITS_DATA: OutfitProduct[] = [
+  ...RAW_OUTFITS_DATA,
+  ...CANONICAL_THREE_SAREES
+];
+
 import type { Saree } from '../types';
 
 export function outfitToSaree(outfit: OutfitProduct): Saree {
+  // If this outfit matches a canonical saree in SAREES_DATA, return that canonical record directly
+  const canonical = SAREES_DATA.find(
+    (s) => s.id === outfit.id || s.slug === outfit.slug || s.name === outfit.name
+  );
+  if (canonical) {
+    return canonical;
+  }
+
   return {
     id: outfit.id,
     name: outfit.name,
@@ -1105,4 +1199,5 @@ export function outfitToSaree(outfit: OutfitProduct): Saree {
     trending: true,
   };
 }
+
 

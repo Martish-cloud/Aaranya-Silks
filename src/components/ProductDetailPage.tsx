@@ -8,6 +8,7 @@ import {
   MapPin,
   Sparkles,
   ArrowRight,
+  ArrowLeft,
   Share2
 } from 'lucide-react';
 import type { Saree } from '../types';
@@ -22,7 +23,7 @@ interface ProductDetailPageProps {
 }
 
 export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) => {
-  const { addToCart, isInWishlist, toggleWishlist, setIsCheckoutOpen, showToast, navigateTo, selectedVariantColor } = useShop();
+  const { addToCart, isInWishlist, toggleWishlist, setIsCheckoutOpen, showToast, navigateTo, goBack, selectedVariantColor } = useShop();
 
   const product: Saree = SAREES_DATA.find((s) => s.slug === slug) || SAREES_DATA[0];
 
@@ -134,15 +135,27 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
   return (
     <div className="bg-[#FAF7F0] min-h-screen py-4 lg:py-6 pb-24 lg:pb-12">
       <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8">
-        {/* Compact Breadcrumb Navigation */}
-        <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-[#1C1A19]/60 mb-4 overflow-x-auto no-scrollbar whitespace-nowrap">
-          <button onClick={() => navigateTo('home')} className="hover:text-[#651C32] transition-colors">Home</button>
-          <span>/</span>
-          <button onClick={() => navigateTo('catalog')} className="hover:text-[#651C32] transition-colors">Sarees</button>
-          <span>/</span>
-          <button onClick={() => navigateTo('catalog', undefined, product.category)} className="hover:text-[#651C32] transition-colors">{product.category}</button>
-          <span>/</span>
-          <span className="text-[#651C32] font-medium truncate max-w-[200px] sm:max-w-none">{product.name}</span>
+        {/* Top Navigation Bar: Back Button & Breadcrumbs */}
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <button
+            onClick={goBack}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 hover:bg-[#651C32] text-[#651C32] hover:text-[#FAF7F0] border border-[#C8A96B]/40 hover:border-[#651C32] shadow-sm transition-all duration-200 text-xs sm:text-sm font-medium group cursor-pointer"
+            aria-label="Back to previous page"
+          >
+            <ArrowLeft className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-1 text-current" />
+            <span>Back to previous</span>
+          </button>
+
+          {/* Compact Breadcrumb Navigation */}
+          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-[#1C1A19]/60 overflow-x-auto no-scrollbar whitespace-nowrap">
+            <button onClick={() => navigateTo('home')} className="hover:text-[#651C32] transition-colors">Home</button>
+            <span>/</span>
+            <button onClick={() => navigateTo('catalog')} className="hover:text-[#651C32] transition-colors">Sarees</button>
+            <span>/</span>
+            <button onClick={() => navigateTo('catalog', undefined, product.category)} className="hover:text-[#651C32] transition-colors">{product.category}</button>
+            <span>/</span>
+            <span className="text-[#651C32] font-medium truncate max-w-[180px] sm:max-w-none">{product.name}</span>
+          </div>
         </div>
 
         {/* Main One-Screen Side-by-Side Product Container */}

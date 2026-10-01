@@ -1,4 +1,4 @@
-import React, { useState, useMemo, memo } from 'react';
+import React, { useState, useMemo, memo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Heart,
@@ -19,13 +19,16 @@ import {
   DUPLICATE_IMAGES_AUDIT,
   type OutfitProduct
 } from '../data/outfits';
+import { SAREES_DATA } from '../data/sarees';
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
+import { preloadImages } from '../utils/imagePreloader';
 import userProductImage from '../assets/user-product-image.png';
 
 interface OutfitCardProps {
   outfit: OutfitProduct;
+  onCardClick: (outfit: OutfitProduct) => void;
   onQuickView: (outfit: OutfitProduct) => void;
   onAddToCart: (outfit: OutfitProduct) => void;
   onToggleWishlist: (id: string) => void;
@@ -34,6 +37,7 @@ interface OutfitCardProps {
 
 const OutfitCard = memo<OutfitCardProps>(({
   outfit,
+  onCardClick,
   onQuickView,
   onAddToCart,
   onToggleWishlist,
@@ -67,7 +71,7 @@ const OutfitCard = memo<OutfitCardProps>(({
       {/* 1. Main Image Container - Face Fully Visible with object-top */}
       <div
         className="relative w-full aspect-[3/4] bg-[#F2EBDD]/60 overflow-hidden cursor-pointer"
-        onClick={() => onQuickView(outfit)}
+        onClick={() => onCardClick(outfit)}
       >
         <div className="absolute inset-0 w-full h-full transition-transform duration-700 ease-out group-hover:scale-105 will-change-transform">
           {(outfit.gallery.length > 0 ? outfit.gallery : [outfit.image]).map((img, idx) => (
@@ -172,7 +176,7 @@ const OutfitCard = memo<OutfitCardProps>(({
           </div>
 
           <h3
-            onClick={() => onQuickView(outfit)}
+            onClick={() => onCardClick(outfit)}
             className="font-serif text-[10.5px] sm:text-xs font-semibold text-[#1C1A19] group-hover:text-[#651C32] transition-colors line-clamp-1 cursor-pointer leading-snug"
           >
             {outfit.name}
@@ -225,6 +229,7 @@ interface SlidingRowProps {
   items: OutfitProduct[];
   direction: 'ltr' | 'rtl';
   rowIndex: number;
+  onCardClick: (outfit: OutfitProduct) => void;
   onQuickView: (outfit: OutfitProduct) => void;
   onAddToCart: (outfit: OutfitProduct) => void;
   onToggleWishlist: (id: string) => void;
@@ -235,6 +240,7 @@ const SlidingRow: React.FC<SlidingRowProps> = ({
   items,
   direction,
   rowIndex,
+  onCardClick,
   onQuickView,
   onAddToCart,
   onToggleWishlist,
@@ -274,6 +280,7 @@ const SlidingRow: React.FC<SlidingRowProps> = ({
           <OutfitCard
             key={`${outfit.id}-r${rowIndex}-${idx}`}
             outfit={outfit}
+            onCardClick={onCardClick}
             onQuickView={onQuickView}
             onAddToCart={onAddToCart}
             onToggleWishlist={onToggleWishlist}
@@ -286,12 +293,31 @@ const SlidingRow: React.FC<SlidingRowProps> = ({
 };
 
 export const OutfitGallery: React.FC = () => {
-  const { openQuickView, addToCart, isInWishlist, toggleWishlist } = useShop();
+  const { openQuickView, addToCart, isInWishlist, toggleWishlist, navigateTo } = useShop();
 
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'featured' | 'price-low' | 'price-high' | 'rating'>('featured');
   const [showAuditInfo, setShowAuditInfo] = useState(false);
   const [activeRowSet, setActiveRowSet] = useState<'set1' | 'set2' | 'all'>('set1');
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Predictive preloading for upcoming outfit images as user approaches section
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const imgsToPreload = OUTFITS_DATA.map((o) => o.image).filter(Boolean);
+          preloadImages(imgsToPreload);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '600px 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Compute category counts
   const categoryCounts = useMemo(() => {
@@ -323,14 +349,14 @@ export const OutfitGallery: React.FC = () => {
     return items;
   }, [activeCategory, sortBy]);
 
-  // Chunk items into rows of 6 for desktop 6-column layout (strictly Rows 1–6)
+  // Distribute items evenly across strictly Rows 1–6 without creating an extra 7th row
   const rows = useMemo(() => {
-    const chunkSize = 6;
-    const result: OutfitProduct[][] = [];
-    for (let i = 0; i < filteredOutfits.length; i += chunkSize) {
-      result.push(filteredOutfits.slice(i, i + chunkSize));
-    }
-    return result.slice(0, 6);
+    const numRows = 6;
+    const result: OutfitProduct[][] = Array.from({ length: numRows }, () => []);
+    filteredOutfits.forEach((item, index) => {
+      result[index % numRows].push(item);
+    });
+    return result;
   }, [filteredOutfits]);
 
   // Structure 3 rows at a time in view (Set 1: Rows 1-3, Set 2: Rows 4-6, or All 6)
@@ -341,6 +367,18 @@ export const OutfitGallery: React.FC = () => {
   }, [rows, activeRowSet]);
 
   const rowStartIndex = activeRowSet === 'set2' ? 3 : 0;
+
+  const handleCardClick = (outfit: OutfitProduct) => {
+    const canonical = SAREES_DATA.find(
+      (s) => s.slug === outfit.slug || s.id === outfit.id || s.name === outfit.name
+    );
+    if (canonical) {
+      navigateTo('product', canonical.slug);
+    } else {
+      const sareeEquivalent = outfitToSaree(outfit);
+      openQuickView(sareeEquivalent, sareeEquivalent.color);
+    }
+  };
 
   const handleOpenQuickView = (outfit: OutfitProduct) => {
     const sareeEquivalent = outfitToSaree(outfit);
@@ -353,7 +391,7 @@ export const OutfitGallery: React.FC = () => {
   };
 
   return (
-    <section id="outfit-gallery" className="py-16 sm:py-24 bg-[#FAF7F0] relative overflow-hidden">
+    <section ref={sectionRef} id="outfit-gallery" className="py-16 sm:py-24 bg-[#FAF7F0] relative overflow-hidden">
       {/* Dynamic Keyframes for Alternating Infinite Sliding Animation */}
       <style>{`
         @keyframes outfitSlideLTR {
@@ -582,6 +620,7 @@ export const OutfitGallery: React.FC = () => {
                 items={rowItems}
                 direction={direction}
                 rowIndex={actualRowIdx}
+                onCardClick={handleCardClick}
                 onQuickView={handleOpenQuickView}
                 onAddToCart={handleAddToCart}
                 onToggleWishlist={toggleWishlist}
