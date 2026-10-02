@@ -113,10 +113,12 @@ export const SignatureCollections: React.FC = () => {
   const { navigateTo } = useShop();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isInView, setIsInView] = useState(false);
+  const [entranceKey, setEntranceKey] = useState(0);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const cardRectRef = useRef<DOMRect | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const activePhoto = GALLERY_ITEMS[currentIndex];
 
@@ -136,28 +138,66 @@ export const SignatureCollections: React.FC = () => {
     preloadImage(GALLERY_ITEMS[prevIdx].src);
   }, [currentIndex]);
 
-  // Monitor section visibility so slideshow timer only runs when user is looking at this section
+  // Viewport Intersection Observer: Immediate entrance trigger on entry, reset state on exit
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsInView(entry.isIntersecting);
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          setEntranceKey((k) => k + 1);
+        } else {
+          setIsInView(false);
+        }
       },
-      { threshold: 0.15 }
+      {
+        threshold: 0.08,
+        rootMargin: '0px 0px -30px 0px',
+      }
     );
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
-  // Auto-slideshow timer (2 seconds interval) - ALWAYS continues autoplaying when in view
-  useEffect(() => {
-    if (lightboxOpen || !isInView) return;
-    const interval = setInterval(() => {
+  // Timer helpers: exactly ~2000ms, single timer, reset on manual interaction or index change
+  const clearTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  const startTimer = useCallback(() => {
+    clearTimer();
+    if (!isInView || lightboxOpen || (typeof document !== 'undefined' && document.visibilityState === 'hidden')) {
+      return;
+    }
+    timerRef.current = setTimeout(() => {
       handleNext();
     }, 2000);
-    return () => clearInterval(interval);
-  }, [lightboxOpen, isInView, handleNext]);
+  }, [clearTimer, isInView, lightboxOpen, handleNext]);
+
+  // Restart 2-second autoplay timer whenever currentIndex changes (both automatic & manual navigation)
+  useEffect(() => {
+    startTimer();
+    return () => clearTimer();
+  }, [currentIndex, startTimer, clearTimer]);
+
+  // Tab visibility listener: pause when tab hidden, resume when tab visible
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && isInView && !lightboxOpen) {
+        startTimer();
+      } else {
+        clearTimer();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [isInView, lightboxOpen, startTimer, clearTimer]);
 
   // Keyboard navigation (only active when section is in view or lightbox is open)
   useEffect(() => {
@@ -199,13 +239,13 @@ export const SignatureCollections: React.FC = () => {
       id="photo-gallery"
       className="py-16 md:py-24 bg-[#0F0A09] text-[#FAF7F0] relative overflow-hidden select-none"
     >
-      {/* Full Section Background - Same Selected Image Enlarged with Subtle 15-20% Blur */}
+      {/* Full Section Background - Same Selected Image Enlarged with Subtle Blur & 20-25% Visibility */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <AnimatePresence>
+        <AnimatePresence mode="popLayout">
           <motion.div
             key={`section-bg-${activePhoto.id}`}
             initial={{ opacity: 0, scale: 1.04 }}
-            animate={{ opacity: 0.38, scale: 1.08 }}
+            animate={{ opacity: 0.22, scale: 1.08 }}
             exit={{ opacity: 0, scale: 1.1 }}
             transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 w-full h-full"
@@ -214,18 +254,24 @@ export const SignatureCollections: React.FC = () => {
               src={activePhoto.src}
               alt=""
               aria-hidden="true"
-              className="w-full h-full object-cover object-center filter blur-[7px] transform-gpu"
+              className="w-full h-full object-cover object-center filter blur-xl transform-gpu"
             />
           </motion.div>
         </AnimatePresence>
-        {/* Soft dark vignette overlays ensuring impeccable text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F0A09]/85 via-[#0F0A09]/55 to-[#0F0A09]/85" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,#0F0A09_85%)]" />
+        {/* Soft dark vignette overlays ensuring crystal-clear text readability while preserving background visibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F0A09]/75 via-[#0F0A09]/40 to-[#0F0A09]/80 pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,#0F0A09_85%)] pointer-events-none" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Editorial Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+        {/* Editorial Section Header with Re-triggerable Entrance Animation */}
+        <motion.div
+          key={`header-${entranceKey}`}
+          initial={{ opacity: 0, y: 16 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-2xl mx-auto mb-12 sm:mb-16"
+        >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FAF7F0]/5 border border-[#C8A96B]/30 text-[#C8A96B] text-xs font-semibold uppercase tracking-[0.25em] mb-4 backdrop-blur-sm">
             <Sparkles className="w-3.5 h-3.5 text-[#C8A96B]" />
             <span>Haute Couture Lookbook</span>
@@ -242,10 +288,23 @@ export const SignatureCollections: React.FC = () => {
           <p className="text-xs sm:text-sm md:text-base text-[#FAF7F0]/70 font-light mt-3 max-w-xl mx-auto leading-relaxed">
             Nine iconic editorial portraits capturing the pure silk radiance, heritage weaves, and imperial bridal heirlooms of Aaranya Silks.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Main Editorial Presentation Frame */}
-        <div
+        {/* Main Editorial Presentation Frame with Re-triggerable Entrance & Micro-interactions */}
+        <motion.div
+          key={`stage-${entranceKey}`}
+          initial="hidden"
+          animate={isInView ? 'visible' : 'hidden'}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.04,
+              },
+            },
+          }}
           className="relative max-w-5xl mx-auto"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -253,11 +312,22 @@ export const SignatureCollections: React.FC = () => {
           {/* Main 9:10 Aspect Ratio Showcase Container */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left/Center Column: Strict 9:10 Main Image with Synchronized Depth Background */}
-            <div className="lg:col-span-7 flex justify-center">
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 24, scale: 0.96 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+                },
+              }}
+              className="lg:col-span-7 flex justify-center"
+            >
               <div className="relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[450px] aspect-[9/10] flex items-center justify-center">
                 {/* Background Depth Layer - Subtly recognizable rear card (90-95% opacity, 5-10% transparency) */}
                 <div className="absolute -inset-4 sm:-inset-6 md:-inset-8 rounded-[2.5rem] overflow-hidden pointer-events-none -z-10">
-                  <AnimatePresence>
+                  <AnimatePresence mode="popLayout">
                     <motion.div
                       key={`bg-depth-${activePhoto.id}`}
                       initial={{ opacity: 0, scale: 1.08 }}
@@ -288,7 +358,7 @@ export const SignatureCollections: React.FC = () => {
                 >
                   {/* Inside-Card Enlarged Depth Background Layer */}
                   <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-                    <AnimatePresence>
+                    <AnimatePresence mode="popLayout">
                       <motion.div
                         key={`card-inner-bg-${activePhoto.id}`}
                         initial={{ opacity: 0, scale: 1.08 }}
@@ -308,7 +378,7 @@ export const SignatureCollections: React.FC = () => {
                   </div>
 
                   {/* Primary High-Resolution Foreground Image (Strict 9:10, Head & Model Fully Visible, Zero Unwanted Cropping) */}
-                  <AnimatePresence>
+                  <AnimatePresence mode="popLayout">
                     <motion.div
                       key={activePhoto.id}
                       initial={{ opacity: 0, scale: 0.98 }}
@@ -357,17 +427,31 @@ export const SignatureCollections: React.FC = () => {
                   </AnimatePresence>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Right Column: Editorial Craftsmanship & Controls */}
-            <div className="lg:col-span-5 text-left space-y-6">
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                    duration: 0.55,
+                    delay: 0.08,
+                    ease: [0.22, 1, 0.36, 1],
+                  },
+                },
+              }}
+              className="lg:col-span-5 text-left space-y-6"
+            >
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activePhoto.id}
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.22 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                   className="space-y-5"
                 >
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B1E3F]/30 border border-[#8B1E3F] text-[#FAF7F0] text-xs font-medium tracking-wide">
@@ -435,10 +519,9 @@ export const SignatureCollections: React.FC = () => {
                   />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
-
-        </div>
+        </motion.div>
       </div>
 
       {/* Fullscreen Lightbox Modal */}
