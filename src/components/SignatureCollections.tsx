@@ -109,11 +109,11 @@ const GALLERY_ITEMS: GalleryItem[] = [
   },
 ];
 
-const slideVariants = {
+const cardSlideVariants = {
   enter: (dir: number) => ({
-    x: dir > 0 ? '100%' : dir < 0 ? '-100%' : 0,
+    x: dir > 0 ? 320 : dir < 0 ? -320 : 0,
     opacity: 0,
-    scale: 0.98,
+    scale: 0.92,
   }),
   center: {
     zIndex: 1,
@@ -123,9 +123,9 @@ const slideVariants = {
   },
   exit: (dir: number) => ({
     zIndex: 0,
-    x: dir < 0 ? '100%' : '-100%',
+    x: dir < 0 ? 320 : -320,
     opacity: 0,
-    scale: 0.98,
+    scale: 0.92,
   }),
 };
 
@@ -238,9 +238,9 @@ export const SignatureCollections: React.FC = () => {
         <AnimatePresence mode="popLayout">
           <motion.div
             key={`section-bg-${activePhoto.id}`}
-            initial={{ opacity: 0, scale: 1.04 }}
-            animate={{ opacity: 0.60, scale: 1.06 }}
-            exit={{ opacity: 0, scale: 1.08 }}
+            initial={{ opacity: 0, scale: 1.02 }}
+            animate={{ opacity: 0.82, scale: 1.05 }}
+            exit={{ opacity: 0, scale: 1.07 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 w-full h-full"
           >
@@ -248,13 +248,13 @@ export const SignatureCollections: React.FC = () => {
               src={activePhoto.src}
               alt=""
               aria-hidden="true"
-              className="w-full h-full object-cover object-center filter blur-[2px] brightness-[0.95] contrast-[1.05] transform-gpu"
+              className="w-full h-full object-cover object-center filter blur-[1px] brightness-[0.98] contrast-[1.05] transform-gpu"
             />
           </motion.div>
         </AnimatePresence>
         {/* Soft luxury dark vignette overlays ensuring crystal-clear text readability while keeping the photo background clearly visible */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F0A09]/35 via-[#0F0A09]/15 to-[#0F0A09]/55 pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,#0F0A09_85%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F0A09]/40 via-transparent to-[#0F0A09]/50 pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_65%,#0F0A09_90%)] pointer-events-none" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -284,21 +284,8 @@ export const SignatureCollections: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Main Editorial Presentation Frame with Re-triggerable Entrance & Micro-interactions */}
-        <motion.div
-          key={`stage-${entranceKey}`}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.1,
-                delayChildren: 0.04,
-              },
-            },
-          }}
+        {/* Main Editorial Presentation Frame */}
+        <div
           className="relative max-w-5xl mx-auto"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -306,145 +293,100 @@ export const SignatureCollections: React.FC = () => {
           {/* Main 9:10 Aspect Ratio Showcase Container */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left/Center Column: Strict 9:10 Main Image with Synchronized Depth Background */}
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 24, scale: 0.96 },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  scale: 1,
-                  transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
-                },
-              }}
-              className="lg:col-span-7 flex justify-center"
-            >
+            <div className="lg:col-span-7 flex justify-center overflow-hidden py-4 px-2">
               <div className="relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[450px] aspect-[9/10] flex items-center justify-center">
-                {/* Background Depth Layer - Subtly recognizable rear card */}
-                <div className="absolute -inset-4 sm:-inset-6 md:-inset-8 rounded-[2.5rem] overflow-hidden pointer-events-none -z-10">
-                  <AnimatePresence mode="popLayout">
-                    <motion.div
-                      key={`bg-depth-${activePhoto.id}`}
-                      initial={{ opacity: 0, scale: 1.08 }}
-                      animate={{ opacity: 0.95, scale: 1.12 }}
-                      exit={{ opacity: 0, scale: 1.16 }}
-                      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                      className="absolute inset-0 w-full h-full"
-                    >
+                <AnimatePresence initial={false} custom={direction} mode="popLayout">
+                  <motion.div
+                    key={activePhoto.id}
+                    custom={direction}
+                    variants={cardSlideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{
+                      x: { type: 'spring', stiffness: 280, damping: 28 },
+                      opacity: { duration: 0.35, ease: 'easeInOut' },
+                      scale: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
+                    }}
+                    className="absolute inset-0 w-full h-full flex items-center justify-center"
+                  >
+                    {/* Background Depth Layer - Subtly recognizable rear card */}
+                    <div className="absolute -inset-3 sm:-inset-5 md:-inset-6 rounded-[2.5rem] overflow-hidden pointer-events-none -z-10 shadow-2xl">
                       <img
                         src={activePhoto.src}
                         alt=""
                         aria-hidden="true"
-                        className="w-full h-full object-cover object-top filter blur-[2px] opacity-95 transform-gpu"
+                        className="w-full h-full object-cover object-top filter blur-[3px] opacity-75 transform-gpu"
                       />
-                    </motion.div>
-                  </AnimatePresence>
-                  <div className="absolute inset-0 bg-[#0F0A09]/10" />
-                </div>
+                      <div className="absolute inset-0 bg-[#0F0A09]/20" />
+                    </div>
 
-                {/* Main Foreground Card with 3D Tilt */}
-                <div
-                  onMouseMove={handleMouseMove}
-                  style={{
-                    transform: `perspective(1000px) rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`,
-                    transition: 'transform 0.15s ease-out',
-                  }}
-                  className="relative w-full h-full rounded-3xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.8)] border border-[#C8A96B]/40 group bg-[#1A1412]"
-                >
-                  {/* Inside-Card Enlarged Depth Background Layer */}
-                  <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-                    <AnimatePresence mode="popLayout">
-                      <motion.div
-                        key={`card-inner-bg-${activePhoto.id}`}
-                        initial={{ opacity: 0, scale: 1.08 }}
-                        animate={{ opacity: 0.25, scale: 1.14 }}
-                        exit={{ opacity: 0, scale: 1.18 }}
-                        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                        className="absolute inset-0 w-full h-full"
-                      >
+                    {/* Main Foreground Card with 3D Tilt */}
+                    <div
+                      onMouseMove={handleMouseMove}
+                      style={{
+                        transform: `perspective(1000px) rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`,
+                        transition: 'transform 0.15s ease-out',
+                      }}
+                      className="relative w-full h-full rounded-3xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.85)] border border-[#C8A96B]/40 group bg-[#1A1412]"
+                    >
+                      {/* Inside-Card Enlarged Depth Background Layer */}
+                      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
                         <img
                           src={activePhoto.src}
                           alt=""
                           aria-hidden="true"
-                          className="w-full h-full object-cover object-top filter blur-2xl transform-gpu"
+                          className="w-full h-full object-cover object-top filter blur-2xl opacity-25 transform-gpu"
                         />
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Primary High-Resolution Foreground Image with Smooth Sliding Transition */}
-                  <AnimatePresence initial={false} custom={direction} mode="popLayout">
-                    <motion.div
-                      key={activePhoto.id}
-                      custom={direction}
-                      variants={slideVariants}
-                      initial="enter"
-                      animate="center"
-                      exit="exit"
-                      transition={{
-                        x: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
-                        opacity: { duration: 0.32, ease: 'easeInOut' },
-                        scale: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
-                      }}
-                      className="absolute inset-0 w-full h-full z-10"
-                    >
-                      <img
-                        src={activePhoto.src}
-                        alt={activePhoto.title}
-                        className="w-full h-full object-cover object-top select-none transition-transform duration-700 group-hover:scale-[1.03]"
-                        loading="eager"
-                      />
-
-                      {/* Subtle Gradient Veil for Text Contrast */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
-
-                      {/* Top Floating Counter Pill */}
-                      <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-[#C8A96B]/40 text-[11px] font-mono tracking-widest text-[#C8A96B] flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#C8A96B] animate-pulse" />
-                        <span>
-                          0{currentIndex + 1} / 0{GALLERY_ITEMS.length}
-                        </span>
                       </div>
 
-                      {/* Top Right Expand / Lightbox Trigger */}
-                      <button
-                        onClick={() => setLightboxOpen(true)}
-                        className="absolute top-4 right-4 p-2.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 hover:border-[#C8A96B] hover:text-[#C8A96B] text-white/80 transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
-                        aria-label="View fullscreen photo"
-                      >
-                        <Expand className="w-4 h-4" />
-                      </button>
+                      {/* Primary High-Resolution Foreground Image */}
+                      <div className="absolute inset-0 w-full h-full z-10">
+                        <img
+                          src={activePhoto.src}
+                          alt={activePhoto.title}
+                          className="w-full h-full object-cover object-top select-none transition-transform duration-700 group-hover:scale-[1.03]"
+                          loading="eager"
+                        />
 
-                      {/* Bottom Caption Pill over Image */}
-                      <div className="absolute bottom-5 inset-x-5 text-left pointer-events-none">
-                        <span className="text-[11px] uppercase tracking-[0.2em] font-semibold text-[#C8A96B] block mb-1">
-                          {activePhoto.category}
-                        </span>
-                        <h3 className="font-serif text-xl sm:text-2xl font-light text-white leading-tight drop-shadow-md">
-                          {activePhoto.title}
-                        </h3>
+                        {/* Subtle Gradient Veil for Text Contrast */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+
+                        {/* Top Floating Counter Pill */}
+                        <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-[#C8A96B]/40 text-[11px] font-mono tracking-widest text-[#C8A96B] flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#C8A96B] animate-pulse" />
+                          <span>
+                            0{currentIndex + 1} / 0{GALLERY_ITEMS.length}
+                          </span>
+                        </div>
+
+                        {/* Top Right Expand / Lightbox Trigger */}
+                        <button
+                          onClick={() => setLightboxOpen(true)}
+                          className="absolute top-4 right-4 p-2.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 hover:border-[#C8A96B] hover:text-[#C8A96B] text-white/80 transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
+                          aria-label="View fullscreen photo"
+                        >
+                          <Expand className="w-4 h-4" />
+                        </button>
+
+                        {/* Bottom Caption Pill over Image */}
+                        <div className="absolute bottom-5 inset-x-5 text-left pointer-events-none">
+                          <span className="text-[11px] uppercase tracking-[0.2em] font-semibold text-[#C8A96B] block mb-1">
+                            {activePhoto.category}
+                          </span>
+                          <h3 className="font-serif text-xl sm:text-2xl font-light text-white leading-tight drop-shadow-md">
+                            {activePhoto.title}
+                          </h3>
+                        </div>
                       </div>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
               </div>
-            </motion.div>
+            </div>
 
             {/* Right Column: Editorial Craftsmanship & Controls */}
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: {
-                    duration: 0.55,
-                    delay: 0.08,
-                    ease: [0.22, 1, 0.36, 1],
-                  },
-                },
-              }}
-              className="lg:col-span-5 text-left space-y-6"
-            >
+            <div className="lg:col-span-5 text-left space-y-6">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activePhoto.id}
@@ -519,9 +461,9 @@ export const SignatureCollections: React.FC = () => {
                   />
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Fullscreen Lightbox Modal */}
