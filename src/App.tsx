@@ -28,6 +28,7 @@ import { CheckoutModal } from './components/CheckoutModal';
 import { CatalogPage } from './components/CatalogPage';
 import { ProductDetailPage } from './components/ProductDetailPage';
 import { StoryPage } from './components/StoryPage';
+import { GlobalWatermark } from './components/GlobalWatermark';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle, Info } from 'lucide-react';
 
@@ -176,16 +177,6 @@ const AppContent: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* 7. Global Persistent Brand Signature Watermark */}
-      <div
-        aria-hidden="true"
-        className="fixed bottom-2.5 right-3 sm:bottom-3 sm:right-4 z-30 pointer-events-none select-none transition-opacity duration-300"
-      >
-        <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#1C1A19]/35 backdrop-blur-xs border border-white/10 text-[#FAF7F0]/75 text-[10px] sm:text-[11px] font-sans tracking-widest shadow-xs">
-          <span>Made by</span>
-          <span className="font-semibold text-[#FAF7F0] tracking-[0.18em]">ZYNOVA</span>
-        </div>
-      </div>
     </div>
   );
 };
@@ -194,6 +185,7 @@ export function App() {
   return (
     <ShopProvider>
       <AppContent />
+      <GlobalWatermark />
     </ShopProvider>
   );
 }
