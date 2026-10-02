@@ -285,15 +285,15 @@ export const SignatureCollections: React.FC = () => {
 
         {/* Main Editorial Presentation Frame */}
         <div
-          className="relative max-w-5xl mx-auto"
+          className="relative max-w-[1080px] lg:max-w-[1100px] mx-auto w-full"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
           {/* Main 9:10 Aspect Ratio Showcase Container */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
             {/* Left/Center Column: Strict 9:10 Main Image with Synchronized Depth Background */}
-            <div className="lg:col-span-7 flex justify-center overflow-hidden py-4 px-2">
-              <div className="relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[450px] aspect-[9/10] flex items-center justify-center">
+            <div className="flex justify-center lg:justify-end overflow-hidden py-3 px-2 sm:px-3">
+              <div className="relative w-full max-w-[310px] sm:max-w-[350px] md:max-w-[380px] lg:max-w-[395px] aspect-[9/10] flex items-center justify-center">
                 <AnimatePresence initial={false} custom={direction} mode="popLayout">
                   <motion.div
                     key={activePhoto.id}
@@ -376,7 +376,7 @@ export const SignatureCollections: React.FC = () => {
             </div>
 
             {/* Right Column: Editorial Craftsmanship & Controls */}
-            <div className="lg:col-span-5 text-left space-y-6">
+            <div className="text-left space-y-4 sm:space-y-5 max-w-[460px] lg:max-w-[475px] w-full mx-auto lg:mx-0">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activePhoto.id}
@@ -384,24 +384,24 @@ export const SignatureCollections: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                  className="space-y-5 bg-black/60 backdrop-blur-md p-6 sm:p-8 rounded-3xl border border-[#C8A96B]/30 shadow-2xl"
+                  className="space-y-4 sm:space-y-5 bg-black/60 backdrop-blur-md p-5 sm:p-7 rounded-3xl border border-[#C8A96B]/30 shadow-2xl"
                 >
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B1E3F]/40 border border-[#8B1E3F] text-[#FAF7F0] text-xs font-medium tracking-wide">
                     <span>{activePhoto.hue}</span>
                   </div>
 
-                  <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-light text-[#FAF7F0] leading-snug drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
+                  <h3 className="font-serif text-xl sm:text-2xl lg:text-[28px] xl:text-3xl font-light text-[#FAF7F0] leading-snug drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
                     {activePhoto.title}
                   </h3>
 
-                  <p className="text-sm sm:text-base text-[#FAF7F0]/90 font-light leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
+                  <p className="text-xs sm:text-sm text-[#FAF7F0]/90 font-light leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
                     {activePhoto.description}
                   </p>
 
                   {/* Highlights Spec Card */}
-                  <div className="pt-2">
-                    <div className="p-3.5 sm:p-4 rounded-2xl bg-white/[0.06] border border-[#C8A96B]/25">
-                      <span className="text-[10px] uppercase text-[#C8A96B] tracking-wider block mb-1">
+                  <div className="pt-1 sm:pt-2">
+                    <div className="p-3 sm:p-3.5 rounded-2xl bg-white/[0.06] border border-[#C8A96B]/25">
+                      <span className="text-[10px] uppercase text-[#C8A96B] tracking-wider block mb-0.5 sm:mb-1">
                         Zari Purity
                       </span>
                       <span className="text-xs sm:text-sm font-serif font-medium text-white">
@@ -411,10 +411,10 @@ export const SignatureCollections: React.FC = () => {
                   </div>
 
                   {/* Actions & Catalog Navigation */}
-                  <div className="pt-4 flex flex-wrap items-center gap-3">
+                  <div className="pt-3 sm:pt-4 flex flex-wrap items-center gap-3">
                     <button
                       onClick={() => navigateTo('catalog', undefined, 'Silk Sarees')}
-                      className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-[#8B1E3F] hover:bg-[#651C32] text-white text-xs font-semibold uppercase tracking-[0.2em] transition-all shadow-lg hover:shadow-xl border border-[#C8A96B]/50 hover:border-[#C8A96B] cursor-pointer"
+                      className="inline-flex items-center gap-2.5 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-[#8B1E3F] hover:bg-[#651C32] text-white text-xs font-semibold uppercase tracking-[0.2em] transition-all shadow-lg hover:shadow-xl border border-[#C8A96B]/50 hover:border-[#C8A96B] cursor-pointer"
                     >
                       <span>Explore Saree Collection</span>
                       <ArrowRight className="w-4 h-4 text-[#C8A96B]" />
@@ -424,10 +424,10 @@ export const SignatureCollections: React.FC = () => {
               </AnimatePresence>
 
               {/* Prev / Next Slide Controls (Only Left and Right arrows as required) */}
-              <div className="flex items-center gap-3 pt-2">
+              <div className="flex items-center gap-3 pt-1 sm:pt-2">
                 <button
                   onClick={handlePrev}
-                  className="p-3.5 rounded-full bg-black/60 hover:bg-[#8B1E3F] border border-[#C8A96B]/50 hover:border-[#C8A96B] text-white transition-all shadow-xl group cursor-pointer active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#C8A96B] backdrop-blur-md"
+                  className="p-3 sm:p-3.5 rounded-full bg-black/60 hover:bg-[#8B1E3F] border border-[#C8A96B]/50 hover:border-[#C8A96B] text-white transition-all shadow-xl group cursor-pointer active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#C8A96B] backdrop-blur-md"
                   aria-label="Previous photograph"
                 >
                   <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
@@ -435,7 +435,7 @@ export const SignatureCollections: React.FC = () => {
 
                 <button
                   onClick={handleNext}
-                  className="p-3.5 rounded-full bg-black/60 hover:bg-[#8B1E3F] border border-[#C8A96B]/50 hover:border-[#C8A96B] text-white transition-all shadow-xl group cursor-pointer active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#C8A96B] backdrop-blur-md"
+                  className="p-3 sm:p-3.5 rounded-full bg-black/60 hover:bg-[#8B1E3F] border border-[#C8A96B]/50 hover:border-[#C8A96B] text-white transition-all shadow-xl group cursor-pointer active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#C8A96B] backdrop-blur-md"
                   aria-label="Next photograph"
                 >
                   <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
