@@ -233,27 +233,27 @@ export const SignatureCollections: React.FC = () => {
       id="photo-gallery"
       className="py-16 md:py-24 bg-[#0F0A09] text-[#FAF7F0] relative overflow-hidden select-none"
     >
-      {/* Full Section Background - Same Selected Image Enlarged with High Clarity & Crisp Visibility */}
+      {/* Full Section Background - Same Selected Image with Model's Face Positioned Naturally, Soft Blur & Subdued Transparency */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <AnimatePresence mode="popLayout">
           <motion.div
             key={`section-bg-${activePhoto.id}`}
             initial={{ opacity: 0, scale: 1.01 }}
-            animate={{ opacity: 1, scale: 1.02 }}
+            animate={{ opacity: 0.55, scale: 1.02 }}
             exit={{ opacity: 0, scale: 1.04 }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 w-full h-full"
           >
             <img
               src={activePhoto.src}
               alt=""
               aria-hidden="true"
-              className="w-full h-full object-cover object-center brightness-105 contrast-105 transform-gpu"
+              className="w-full h-full object-cover object-[center_15%] filter blur-[6px] brightness-[0.88] contrast-[1.05] transform-gpu"
             />
           </motion.div>
         </AnimatePresence>
-        {/* Soft luxury tint overlay keeping the photo background crystal-clear and fully visible */}
-        <div className="absolute inset-0 bg-black/25 pointer-events-none" />
+        {/* Soft luxury dark vignette overlay keeping the photo background softly visible & subdued */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F0A09]/55 via-[#0F0A09]/30 to-[#0F0A09]/65 pointer-events-none" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -309,15 +309,15 @@ export const SignatureCollections: React.FC = () => {
                     }}
                     className="absolute inset-0 w-full h-full flex items-center justify-center"
                   >
-                    {/* Background Depth Layer - Fully recognizable rear card */}
-                    <div className="absolute -inset-3 sm:-inset-5 md:-inset-6 rounded-[2.5rem] overflow-hidden pointer-events-none -z-10 shadow-2xl">
+                    {/* Single Subtle Rear Depth Card */}
+                    <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none -z-10 shadow-xl border border-[#C8A96B]/20 transform translate-x-2.5 translate-y-2.5 sm:translate-x-3 sm:translate-y-3 scale-[0.98] bg-[#140E0C] opacity-70">
                       <img
                         src={activePhoto.src}
                         alt=""
                         aria-hidden="true"
-                        className="w-full h-full object-cover object-top opacity-100 transform-gpu"
+                        className="w-full h-full object-cover object-top filter blur-[2px] brightness-[0.75] contrast-[1.05] transform-gpu"
                       />
-                      <div className="absolute inset-0 bg-black/10" />
+                      <div className="absolute inset-0 bg-black/30" />
                     </div>
 
                     {/* Main Foreground Card with 3D Tilt */}
@@ -329,15 +329,6 @@ export const SignatureCollections: React.FC = () => {
                       }}
                       className="relative w-full h-full rounded-3xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.85)] border border-[#C8A96B]/40 group bg-[#1A1412]"
                     >
-                      {/* Inside-Card Enlarged Depth Background Layer */}
-                      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-                        <img
-                          src={activePhoto.src}
-                          alt=""
-                          aria-hidden="true"
-                          className="w-full h-full object-cover object-top filter blur-2xl opacity-25 transform-gpu"
-                        />
-                      </div>
 
                       {/* Primary High-Resolution Foreground Image */}
                       <div className="absolute inset-0 w-full h-full z-10">

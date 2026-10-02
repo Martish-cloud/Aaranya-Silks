@@ -9,9 +9,10 @@ import { formatINR } from '../utils/formatters';
 interface ProductCardProps {
   product: Saree;
   priority?: boolean;
+  aspectRatio?: '9/5' | '3/4';
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product, aspectRatio = '3/4' }) => {
   const {
     isInWishlist,
     toggleWishlist,
@@ -49,7 +50,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       className="group cursor-pointer flex flex-col h-full bg-[#FAF7F0] rounded-2xl overflow-hidden border border-[#C8A96B]/20 hover:border-[#C8A96B]/60 transition-all duration-500 hover:shadow-xl hover:-translate-y-1"
     >
       {/* Product Image Stage */}
-      <div className="relative w-full aspect-[3/4] bg-[#F2EBDD] overflow-hidden">
+      <div className={`relative w-full ${aspectRatio === '9/5' ? 'aspect-[9/5]' : 'aspect-[3/4]'} bg-[#F2EBDD] overflow-hidden`}>
         {/* Primary Image - Consistent Source of Truth */}
         <img
           src={primaryImage}
@@ -57,14 +58,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).src = userProductImage;
           }}
-          className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+          className={`w-full h-full object-cover ${aspectRatio === '9/5' ? 'object-[center_20%]' : 'object-top'} transition-transform duration-700 ease-out group-hover:scale-105`}
           loading="lazy"
         />
 
         {/* Badges Overlay */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+        <div className={`absolute ${aspectRatio === '9/5' ? 'top-2 left-2 gap-1' : 'top-3 left-3 gap-1.5'} flex flex-col z-10`}>
           {product.badge && (
-            <span className="px-2.5 py-1 rounded-full bg-[#651C32] text-[#FAF7F0] text-[10px] uppercase font-bold tracking-wider shadow-md">
+            <span className={`px-2 py-0.5 rounded-full bg-[#651C32] text-[#FAF7F0] ${aspectRatio === '9/5' ? 'text-[9px]' : 'text-[10px]'} uppercase font-bold tracking-wider shadow-md`}>
               {product.badge}
             </span>
           )}
@@ -81,7 +82,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             e.stopPropagation();
             toggleWishlist(product.id);
           }}
-          className={`absolute top-2.5 right-2.5 z-10 p-2 sm:p-2.5 rounded-full backdrop-blur-md transition-all duration-300 shadow-md ${
+          className={`absolute ${aspectRatio === '9/5' ? 'top-2 right-2 p-1.5 sm:p-2' : 'top-2.5 right-2.5 p-2 sm:p-2.5'} z-10 rounded-full backdrop-blur-md transition-all duration-300 shadow-md ${
             isWishlisted
               ? 'bg-[#8B1E3F] text-white scale-110'
               : 'bg-[#FAF7F0]/85 text-[#1C1A19] hover:bg-[#FAF7F0] hover:text-[#8B1E3F]'
@@ -92,7 +93,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </button>
 
         {/* Quick Actions Floating Tray on Desktop Hover */}
-        <div className="absolute bottom-2.5 inset-x-2.5 z-10 hidden sm:flex items-center gap-1.5 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+        <div className={`absolute ${aspectRatio === '9/5' ? 'bottom-2 inset-x-2' : 'bottom-2.5 inset-x-2.5'} z-10 hidden sm:flex items-center gap-1.5 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300`}>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -118,11 +119,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
 
       {/* Product Information */}
-      <div className="p-3 sm:p-4 xl:p-3 2xl:p-3.5 flex-1 flex flex-col justify-between text-left">
+      <div className={`${aspectRatio === '9/5' ? 'p-2.5 sm:p-3' : 'p-3 sm:p-4 xl:p-3 2xl:p-3.5'} flex-1 flex flex-col justify-between text-left`}>
         <div>
           {/* Category & Rating */}
-          <div className="flex items-center justify-between text-xs text-[#1C1A19]/60 mb-1.5">
-            <span className="uppercase tracking-wider font-medium text-[11px] text-[#8B1E3F]">
+          <div className={`flex items-center justify-between text-xs text-[#1C1A19]/60 ${aspectRatio === '9/5' ? 'mb-1' : 'mb-1.5'}`}>
+            <span className={`uppercase tracking-wider font-medium ${aspectRatio === '9/5' ? 'text-[10px]' : 'text-[11px]'} text-[#8B1E3F]`}>
               {product.category}
             </span>
             <div className="flex items-center gap-1">
@@ -134,12 +135,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
 
           {/* Saree Name */}
-          <h3 className="font-serif text-base sm:text-lg font-medium text-[#1C1A19] group-hover:text-[#651C32] transition-colors line-clamp-1 mb-1">
+          <h3 className={`font-serif ${aspectRatio === '9/5' ? 'text-sm sm:text-base mb-0.5' : 'text-base sm:text-lg mb-1'} font-medium text-[#1C1A19] group-hover:text-[#651C32] transition-colors line-clamp-1`}>
             {product.name}
           </h3>
 
           {/* Fabric Specification */}
-          <p className="text-xs text-[#1C1A19]/65 font-light line-clamp-1 mb-3">
+          <p className={`text-xs text-[#1C1A19]/65 font-light line-clamp-1 ${aspectRatio === '9/5' ? 'mb-1.5' : 'mb-3'}`}>
             {product.fabric} • {product.zariType}
           </p>
         </div>
@@ -148,7 +149,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div>
           {/* Swatches */}
           {product.colors.length > 1 && (
-            <div className="flex items-center gap-1.5 mb-3">
+            <div className={`flex items-center gap-1.5 ${aspectRatio === '9/5' ? 'mb-1.5' : 'mb-3'}`}>
               {product.colors.map((c, i) => (
                 <button
                   key={c.name}
@@ -173,7 +174,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
           {/* Price */}
           <div className="flex items-baseline gap-2 pt-1 border-t border-[#C8A96B]/20">
-            <span className="font-serif text-lg sm:text-xl font-bold text-[#651C32]">
+            <span className={`font-serif ${aspectRatio === '9/5' ? 'text-base sm:text-lg' : 'text-lg sm:text-xl'} font-bold text-[#651C32]`}>
               {formatINR(product.price)}
             </span>
             {product.originalPrice && (

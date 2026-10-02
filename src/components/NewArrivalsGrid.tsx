@@ -82,7 +82,14 @@ export const NewArrivalsGrid: React.FC = () => {
   const handleScroll = (direction: 'left' | 'right') => {
     markUserInteraction();
     if (railRef.current) {
-      const scrollAmount = direction === 'left' ? -320 : 320;
+      const containerWidth = railRef.current.clientWidth;
+      let step = (containerWidth - 60) / 4 + 20;
+      if (containerWidth < 640) {
+        step = (containerWidth - 12) / 2 + 12;
+      } else if (containerWidth < 1024) {
+        step = (containerWidth - 32) / 3 + 16;
+      }
+      const scrollAmount = direction === 'left' ? -step : step;
       railRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
@@ -161,15 +168,15 @@ export const NewArrivalsGrid: React.FC = () => {
           onTouchStart={markUserInteraction}
           onTouchMove={markUserInteraction}
           onWheel={markUserInteraction}
-          className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto no-scrollbar py-2 px-1 select-none"
+          className="flex items-stretch gap-3 sm:gap-4 lg:gap-5 overflow-x-auto no-scrollbar py-2 select-none"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {DISPLAY_PRODUCTS.map((product, idx) => (
             <div
               key={`${product.id}-${idx}`}
-              className="shrink-0 w-[240px] sm:w-[270px] md:w-[290px] xl:w-[310px] transform-gpu"
+              className="shrink-0 w-[calc((100%-12px)/2)] sm:w-[calc((100%-32px)/3)] lg:w-[calc((100%-60px)/4)] transform-gpu"
             >
-              <ProductCard product={product} />
+              <ProductCard product={product} aspectRatio="9/5" />
             </div>
           ))}
         </div>
