@@ -13,7 +13,7 @@ import {
 import { useShop } from '../context/ShopContext';
 import { WipeText } from './WipeText';
 
-// Import all 10 Brand Ambassador images in optimized WebP (with original fallback references)
+// Import all 8 Brand Ambassador images in optimized WebP (with original fallback references)
 import ba1Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (1).webp';
 import ba2Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (2).webp';
 import ba3Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (3).webp';
@@ -21,9 +21,7 @@ import ba4Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassad
 import ba5Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (5).webp';
 import ba6Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (6).webp';
 import ba7Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (7).webp';
-import ba8Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (8).webp';
 import ba9Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (9).webp';
-import ba10Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (10).webp';
 
 import ba1Orig from '../assets/Brand Ambassador/Brand Ambassador (1).png';
 import ba2Orig from '../assets/Brand Ambassador/Brand Ambassador (2).jpeg';
@@ -32,9 +30,7 @@ import ba4Orig from '../assets/Brand Ambassador/Brand Ambassador (4).jpeg';
 import ba5Orig from '../assets/Brand Ambassador/Brand Ambassador (5).png';
 import ba6Orig from '../assets/Brand Ambassador/Brand Ambassador (6).png';
 import ba7Orig from '../assets/Brand Ambassador/Brand Ambassador (7).png';
-import ba8Orig from '../assets/Brand Ambassador/Brand Ambassador (8).png';
 import ba9Orig from '../assets/Brand Ambassador/Brand Ambassador (9).png';
-import ba10Orig from '../assets/Brand Ambassador/Brand Ambassador (10).png';
 
 // Theme Palette Constants
 const THEME = {
@@ -61,12 +57,12 @@ export interface AmbassadorOffer {
   perks: string[];
 }
 
-// 10 Brand Ambassador sequential offer mappings
+// 8 Brand Ambassador sequential offer mappings (reindexed 01 to 08)
 export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
   {
-    id: 4,
-    number: '04',
-    ambassadorName: 'Ambassador 04',
+    id: 1,
+    number: '01',
+    ambassadorName: 'Ambassador 01',
     title: 'Festive Radiant Colorways',
     tagline: 'Auspicious Vermillion & Turmeric Gold',
     offer: 'Free Insured Express Air Delivery Across India & Velvet Box',
@@ -106,9 +102,9 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     perks: ['Handcrafted Badla Scallops', 'Pastel Blossom Palette', 'Featherweight Breathable Drape']
   },
   {
-    id: 1,
-    number: '01',
-    ambassadorName: 'Ambassador 01',
+    id: 4,
+    number: '04',
+    ambassadorName: 'Ambassador 04',
     title: 'The Royal Muhurtham Edit',
     tagline: 'Certified Pure Zari Bridal Kanjivaram',
     offer: 'Flat 20% Privilege on Certified Bridal Kanjivarams',
@@ -165,20 +161,6 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     id: 8,
     number: '08',
     ambassadorName: 'Ambassador 08',
-    title: 'Pastel Blossom Chanderi',
-    tagline: 'Daylight Soirée & Garden Wedding Edit',
-    offer: 'Complimentary Matching Pure Silk Potli Bag on Orders Over ₹25,000',
-    couponCode: 'POTLIBAG',
-    categoryTarget: 'Designer Sarees',
-    highlight: 'Sheer translucent luster interwoven with gossamer gold buttis and zari tassels',
-    imageWebp: ba8Webp,
-    imageOrig: ba8Orig,
-    perks: ['Hand-Beaded Silk Potli', 'Delicate Zari Tassels', 'Handwoven Gossamer Sheer']
-  },
-  {
-    id: 9,
-    number: '09',
-    ambassadorName: 'Ambassador 09',
     title: 'Mayurakshi Crimson Bridal',
     tagline: 'Imperial Trousseau Signature Masterpiece',
     offer: 'Personalized Calligraphy Monogram Woven into Pallu Edge',
@@ -188,20 +170,6 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     imageWebp: ba9Webp,
     imageOrig: ba9Orig,
     perks: ['Woven Custom Initials', 'Pure Vermillion Natural Dye', 'Lifetime Authenticity Guarantee']
-  },
-  {
-    id: 10,
-    number: '10',
-    ambassadorName: 'Ambassador 10',
-    title: 'The Obsidian & Silver Soirée',
-    tagline: 'Midnight Drama with Liquid Silver Zari',
-    offer: 'Exclusive ₹5,000 Gift Voucher for Your Next Festive Purchase',
-    couponCode: 'MIDNIGHTLUXE',
-    categoryTarget: 'Party Wear Sarees',
-    highlight: 'Deep midnight obsidian body draped with electroplated tested sterling silver zari',
-    imageWebp: ba10Webp,
-    imageOrig: ba10Orig,
-    perks: ['Tested Sterling Silver Zari', 'Cocktail Gala Silhouette', '₹5,000 Festive Privilege Credit']
   }
 ];
 
@@ -290,7 +258,7 @@ export const WorthYourAttention: React.FC = () => {
   const handleScrollRail = (direction: 'left' | 'right') => {
     markUserInteraction();
     if (cardStripRef.current) {
-      const scrollAmount = direction === 'left' ? -260 : 260;
+      const scrollAmount = direction === 'left' ? -225 : 225;
       cardStripRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
@@ -355,7 +323,7 @@ export const WorthYourAttention: React.FC = () => {
             </WipeText>
 
             <p className="text-xs sm:text-sm md:text-base font-light mt-2 max-w-xl text-[#1C1A19]/75">
-              Explore 10 bespoke ambassador privileges — royal drapes, artisan embroideries, and complimentary trousseau tailoring.
+              Explore 8 bespoke ambassador privileges — royal drapes, artisan embroideries, and complimentary trousseau tailoring.
             </p>
           </div>
 
@@ -397,16 +365,16 @@ export const WorthYourAttention: React.FC = () => {
                 color: THEME.champagne
               }}
             >
-              <span>View All 10 Offers</span>
+              <span>View All 8 Offers</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
 
         {/* 2. Main Composite Card Layout: Narrow Vertical Cards (Left) + Large Featured Card (Right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          {/* Left Column: Narrow Vertical Cards Rail (7 cols on Desktop) */}
-          <div className="lg:col-span-7 flex flex-col justify-between">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+          {/* Left Column: Narrow Vertical Cards Rail (6 cols on Desktop) */}
+          <div className="lg:col-span-6 flex flex-col justify-between">
             {/* Rail Header Indicator */}
             <div className="flex items-center justify-between mb-3 px-1">
               <div className="flex items-center gap-2">
@@ -414,7 +382,7 @@ export const WorthYourAttention: React.FC = () => {
                   Select Ambassador Look
                 </span>
                 <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-[#3A0B18]/10 text-[#5B1024]">
-                  {activeId} of 10
+                  {activeOffer.number} of {BRAND_AMBASSADOR_OFFERS.length}
                 </span>
               </div>
               <span className="text-[11px] text-[#1C1A19]/60 italic hidden sm:inline">
@@ -456,7 +424,7 @@ export const WorthYourAttention: React.FC = () => {
                     }}
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.25 }}
-                    className={`relative flex-shrink-0 w-[205px] sm:w-[230px] md:w-[255px] aspect-[9/16] rounded-2xl overflow-hidden cursor-pointer transition-shadow duration-500 select-none group border ${
+                    className={`relative flex-shrink-0 w-[165px] sm:w-[185px] md:w-[205px] aspect-[9/16] rounded-2xl overflow-hidden cursor-pointer transition-shadow duration-500 select-none group border ${
                       isActive
                         ? 'ring-2 shadow-2xl scale-[1.02] z-20'
                         : 'shadow-md opacity-85 hover:opacity-100 z-10'
@@ -593,7 +561,7 @@ export const WorthYourAttention: React.FC = () => {
 
               <div className="flex items-center gap-2">
                 <span className="text-xs text-[#1C1A19]/70 font-mono">
-                  {activeId} / 10
+                  {activeOffer.number} / {BRAND_AMBASSADOR_OFFERS.length}
                 </span>
                 <div className="flex items-center gap-1">
                   <button
@@ -615,10 +583,10 @@ export const WorthYourAttention: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Large Featured Card (5 cols on Desktop) */}
-          <div className="lg:col-span-5 flex flex-col">
+          {/* Right Column: Large Featured Card (6 cols on Desktop) */}
+          <div className="lg:col-span-6 flex flex-col">
             <div
-              className="relative flex-1 min-h-[500px] sm:min-h-[560px] rounded-3xl overflow-hidden shadow-2xl border flex flex-col justify-between p-6 sm:p-8 text-left text-white"
+              className="relative flex-1 min-h-[480px] sm:min-h-[520px] rounded-3xl overflow-hidden shadow-2xl border flex flex-col justify-between p-6 sm:p-8 text-left text-white"
               style={{
                 backgroundColor: THEME.burgundy,
                 borderColor: `${THEME.champagne}40`,
@@ -667,7 +635,7 @@ export const WorthYourAttention: React.FC = () => {
                       color: THEME.champagne
                     }}
                   >
-                    AMBASSADOR {activeOffer.number} / 10
+                    AMBASSADOR {activeOffer.number} / {BRAND_AMBASSADOR_OFFERS.length}
                   </span>
 
                   <span
