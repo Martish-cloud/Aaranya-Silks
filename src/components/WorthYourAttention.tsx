@@ -608,17 +608,17 @@ export const WorthYourAttention: React.FC = () => {
                     <img
                       src={activeOffer.imageOrig}
                       alt={`Featured Ambassador ${activeOffer.number} - ${activeOffer.title}`}
-                      className="w-full h-full object-cover object-top filter brightness-90 contrast-[1.05]"
+                      className="w-full h-full object-cover object-top filter brightness-100 contrast-[1.05]"
                       // @ts-expect-error fetchpriority
                       fetchpriority="high"
                     />
                   </picture>
 
-                  {/* Gradient Scrim - Maroon to Burgundy to transparent */}
+                  {/* Gradient Scrim - Minimal bottom gradient keeping photo fully visible */}
                   <div
                     className="absolute inset-0"
                     style={{
-                      background: `linear-gradient(to top, ${THEME.burgundy}F8 0%, ${THEME.burgundy}D9 42%, ${THEME.maroon}55 70%, rgba(58, 11, 24, 0.3) 100%)`
+                      background: `linear-gradient(to top, ${THEME.burgundy}F0 0%, ${THEME.burgundy}99 35%, transparent 62%)`
                     }}
                   />
                 </motion.div>

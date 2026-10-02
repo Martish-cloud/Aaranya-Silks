@@ -238,23 +238,22 @@ export const SignatureCollections: React.FC = () => {
         <AnimatePresence mode="popLayout">
           <motion.div
             key={`section-bg-${activePhoto.id}`}
-            initial={{ opacity: 0, scale: 1.02 }}
-            animate={{ opacity: 0.82, scale: 1.05 }}
-            exit={{ opacity: 0, scale: 1.07 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, scale: 1.01 }}
+            animate={{ opacity: 1, scale: 1.02 }}
+            exit={{ opacity: 0, scale: 1.04 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 w-full h-full"
           >
             <img
               src={activePhoto.src}
               alt=""
               aria-hidden="true"
-              className="w-full h-full object-cover object-center filter blur-[1px] brightness-[0.98] contrast-[1.05] transform-gpu"
+              className="w-full h-full object-cover object-center brightness-105 contrast-105 transform-gpu"
             />
           </motion.div>
         </AnimatePresence>
-        {/* Soft luxury dark vignette overlays ensuring crystal-clear text readability while keeping the photo background clearly visible */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F0A09]/40 via-transparent to-[#0F0A09]/50 pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_65%,#0F0A09_90%)] pointer-events-none" />
+        {/* Soft luxury tint overlay keeping the photo background crystal-clear and fully visible */}
+        <div className="absolute inset-0 bg-black/25 pointer-events-none" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -310,15 +309,15 @@ export const SignatureCollections: React.FC = () => {
                     }}
                     className="absolute inset-0 w-full h-full flex items-center justify-center"
                   >
-                    {/* Background Depth Layer - Subtly recognizable rear card */}
+                    {/* Background Depth Layer - Fully recognizable rear card */}
                     <div className="absolute -inset-3 sm:-inset-5 md:-inset-6 rounded-[2.5rem] overflow-hidden pointer-events-none -z-10 shadow-2xl">
                       <img
                         src={activePhoto.src}
                         alt=""
                         aria-hidden="true"
-                        className="w-full h-full object-cover object-top filter blur-[3px] opacity-75 transform-gpu"
+                        className="w-full h-full object-cover object-top opacity-100 transform-gpu"
                       />
-                      <div className="absolute inset-0 bg-[#0F0A09]/20" />
+                      <div className="absolute inset-0 bg-black/10" />
                     </div>
 
                     {/* Main Foreground Card with 3D Tilt */}
@@ -394,9 +393,9 @@ export const SignatureCollections: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                  className="space-y-5"
+                  className="space-y-5 bg-black/60 backdrop-blur-md p-6 sm:p-8 rounded-3xl border border-[#C8A96B]/30 shadow-2xl"
                 >
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B1E3F]/30 border border-[#8B1E3F] text-[#FAF7F0] text-xs font-medium tracking-wide">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B1E3F]/40 border border-[#8B1E3F] text-[#FAF7F0] text-xs font-medium tracking-wide">
                     <span>{activePhoto.hue}</span>
                   </div>
 
@@ -410,7 +409,7 @@ export const SignatureCollections: React.FC = () => {
 
                   {/* Highlights Spec Card */}
                   <div className="pt-2">
-                    <div className="p-3.5 sm:p-4 rounded-2xl bg-white/[0.04] border border-[#C8A96B]/25">
+                    <div className="p-3.5 sm:p-4 rounded-2xl bg-white/[0.06] border border-[#C8A96B]/25">
                       <span className="text-[10px] uppercase text-[#C8A96B] tracking-wider block mb-1">
                         Zari Purity
                       </span>
@@ -437,7 +436,7 @@ export const SignatureCollections: React.FC = () => {
               <div className="flex items-center gap-3 pt-2">
                 <button
                   onClick={handlePrev}
-                  className="p-3 rounded-full bg-white/[0.05] hover:bg-[#8B1E3F] border border-[#C8A96B]/40 hover:border-[#C8A96B] text-white transition-all shadow-md group cursor-pointer active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#C8A96B]"
+                  className="p-3.5 rounded-full bg-black/60 hover:bg-[#8B1E3F] border border-[#C8A96B]/50 hover:border-[#C8A96B] text-white transition-all shadow-xl group cursor-pointer active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#C8A96B] backdrop-blur-md"
                   aria-label="Previous photograph"
                 >
                   <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
@@ -445,7 +444,7 @@ export const SignatureCollections: React.FC = () => {
 
                 <button
                   onClick={handleNext}
-                  className="p-3 rounded-full bg-white/[0.05] hover:bg-[#8B1E3F] border border-[#C8A96B]/40 hover:border-[#C8A96B] text-white transition-all shadow-md group cursor-pointer active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#C8A96B]"
+                  className="p-3.5 rounded-full bg-black/60 hover:bg-[#8B1E3F] border border-[#C8A96B]/50 hover:border-[#C8A96B] text-white transition-all shadow-xl group cursor-pointer active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#C8A96B] backdrop-blur-md"
                   aria-label="Next photograph"
                 >
                   <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
