@@ -239,14 +239,14 @@ export const SignatureCollections: React.FC = () => {
       id="photo-gallery"
       className="py-16 md:py-24 bg-[#0F0A09] text-[#FAF7F0] relative overflow-hidden select-none"
     >
-      {/* Full Section Background - Same Selected Image Enlarged with Subtle Blur & 20-25% Visibility */}
+      {/* Full Section Background - Same Selected Image Enlarged with High Clarity & Crisp Visibility */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <AnimatePresence mode="popLayout">
           <motion.div
             key={`section-bg-${activePhoto.id}`}
             initial={{ opacity: 0, scale: 1.04 }}
-            animate={{ opacity: 0.22, scale: 1.08 }}
-            exit={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 0.42, scale: 1.06 }}
+            exit={{ opacity: 0, scale: 1.08 }}
             transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 w-full h-full"
           >
@@ -254,13 +254,13 @@ export const SignatureCollections: React.FC = () => {
               src={activePhoto.src}
               alt=""
               aria-hidden="true"
-              className="w-full h-full object-cover object-center filter blur-xl transform-gpu"
+              className="w-full h-full object-cover object-center filter blur-[4px] transform-gpu"
             />
           </motion.div>
         </AnimatePresence>
-        {/* Soft dark vignette overlays ensuring crystal-clear text readability while preserving background visibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F0A09]/75 via-[#0F0A09]/40 to-[#0F0A09]/80 pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,#0F0A09_85%)] pointer-events-none" />
+        {/* Soft luxury dark vignette overlays ensuring crystal-clear text readability while keeping the photo background clearly visible */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F0A09]/50 via-[#0F0A09]/20 to-[#0F0A09]/65 pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_45%,#0F0A09_75%)] pointer-events-none" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -325,14 +325,14 @@ export const SignatureCollections: React.FC = () => {
               className="lg:col-span-7 flex justify-center"
             >
               <div className="relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[450px] aspect-[9/10] flex items-center justify-center">
-                {/* Background Depth Layer - Subtly recognizable rear card (90-95% opacity, 5-10% transparency) */}
+                {/* Background Depth Layer - Subtly recognizable rear card */}
                 <div className="absolute -inset-4 sm:-inset-6 md:-inset-8 rounded-[2.5rem] overflow-hidden pointer-events-none -z-10">
                   <AnimatePresence mode="popLayout">
                     <motion.div
                       key={`bg-depth-${activePhoto.id}`}
                       initial={{ opacity: 0, scale: 1.08 }}
-                      animate={{ opacity: 0.92, scale: 1.15 }}
-                      exit={{ opacity: 0, scale: 1.2 }}
+                      animate={{ opacity: 0.95, scale: 1.12 }}
+                      exit={{ opacity: 0, scale: 1.16 }}
                       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                       className="absolute inset-0 w-full h-full"
                     >
@@ -340,7 +340,7 @@ export const SignatureCollections: React.FC = () => {
                         src={activePhoto.src}
                         alt=""
                         aria-hidden="true"
-                        className="w-full h-full object-cover object-top filter blur-lg sm:blur-xl opacity-95 transform-gpu"
+                        className="w-full h-full object-cover object-top filter blur-[3px] opacity-95 transform-gpu"
                       />
                     </motion.div>
                   </AnimatePresence>
@@ -458,11 +458,11 @@ export const SignatureCollections: React.FC = () => {
                     <span>{activePhoto.hue}</span>
                   </div>
 
-                  <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-light text-[#FAF7F0] leading-snug">
+                  <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-light text-[#FAF7F0] leading-snug drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
                     {activePhoto.title}
                   </h3>
 
-                  <p className="text-sm sm:text-base text-[#FAF7F0]/80 font-light leading-relaxed">
+                  <p className="text-sm sm:text-base text-[#FAF7F0]/90 font-light leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
                     {activePhoto.description}
                   </p>
 
