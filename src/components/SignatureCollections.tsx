@@ -109,25 +109,58 @@ const GALLERY_ITEMS: GalleryItem[] = [
   },
 ];
 
+const slideVariants = {
+  enter: (dir: number) => ({
+    x: dir > 0 ? '100%' : dir < 0 ? '-100%' : 0,
+    opacity: 0,
+    scale: 0.98,
+  }),
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1,
+    scale: 1,
+  },
+  exit: (dir: number) => ({
+    zIndex: 0,
+    x: dir < 0 ? '100%' : '-100%',
+    opacity: 0,
+    scale: 0.98,
+  }),
+};
+
 export const SignatureCollections: React.FC = () => {
   const { navigateTo } = useShop();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
   const [isInView, setIsInView] = useState(false);
   const [entranceKey, setEntranceKey] = useState(0);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const cardRectRef = useRef<DOMRect | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isTransitioningRef = useRef(false);
 
   const activePhoto = GALLERY_ITEMS[currentIndex];
 
   const handleNext = useCallback(() => {
+    if (isTransitioningRef.current) return;
+    isTransitioningRef.current = true;
+    setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % GALLERY_ITEMS.length);
+    setTimeout(() => {
+      isTransitioningRef.current = false;
+    }, 380);
   }, []);
 
   const handlePrev = useCallback(() => {
+    if (isTransitioningRef.current) return;
+    isTransitioningRef.current = true;
+    setDirection(-1);
     setCurrentIndex((prev) => (prev - 1 + GALLERY_ITEMS.length) % GALLERY_ITEMS.length);
+    setTimeout(() => {
+      isTransitioningRef.current = false;
+    }, 380);
   }, []);
 
   // Predictive preloading: Keep upcoming (next) and previous images ready in memory before transition
@@ -159,45 +192,6 @@ export const SignatureCollections: React.FC = () => {
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
-
-  // Timer helpers: exactly ~2000ms, single timer, reset on manual interaction or index change
-  const clearTimer = useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-  }, []);
-
-  const startTimer = useCallback(() => {
-    clearTimer();
-    if (!isInView || lightboxOpen || (typeof document !== 'undefined' && document.visibilityState === 'hidden')) {
-      return;
-    }
-    timerRef.current = setTimeout(() => {
-      handleNext();
-    }, 2000);
-  }, [clearTimer, isInView, lightboxOpen, handleNext]);
-
-  // Restart 2-second autoplay timer whenever currentIndex changes (both automatic & manual navigation)
-  useEffect(() => {
-    startTimer();
-    return () => clearTimer();
-  }, [currentIndex, startTimer, clearTimer]);
-
-  // Tab visibility listener: pause when tab hidden, resume when tab visible
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && isInView && !lightboxOpen) {
-        startTimer();
-      } else {
-        clearTimer();
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [isInView, lightboxOpen, startTimer, clearTimer]);
 
   // Keyboard navigation (only active when section is in view or lightbox is open)
   useEffect(() => {
@@ -245,22 +239,22 @@ export const SignatureCollections: React.FC = () => {
           <motion.div
             key={`section-bg-${activePhoto.id}`}
             initial={{ opacity: 0, scale: 1.04 }}
-            animate={{ opacity: 0.42, scale: 1.06 }}
+            animate={{ opacity: 0.60, scale: 1.06 }}
             exit={{ opacity: 0, scale: 1.08 }}
-            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 w-full h-full"
           >
             <img
               src={activePhoto.src}
               alt=""
               aria-hidden="true"
-              className="w-full h-full object-cover object-center filter blur-[4px] transform-gpu"
+              className="w-full h-full object-cover object-center filter blur-[2px] brightness-[0.95] contrast-[1.05] transform-gpu"
             />
           </motion.div>
         </AnimatePresence>
         {/* Soft luxury dark vignette overlays ensuring crystal-clear text readability while keeping the photo background clearly visible */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F0A09]/50 via-[#0F0A09]/20 to-[#0F0A09]/65 pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_45%,#0F0A09_75%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F0A09]/35 via-[#0F0A09]/15 to-[#0F0A09]/55 pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,#0F0A09_85%)] pointer-events-none" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -340,7 +334,7 @@ export const SignatureCollections: React.FC = () => {
                         src={activePhoto.src}
                         alt=""
                         aria-hidden="true"
-                        className="w-full h-full object-cover object-top filter blur-[3px] opacity-95 transform-gpu"
+                        className="w-full h-full object-cover object-top filter blur-[2px] opacity-95 transform-gpu"
                       />
                     </motion.div>
                   </AnimatePresence>
@@ -377,14 +371,20 @@ export const SignatureCollections: React.FC = () => {
                     </AnimatePresence>
                   </div>
 
-                  {/* Primary High-Resolution Foreground Image (Strict 9:10, Head & Model Fully Visible, Zero Unwanted Cropping) */}
-                  <AnimatePresence mode="popLayout">
+                  {/* Primary High-Resolution Foreground Image with Smooth Sliding Transition */}
+                  <AnimatePresence initial={false} custom={direction} mode="popLayout">
                     <motion.div
                       key={activePhoto.id}
-                      initial={{ opacity: 0, scale: 0.98 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 1.02 }}
-                      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                      custom={direction}
+                      variants={slideVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{
+                        x: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
+                        opacity: { duration: 0.32, ease: 'easeInOut' },
+                        scale: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
+                      }}
                       className="absolute inset-0 w-full h-full z-10"
                     >
                       <img
@@ -495,7 +495,7 @@ export const SignatureCollections: React.FC = () => {
               <div className="flex items-center gap-3 pt-2">
                 <button
                   onClick={handlePrev}
-                  className="p-3 rounded-full bg-white/[0.05] hover:bg-[#8B1E3F] border border-[#C8A96B]/40 hover:border-[#C8A96B] text-white transition-all shadow-md group cursor-pointer"
+                  className="p-3 rounded-full bg-white/[0.05] hover:bg-[#8B1E3F] border border-[#C8A96B]/40 hover:border-[#C8A96B] text-white transition-all shadow-md group cursor-pointer active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#C8A96B]"
                   aria-label="Previous photograph"
                 >
                   <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
@@ -503,7 +503,7 @@ export const SignatureCollections: React.FC = () => {
 
                 <button
                   onClick={handleNext}
-                  className="p-3 rounded-full bg-white/[0.05] hover:bg-[#8B1E3F] border border-[#C8A96B]/40 hover:border-[#C8A96B] text-white transition-all shadow-md group cursor-pointer"
+                  className="p-3 rounded-full bg-white/[0.05] hover:bg-[#8B1E3F] border border-[#C8A96B]/40 hover:border-[#C8A96B] text-white transition-all shadow-md group cursor-pointer active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#C8A96B]"
                   aria-label="Next photograph"
                 >
                   <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
