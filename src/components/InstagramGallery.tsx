@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Sparkles, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { WipeText } from './WipeText';
 
-import abImg1 from '../assets/AB/Image 1.png';
+import aaranyaBrideImg from '../assets/Shop All Sarees/Mayurakshi Kanjivaram Bridal Silk Saree/Mayurakshi Kanjivaram Bridal Silk Saree (Crimson Red).png';
 import abImg2 from '../assets/AB/Image 2.png';
 import abImg3 from '../assets/AB/Image 3.webp';
 import abImg4 from '../assets/AB/Image 4.png';
@@ -11,7 +11,7 @@ import abImg5 from '../assets/AB/Image 5.jpg';
 const STYLED_POSTS = [
   {
     id: 'ab-1',
-    image: abImg1,
+    image: aaranyaBrideImg,
     productName: 'Royal Kanjivaram Bridal Drape',
     tag: '#AaranyaBride',
     caption: 'Moments of quiet grace and golden purity before the vows are spoken.',
