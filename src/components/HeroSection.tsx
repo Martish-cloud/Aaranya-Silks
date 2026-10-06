@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, ShieldCheck, Award } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { WipeText } from './WipeText';
-import heroImg from '../assets/hero-maroon-saree.png';
+import heroImg from '../assets/hero-maroon-saree.webp';
 
 export const HeroSection: React.FC = () => {
   const { navigateTo } = useShop();
@@ -15,8 +15,9 @@ export const HeroSection: React.FC = () => {
         <img
           src={heroImg}
           alt="Aaranya Silks Luxury Saree Boutique"
-          // @ts-expect-error React 18 / browser fetchpriority support
-          fetchpriority="high"
+          fetchPriority="high"
+          loading="eager"
+          decoding="async"
           className="w-full h-full object-cover object-top filter brightness-[0.68] contrast-[1.05]"
         />
 

@@ -358,8 +358,13 @@ export const CatalogPage: React.FC = () => {
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-5 lg:gap-6">
-                {filteredSarees.map((saree) => (
-                  <ProductCard key={saree.id} product={saree} />
+                {filteredSarees.map((saree, idx) => (
+                  <ProductCard
+                    key={saree.id}
+                    product={saree}
+                    index={idx}
+                    priority={idx < 4}
+                  />
                 ))}
               </div>
             )}

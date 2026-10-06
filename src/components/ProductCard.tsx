@@ -2,17 +2,25 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Eye, ShoppingBag, Star } from 'lucide-react';
 import type { Saree } from '../types';
-import userProductImage from '../assets/user-product-image.png';
+import userProductImage from '../assets/user-product-image.webp';
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
+
+const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
 interface ProductCardProps {
   product: Saree;
   priority?: boolean;
   aspectRatio?: '9/5' | '3/4';
+  index?: number;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, aspectRatio = '3/4' }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  aspectRatio = '3/4',
+  priority = false,
+  index
+}) => {
   const {
     isInWishlist,
     toggleWishlist,
@@ -40,17 +48,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, aspectRatio =
     }
   };
 
+  const staggerDelay = index !== undefined ? (index % 4) * 0.07 : 0;
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 15 }}
+      initial={{ opacity: 0, y: 35 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, amount: 0.08 }}
-      transition={{ duration: 0.45 }}
+      transition={{ duration: 0.6, ease: LUXURY_EASE, delay: staggerDelay }}
       onClick={handleCardClick}
-      className="group cursor-pointer flex flex-col h-full bg-[#FAF7F0] rounded-2xl overflow-hidden border border-[#C8A96B]/20 hover:border-[#C8A96B]/60 transition-all duration-500 hover:shadow-xl hover:-translate-y-1"
+      className="group cursor-pointer flex flex-col h-full bg-[#FAF7F0] rounded-2xl overflow-hidden border border-[#C8A96B]/20 hover:border-[#C8A96B]/60 transition-all duration-500 hover:shadow-xl hover:-translate-y-1 will-change-transform"
     >
       {/* Product Image Stage */}
-      <div className={`relative w-full ${aspectRatio === '9/5' ? 'aspect-[9/5]' : 'aspect-[3/4]'} bg-[#F2EBDD] overflow-hidden`}>
+      <div
+        className={`relative w-full ${aspectRatio === '9/5' ? 'aspect-[9/5]' : 'aspect-[3/4]'} bg-[#F2EBDD] overflow-hidden`}
+        style={{ aspectRatio: aspectRatio === '9/5' ? '9 / 5' : '3 / 4' }}
+      >
         {/* Primary Image - Consistent Source of Truth */}
         <img
           src={primaryImage}
@@ -58,8 +71,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, aspectRatio =
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).src = userProductImage;
           }}
-          className={`w-full h-full object-cover ${aspectRatio === '9/5' ? 'object-[center_20%]' : 'object-top'} transition-transform duration-700 ease-out group-hover:scale-105`}
-          loading="lazy"
+          className={`w-full h-full object-cover ${aspectRatio === '9/5' ? 'object-[center_20%]' : 'object-top'} transition-transform duration-700 ease-out group-hover:scale-105 will-change-transform`}
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+          fetchPriority={priority ? 'high' : 'auto'}
         />
 
         {/* Badges Overlay */}

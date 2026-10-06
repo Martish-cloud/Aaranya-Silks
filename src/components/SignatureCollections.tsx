@@ -5,15 +5,15 @@ import { useShop } from '../context/ShopContext';
 import { WipeText } from './WipeText';
 import { preloadImage } from '../utils/imagePreloader';
 
-import photo1 from '../assets/Photo Gallery/1.jfif';
-import photo2 from '../assets/Photo Gallery/2.jpg';
-import photo3 from '../assets/Photo Gallery/3.jpeg';
-import photo4 from '../assets/Photo Gallery/4.jfif';
-import photo5 from '../assets/Photo Gallery/5.avif';
-import photo6 from '../assets/Photo Gallery/6.jfif';
-import photo7 from '../assets/Photo Gallery/7.jpg';
-import photo8 from '../assets/Photo Gallery/8.jpg';
-import photo9 from '../assets/Photo Gallery/9.jfif';
+import photo1 from '../assets/Photo Gallery/1.webp';
+import photo2 from '../assets/Photo Gallery/2.webp';
+import photo3 from '../assets/Photo Gallery/3.webp';
+import photo4 from '../assets/Photo Gallery/4.webp';
+import photo5 from '../assets/Photo Gallery/5.webp';
+import photo6 from '../assets/Photo Gallery/6.webp';
+import photo7 from '../assets/Photo Gallery/7.webp';
+import photo8 from '../assets/Photo Gallery/8.webp';
+import photo9 from '../assets/Photo Gallery/9.webp';
 
 interface GalleryItem {
   id: number;

@@ -40,6 +40,8 @@ export const BrandStorytelling: React.FC = () => {
                 <img
                   src="https://images.unsplash.com/photo-1610030469857-e1793540ebf8?auto=format&fit=crop&w=1200&q=85"
                   alt="Aaranya Silks Handloom Craftsmanship"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover object-top"
                 />
               </div>
@@ -49,6 +51,8 @@ export const BrandStorytelling: React.FC = () => {
                 <img
                   src="https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=800&q=85"
                   alt="Zari Brocade Detail"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
               </div>

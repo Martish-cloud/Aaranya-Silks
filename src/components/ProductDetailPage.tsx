@@ -16,7 +16,8 @@ import { useShop } from '../context/ShopContext';
 import { SAREES_DATA } from '../data/sarees';
 import { formatINR } from '../utils/formatters';
 import { ProductCard } from './ProductCard';
-import userProductImage from '../assets/user-product-image.png';
+import userProductImage from '../assets/user-product-image.webp';
+import { preloadImages } from '../utils/imagePreloader';
 
 interface ProductDetailPageProps {
   slug: string;
@@ -61,6 +62,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
     const chosenColor = product.colors[colIdx];
     setActiveImg(chosenColor?.image || product.images[0]);
     setActiveImgIdx(0);
+    if (product.images && product.images.length > 1) {
+      preloadImages(product.images);
+    }
   }, [slug, selectedVariantColor, product]);
 
   const [quantity, setQuantity] = useState(1);
@@ -177,6 +181,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                     (e.currentTarget as HTMLImageElement).src = userProductImage;
                   }}
                   className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
                 />
 
                 {/* Top Badges */}
@@ -187,7 +194,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                     </span>
                   )}
                   {product.discountBadge && (
-                    <span className="px-2 py-0.5 rounded-full bg-[#8B1E3F] text-white text-[9px] uppercase font-bold tracking-wider shadow">
+                    <span className="px-2.5 py-0.5 rounded-full bg-[#8B1E3F] text-white text-[9px] uppercase font-bold tracking-wider shadow">
                       {product.discountBadge}
                     </span>
                   )}
@@ -223,6 +230,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
                       onError={(e) => {
                         (e.currentTarget as HTMLImageElement).src = userProductImage;
                       }}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover object-top"
                     />
                   </button>

@@ -39,6 +39,9 @@ export const StoryPage: React.FC = () => {
               <img
                 src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=85"
                 alt="Master Weavers of Varanasi"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
                 className="w-full h-full object-cover object-top"
               />
             </div>
@@ -76,6 +79,8 @@ export const StoryPage: React.FC = () => {
               <img
                 src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85"
                 alt="Pure Gold Zari Testing"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover object-top"
               />
             </div>

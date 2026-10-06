@@ -24,7 +24,7 @@ import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
 import { preloadImages } from '../utils/imagePreloader';
-import userProductImage from '../assets/user-product-image.png';
+import userProductImage from '../assets/user-product-image.webp';
 
 interface OutfitCardProps {
   outfit: OutfitProduct;
@@ -79,7 +79,7 @@ const OutfitCard = memo<OutfitCardProps>(({
               key={idx}
               src={img}
               alt={`${outfit.name} view ${idx + 1}`}
-              loading={idx === 0 ? 'eager' : 'lazy'}
+              loading="lazy"
               decoding="async"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src = userProductImage;

@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Sparkles, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { WipeText } from './WipeText';
 
-import aaranyaBrideImg from '../assets/Shop All Sarees/Mayurakshi Kanjivaram Bridal Silk Saree/Mayurakshi Kanjivaram Bridal Silk Saree (Crimson Red).png';
-import abImg2 from '../assets/AB/Image 2.png';
+import aaranyaBrideImg from '../assets/Shop All Sarees/Mayurakshi Kanjivaram Bridal Silk Saree/Mayurakshi Kanjivaram Bridal Silk Saree (Crimson Red).webp';
+import abImg2 from '../assets/AB/Image 2.webp';
 import abImg3 from '../assets/AB/Image 3.webp';
-import abImg4 from '../assets/AB/Image 4.png';
-import abImg5 from '../assets/AB/Image 5.jpg';
+import abImg4 from '../assets/AB/Image 4.webp';
+import abImg5 from '../assets/AB/Image 5.webp';
 
 const STYLED_POSTS = [
   {
@@ -55,6 +55,7 @@ export const InstagramGallery: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(N * 2); // Start at middle batch (index 10)
   const [isTransitioning, setIsTransitioning] = useState<boolean>(true);
   const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [isInView, setIsInView] = useState<boolean>(false);
   const [containerWidth, setContainerWidth] = useState<number>(() => {
     if (typeof window !== 'undefined') {
       return Math.min(window.innerWidth - 32, 1216);
@@ -192,16 +193,32 @@ export const InstagramGallery: React.FC = () => {
     }
   };
 
-  // Automatic sliding at a dynamic, luxury pace (~2.6s interval, pausing on hover/touch)
+  // Observe viewport intersection to prevent offscreen CPU/animation usage
   useEffect(() => {
-    if (isPaused) return;
+    const el = viewportRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Automatic sliding at a dynamic, luxury pace (~2.6s interval, pausing on hover/touch or offscreen)
+  useEffect(() => {
+    if (isPaused || !isInView) return;
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches) return;
 
     const interval = setInterval(() => {
       slideNext();
     }, 2600);
 
     return () => clearInterval(interval);
-  }, [isPaused, slideNext]);
+  }, [isPaused, isInView, slideNext]);
 
   // Touch & Swipe handlers for mobile devices
   const handleTouchStart = (e: React.TouchEvent) => {

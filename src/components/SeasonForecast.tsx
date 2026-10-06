@@ -4,10 +4,11 @@ import { Compass, ChevronLeft, ChevronRight, Sparkles, ArrowRight, BookOpen } fr
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
+import { preloadImage } from '../utils/imagePreloader';
 
-import wowImg1 from '../assets/Wow/Image (1).png';
-import wowImg2 from '../assets/Wow/Image (4).png';
-import wowImg3 from '../assets/Wow/Image (5).png';
+import wowImg1 from '../assets/Wow/Image (1).webp';
+import wowImg2 from '../assets/Wow/Image (4).webp';
+import wowImg3 from '../assets/Wow/Image (5).webp';
 
 interface SareePage {
   id: number;
@@ -97,6 +98,14 @@ export const SeasonForecast: React.FC = () => {
     setDirection(1);
     setCurrentPageIdx((prev) => (prev === AUTUMN_WINTER_PAGES.length - 1 ? 0 : prev + 1));
   };
+
+  // Predictive preloading: preload next and previous lookbook images
+  React.useEffect(() => {
+    const nextIdx = (currentPageIdx + 1) % AUTUMN_WINTER_PAGES.length;
+    const prevIdx = (currentPageIdx - 1 + AUTUMN_WINTER_PAGES.length) % AUTUMN_WINTER_PAGES.length;
+    preloadImage(AUTUMN_WINTER_PAGES[nextIdx].image);
+    preloadImage(AUTUMN_WINTER_PAGES[prevIdx].image);
+  }, [currentPageIdx]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -250,6 +259,8 @@ export const SeasonForecast: React.FC = () => {
                   <img
                     src={currentPage.image}
                     alt={currentPage.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20 pointer-events-none" />

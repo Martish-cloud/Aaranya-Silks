@@ -47,11 +47,19 @@ export const TrendingShowcase: React.FC = () => {
         {/* Magazine-style Asymmetric Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Main Featured Hero Look (7 cols) */}
-          <div className="lg:col-span-7 bg-[#F2EBDD] rounded-3xl p-6 sm:p-8 border border-[#C8A96B]/30 shadow-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.1 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-7 bg-[#F2EBDD] rounded-3xl p-6 sm:p-8 border border-[#C8A96B]/30 shadow-lg"
+          >
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden mb-6 bg-[#FAF7F0] shadow-inner group">
               <img
                 src={activeColor.image || featured.images[0]}
                 alt={featured.name}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
               />
 
@@ -152,7 +160,7 @@ export const TrendingShowcase: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Related Trending Looks Column (5 cols) */}
           <div className="lg:col-span-5 space-y-5 text-left">
@@ -160,9 +168,13 @@ export const TrendingShowcase: React.FC = () => {
               Complementary Runway Edits
             </h4>
 
-            {relatedSarees.map((saree) => (
+            {relatedSarees.map((saree, idx) => (
               <motion.div
                 key={saree.id}
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.1 }}
+                transition={{ duration: 0.6, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
                 whileHover={{ y: -3 }}
                 onClick={() => navigateTo('product', saree.slug)}
                 className="group cursor-pointer flex items-center gap-4 p-3.5 rounded-2xl bg-[#FAF7F0] border border-[#C8A96B]/25 hover:border-[#651C32] transition-all duration-300 shadow-sm hover:shadow-md"
@@ -173,6 +185,7 @@ export const TrendingShowcase: React.FC = () => {
                     alt={saree.name}
                     className="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-500"
                     loading="lazy"
+                    decoding="async"
                   />
                 </div>
 

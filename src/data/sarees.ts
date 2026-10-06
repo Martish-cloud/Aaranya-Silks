@@ -1,30 +1,42 @@
-import userProductImage from '../assets/user-product-image.png';
+import userProductImage from '../assets/user-product-image.webp';
 import type { Saree, CategoryInfo, CustomerReview } from '../types';
 
 // Dynamic asset globbing for Shop All Sarees and Need to Add
 const shopSareeImages = import.meta.glob<{ default: string }>(
-  '../assets/Shop All Sarees/**/*.{png,jpg,jpeg,jfif,webp}',
+  '../assets/Shop All Sarees/**/*.{webp,png,jpg,jpeg,jfif}',
   { eager: true }
 );
 
 const needToAddImages = import.meta.glob<{ default: string }>(
-  '../assets/Need to Add/**/*.{png,jpg,jpeg,jfif,webp}',
+  '../assets/Need to Add/**/*.{webp,png,jpg,jpeg,jfif}',
   { eager: true }
 );
 
 export function getShopSareeImg(folder: string, filename: string): string {
+  const baseName = filename.replace(/\.[^/.]+$/, '');
+  const webpKey = `../assets/Shop All Sarees/${folder}/${baseName}.webp`;
+  if (shopSareeImages[webpKey]) return shopSareeImages[webpKey].default;
+
   const directKey = `../assets/Shop All Sarees/${folder}/${filename}`;
   if (shopSareeImages[directKey]) return shopSareeImages[directKey].default;
+
   for (const k in shopSareeImages) {
+    if (k.endsWith('/' + baseName + '.webp')) return shopSareeImages[k].default;
     if (k.endsWith('/' + filename)) return shopSareeImages[k].default;
   }
   return userProductImage;
 }
 
 export function getNeedToAddImg(folder: string, filename: string): string {
+  const baseName = filename.replace(/\.[^/.]+$/, '');
+  const webpKey = `../assets/Need to Add/${folder}/${baseName}.webp`;
+  if (needToAddImages[webpKey]) return needToAddImages[webpKey].default;
+
   const directKey = `../assets/Need to Add/${folder}/${filename}`;
   if (needToAddImages[directKey]) return needToAddImages[directKey].default;
+
   for (const k in needToAddImages) {
+    if (k.endsWith('/' + baseName + '.webp')) return needToAddImages[k].default;
     if (k.endsWith('/' + filename)) return needToAddImages[k].default;
   }
   return userProductImage;

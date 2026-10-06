@@ -176,7 +176,7 @@ export const NewArrivalsGrid: React.FC = () => {
               key={`${product.id}-${idx}`}
               className="shrink-0 w-[calc((100%-12px)/2)] sm:w-[calc((100%-32px)/3)] lg:w-[calc((100%-60px)/4)] transform-gpu"
             >
-              <ProductCard product={product} aspectRatio="9/5" />
+              <ProductCard product={product} aspectRatio="9/5" index={idx} />
             </div>
           ))}
         </div>

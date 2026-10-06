@@ -23,14 +23,14 @@ import ba6Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassad
 import ba7Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (7).webp';
 import ba9Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (9).webp';
 
-import ba1Orig from '../assets/Brand Ambassador/Brand Ambassador (1).png';
-import ba2Orig from '../assets/Brand Ambassador/Brand Ambassador (2).jpeg';
-import ba3Orig from '../assets/Brand Ambassador/Brand Ambassador (3).jpeg';
-import ba4Orig from '../assets/Brand Ambassador/Brand Ambassador (4).jpeg';
-import ba5Orig from '../assets/Brand Ambassador/Brand Ambassador (5).png';
-import ba6Orig from '../assets/Brand Ambassador/Brand Ambassador (6).png';
-import ba7Orig from '../assets/Brand Ambassador/Brand Ambassador (7).png';
-import ba9Orig from '../assets/Brand Ambassador/Brand Ambassador (9).png';
+const ba1Orig = ba1Webp;
+const ba2Orig = ba2Webp;
+const ba3Orig = ba3Webp;
+const ba4Orig = ba4Webp;
+const ba5Orig = ba5Webp;
+const ba6Orig = ba6Webp;
+const ba7Orig = ba7Webp;
+const ba9Orig = ba9Webp;
 
 // Theme Palette Constants
 const THEME = {

@@ -22,7 +22,7 @@ export interface OutfitProduct {
   inStock: boolean;
 }
 
-import userProductImage from '../assets/user-product-image.png';
+import userProductImage from '../assets/user-product-image.webp';
 
 // Dynamic asset loading via Vite import.meta.glob
 const optImages = import.meta.glob<{ default: string }>('../assets/outfits_optimized/**/*.{webp,png,jpg,jpeg,jfif}', { eager: true });

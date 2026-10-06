@@ -7,9 +7,9 @@ import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
 
 import trendImg1 from '../assets/Need to Update/Trend of the Day/Kanjivaram Sarees 1.webp';
-import trendImg2 from '../assets/Need to Update/Trend of the Day/Gourgeous (1).jpg';
-import trendImg3 from '../assets/Need to Update/Trend of the Day/Bright colorful saree (3).png';
-import trendImg4 from '../assets/Need to Update/Trend of the Day/Miss Gourgeous.png';
+import trendImg2 from '../assets/Need to Update/Trend of the Day/Gourgeous (1).webp';
+import trendImg3 from '../assets/Need to Update/Trend of the Day/Bright colorful saree (3).webp';
+import trendImg4 from '../assets/Need to Update/Trend of the Day/Miss Gourgeous.webp';
 
 const TREND_IMAGES = [trendImg1, trendImg2, trendImg3, trendImg4];
 
@@ -56,25 +56,27 @@ export const TrendOfTheDay: React.FC = () => {
             return (
               <motion.div
                 key={product.id}
-                animate={{
-                  y: [0, -7, 0]
-                }}
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.1 }}
                 transition={{
-                  duration: 3.8 + (idx % 4) * 0.6,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: idx * 0.35
+                  duration: 0.6,
+                  ease: [0.16, 1, 0.3, 1],
+                  delay: (idx % 4) * 0.08
                 }}
-                className="group flex flex-col justify-between bg-[#F2EBDD] rounded-2xl p-4 border border-[#C8A96B]/25 hover:border-[#651C32] transition-all shadow-sm hover:shadow-md text-left"
+                className="group flex flex-col justify-between bg-[#F2EBDD] rounded-2xl p-4 border border-[#C8A96B]/25 hover:border-[#651C32] transition-all shadow-sm hover:shadow-md text-left will-change-transform"
               >
                 {/* Image Stage */}
                 <div
                   onClick={() => navigateTo('product', product.slug)}
                   className="relative aspect-[3/4] sm:aspect-[4/5] rounded-xl overflow-hidden bg-white mb-4 cursor-pointer"
+                  style={{ aspectRatio: '3 / 4' }}
                 >
                   <img
                     src={cardImg}
                     alt={product.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#FAF7F0]/90 text-[10px] font-semibold text-[#1C1A19]">

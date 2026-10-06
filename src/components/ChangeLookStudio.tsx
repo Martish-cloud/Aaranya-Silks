@@ -4,17 +4,18 @@ import { Star, Heart, ArrowRight, Box } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
-import roseWarmCream from '../assets/studio/rose-warm-cream.png';
-import roseRosePink from '../assets/studio/rose-pink.png';
-import roseDeepWine from '../assets/studio/rose-deep-wine.png';
+import { preloadImages } from '../utils/imagePreloader';
+import roseWarmCream from '../assets/studio/rose-warm-cream.webp';
+import roseRosePink from '../assets/studio/rose-pink.webp';
+import roseDeepWine from '../assets/studio/rose-deep-wine.webp';
 
-import suhaniCrimsonRed from '../assets/studio/suhani-crimson-red.png';
-import suhaniPlumBurgundy from '../assets/studio/suhani-plum-burgundy.png';
-import suhaniChampagneGold from '../assets/studio/suhani-champagne-gold.png';
+import suhaniCrimsonRed from '../assets/studio/suhani-crimson-red.webp';
+import suhaniPlumBurgundy from '../assets/studio/suhani-plum-burgundy.webp';
+import suhaniChampagneGold from '../assets/studio/suhani-champagne-gold.webp';
 
-import swarnaLiquidGold from '../assets/studio/swarna-liquid-gold.png';
-import swarnaWarmIvory from '../assets/studio/swarna-warm-ivory.png';
-import swarnaEmerald from '../assets/studio/swarna-emerald.png';
+import swarnaLiquidGold from '../assets/studio/swarna-liquid-gold.webp';
+import swarnaWarmIvory from '../assets/studio/swarna-warm-ivory.webp';
+import swarnaEmerald from '../assets/studio/swarna-emerald.webp';
 
 const STUDIO_LOOKS = [
   {
@@ -81,6 +82,16 @@ export const ChangeLookStudio: React.FC = () => {
   const look = STUDIO_LOOKS[activeLookIdx];
   const activeColor = look.colors[selectedColorIdx] || look.colors[0];
   const currentImage = activeColor.image;
+
+  React.useEffect(() => {
+    if (look?.colors) {
+      preloadImages(look.colors.map((c) => c.image));
+    }
+    const nextLook = STUDIO_LOOKS[(activeLookIdx + 1) % STUDIO_LOOKS.length];
+    if (nextLook?.thumbnail) {
+      preloadImages([nextLook.thumbnail]);
+    }
+  }, [activeLookIdx, look]);
 
   const handleAddToCart = () => {
     // Construct saree-like object
@@ -161,6 +172,8 @@ export const ChangeLookStudio: React.FC = () => {
                   transition={{ duration: 0.4 }}
                   src={currentImage}
                   alt={`${look.name} - ${activeColor.name}`}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover object-top"
                 />
               </AnimatePresence>

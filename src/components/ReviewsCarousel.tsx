@@ -3,10 +3,10 @@ import { Sparkles, Star, CheckCircle, ChevronLeft, ChevronRight, Quote } from 'l
 import { CUSTOMER_REVIEWS } from '../data/sarees';
 import { WipeText } from './WipeText';
 
-import radhikaImg from '../assets/Need to Update/Words of Adornment/Radhika S. Rao.avif';
-import devikaImg from '../assets/Need to Update/Words of Adornment/Devika Singhania.avif';
-import sunitiImg from '../assets/Need to Update/Words of Adornment/Suniti Mehra.avif';
-import meenakshiImg from '../assets/Need to Update/Words of Adornment/Meenakshi Iyer.avif';
+import radhikaImg from '../assets/Need to Update/Words of Adornment/Radhika S. Rao.webp';
+import devikaImg from '../assets/Need to Update/Words of Adornment/Devika Singhania.webp';
+import sunitiImg from '../assets/Need to Update/Words of Adornment/Suniti Mehra.webp';
+import meenakshiImg from '../assets/Need to Update/Words of Adornment/Meenakshi Iyer.webp';
 
 import { useAutoScrollRail } from '../utils/useAutoScrollRail';
 
@@ -129,6 +129,7 @@ export const ReviewsCarousel: React.FC = () => {
                           alt={rev.author}
                           className="w-11 h-11 rounded-full object-cover object-top border-2 border-[#C8A96B]/60 shadow-sm shrink-0"
                           loading="lazy"
+                          decoding="async"
                         />
                       )}
                       <div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Mail, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -39,7 +40,13 @@ export const NewsletterSection: React.FC = () => {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(200,169,107,0.15),transparent_60%)] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="bg-[#561428]/75 backdrop-blur-md border border-[#C8A96B]/35 hover:border-[#C8A96B]/80 rounded-3xl p-8 sm:p-12 md:p-16 text-center shadow-xl hover:shadow-[0_22px_50px_rgba(200,169,107,0.22)] hover:-translate-y-1 hover:scale-[1.012] transition-all duration-500 group relative overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.1 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="bg-[#561428]/75 backdrop-blur-md border border-[#C8A96B]/35 hover:border-[#C8A96B]/80 rounded-3xl p-8 sm:p-12 md:p-16 text-center shadow-xl hover:shadow-[0_22px_50px_rgba(200,169,107,0.22)] hover:-translate-y-1 hover:scale-[1.012] transition-all duration-500 group relative overflow-hidden"
+        >
           {/* Subtle gold sheen reflex */}
           <div className="absolute -inset-full bg-gradient-to-r from-transparent via-[#C8A96B]/15 to-transparent group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
 
@@ -105,7 +112,7 @@ export const NewsletterSection: React.FC = () => {
               </p>
             </form>
           )}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

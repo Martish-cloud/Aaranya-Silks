@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useShop } from '../context/ShopContext';
 import confetti from 'canvas-confetti';
 
-import heroMaroonImg from '../assets/hero-maroon-saree.png';
+import heroMaroonImg from '../assets/hero-maroon-saree.webp';
 
 export const Footer: React.FC = () => {
   const { navigateTo } = useShop();
@@ -129,6 +129,8 @@ export const Footer: React.FC = () => {
           <img
             src={heroMaroonImg}
             alt="Aaranya Silks Heritage Drape"
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover object-bottom filter brightness-[0.72] group-hover:brightness-[0.82] transition-all duration-700 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20" />

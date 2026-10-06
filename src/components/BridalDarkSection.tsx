@@ -6,11 +6,11 @@ import { SAREES_DATA } from '../data/sarees';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
 
-import bridalImg1 from '../assets/Need to Update/The Bridal Collection/Mayurakshi Kanjivaram Bridal Silk Saree 1.jpg';
-import bridalImg2 from '../assets/Need to Update/The Bridal Collection/Padmavati Scarlet Red Katan Bridal Saree 1.jpg';
-import bridalImg3 from '../assets/Need to Update/The Bridal Collection/Bridal Saree 2.jfif';
-import bridalImg4 from '../assets/Need to Update/The Bridal Collection/Silk Sarees 2.jpg';
-import suhaniBridalImg from '../assets/Shop All Sarees/Suhani Crimson & Zari Trousseau Heirloom/Suhani Crimson & Zari Trousseau Heirloom (Crimson Red).png';
+import bridalImg1 from '../assets/Need to Update/The Bridal Collection/Mayurakshi Kanjivaram Bridal Silk Saree 1.webp';
+import bridalImg2 from '../assets/Need to Update/The Bridal Collection/Padmavati Scarlet Red Katan Bridal Saree 1.webp';
+import bridalImg3 from '../assets/Need to Update/The Bridal Collection/Bridal Saree 2.webp';
+import bridalImg4 from '../assets/Need to Update/The Bridal Collection/Silk Sarees 2.webp';
+import suhaniBridalImg from '../assets/Shop All Sarees/Suhani Crimson & Zari Trousseau Heirloom/Suhani Crimson & Zari Trousseau Heirloom (Crimson Red).webp';
 
 const BRIDAL_IMAGES_LIST = [bridalImg1, bridalImg2, bridalImg3, bridalImg4];
 const BRIDAL_SLUG_MAP: Record<string, string> = {
@@ -46,7 +46,13 @@ export const BridalDarkSection: React.FC = () => {
         {/* Grid: Big Scarlet Campaign Banner + 4 Framed Saree Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           {/* Left Column: Big Glowing Red Bridal Campaign (5 cols) */}
-          <div className="lg:col-span-5 relative rounded-3xl overflow-hidden bg-gradient-to-t from-[#651C32] to-[#8B1E3F] p-8 flex flex-col justify-between shadow-2xl border border-[#C8A96B]/30 group min-h-[460px]">
+          <motion.div
+            initial={{ opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.1 }}
+            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-5 relative rounded-3xl overflow-hidden bg-gradient-to-t from-[#651C32] to-[#8B1E3F] p-8 flex flex-col justify-between shadow-2xl border border-[#C8A96B]/30 group min-h-[460px] will-change-transform"
+          >
             <img
               src={suhaniBridalImg}
               alt="Suhani Crimson & Zari Trousseau Heirloom"
@@ -80,7 +86,7 @@ export const BridalDarkSection: React.FC = () => {
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: 4 Framed Cards with Golden Buttons (7 cols) */}
           <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -90,8 +96,12 @@ export const BridalDarkSection: React.FC = () => {
               return (
                 <motion.div
                   key={saree.id}
+                  initial={{ opacity: 0, y: 35 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, amount: 0.1 }}
+                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: (idx % 2) * 0.08 }}
                   whileHover={{ y: -4 }}
-                  className="flex flex-col justify-between bg-white/[0.06] backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 hover:border-[#C8A96B] transition-all shadow-xl group text-left"
+                  className="flex flex-col justify-between bg-white/[0.06] backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 hover:border-[#C8A96B] transition-all shadow-xl group text-left will-change-transform"
                 >
                   {/* Image */}
                   <div
@@ -101,6 +111,8 @@ export const BridalDarkSection: React.FC = () => {
                     <img
                       src={cardImage}
                       alt={saree.name}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-500"
                     />
                   <div className="absolute top-2.5 left-2.5">

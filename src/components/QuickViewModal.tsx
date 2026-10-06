@@ -104,10 +104,15 @@ export const QuickViewModal: React.FC = () => {
             {/* Left: Gallery */}
             <div className="p-6 bg-[#F2EBDD] flex flex-col justify-between">
               {/* Main Image */}
-              <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-white shadow-md mb-4 border border-[#C8A96B]/20">
+              <div
+                className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-white shadow-md mb-4 border border-[#C8A96B]/20"
+                style={{ aspectRatio: '3 / 4' }}
+              >
                 <img
                   src={currentDisplayImg}
                   alt={product.name}
+                  loading="eager"
+                  decoding="async"
                   className="w-full h-full object-cover object-top"
                 />
                 {product.badge && (
@@ -129,7 +134,13 @@ export const QuickViewModal: React.FC = () => {
                         : 'border-transparent opacity-70 hover:opacity-100'
                     }`}
                   >
-                    <img src={img} alt="thumbnail" className="w-full h-full object-cover object-top" />
+                    <img
+                      src={img}
+                      alt="thumbnail"
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover object-top"
+                    />
                   </button>
                 ))}
               </div>

@@ -103,6 +103,18 @@ export const LatestTrendsLookbook: React.FC = () => {
   const { navigateTo } = useShop();
   const [currentPage, setCurrentPage] = useState(1); // 1-indexed
 
+  // Predictive preloading for adjacent lookbook pages
+  useEffect(() => {
+    const nextIdx = currentPage < LOOKBOOK_PAGES.length ? currentPage : 0;
+    const prevIdx = currentPage > 1 ? currentPage - 2 : LOOKBOOK_PAGES.length - 1;
+    [LOOKBOOK_PAGES[nextIdx]?.image, LOOKBOOK_PAGES[prevIdx]?.image].forEach((src) => {
+      if (src) {
+        const img = new Image();
+        img.src = src;
+      }
+    });
+  }, [currentPage]);
+
   // Video playback states
   const [activePlayingId, setActivePlayingId] = useState<number | null>(null);
   const activePlayingIdRef = useRef<number | null>(null);
@@ -180,11 +192,17 @@ export const LatestTrendsLookbook: React.FC = () => {
     return () => observer.disconnect();
   }, [isMuted]);
 
+  const lastProgressTimeRef = useRef<Record<number, number>>({});
   const handleTimeUpdate = (id: number, e: React.SyntheticEvent<HTMLVideoElement>) => {
     const vid = e.currentTarget;
     if (vid.duration > 0) {
-      const pct = (vid.currentTime / vid.duration) * 100;
-      setVideoProgress((prev) => ({ ...prev, [id]: pct }));
+      const now = performance.now();
+      const last = lastProgressTimeRef.current[id] || 0;
+      if (now - last > 180) {
+        lastProgressTimeRef.current[id] = now;
+        const pct = (vid.currentTime / vid.duration) * 100;
+        setVideoProgress((prev) => ({ ...prev, [id]: pct }));
+      }
     }
   };
 
@@ -249,6 +267,7 @@ export const LatestTrendsLookbook: React.FC = () => {
                     src={reel.posterUrl}
                     alt={`${reel.title} - ${reel.subtitle}`}
                     loading="lazy"
+                    decoding="async"
                     className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-700 ${
                       isPlaying && !hasError
                         ? 'opacity-0 pointer-events-none'
@@ -485,6 +504,8 @@ export const LatestTrendsLookbook: React.FC = () => {
                   <img
                     src={activeLook.image}
                     alt={activeLook.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />

@@ -76,20 +76,24 @@ export const CategoryStrip: React.FC = () => {
           {MOODS.map((mood, idx) => (
             <motion.div
               key={mood.id}
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 35 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, amount: 0.1 }}
-              transition={{ duration: 0.45, delay: idx * 0.06 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: (idx % 6) * 0.07 }}
               onClick={() => navigateTo('catalog', undefined, mood.categoryTarget)}
-              className="group cursor-pointer flex flex-col items-center text-center"
+              className="group cursor-pointer flex flex-col items-center text-center will-change-transform"
             >
               {/* Arched Window Top Frame: rounded-t-full */}
-              <div className="relative w-full aspect-[9/16] rounded-t-full rounded-b-2xl overflow-hidden bg-[#F2EBDD] border border-[#C8A96B]/30 group-hover:border-[#651C32] shadow-md group-hover:shadow-2xl transition-all duration-500 group-hover:-translate-y-2">
+              <div
+                className="relative w-full aspect-[9/16] rounded-t-full rounded-b-2xl overflow-hidden bg-[#F2EBDD] border border-[#C8A96B]/30 group-hover:border-[#651C32] shadow-md group-hover:shadow-2xl transition-all duration-500 group-hover:-translate-y-2"
+                style={{ aspectRatio: '9 / 16' }}
+              >
                 <img
                   src={mood.image}
                   alt={mood.title}
                   className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700 ease-out"
                   loading="lazy"
+                  decoding="async"
                 />
 
                 {/* Ambient Bottom Gradient */}

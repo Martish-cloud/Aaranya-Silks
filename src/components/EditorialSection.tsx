@@ -5,6 +5,7 @@ import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
 import { resolveOptImage } from '../data/outfits';
+import { preloadImage } from '../utils/imagePreloader';
 
 const CURVED_ITEMS = [
   {
@@ -76,6 +77,14 @@ export const EditorialSection: React.FC = () => {
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+
+  // Predictive preloading: preload next and previous carousel items
+  useEffect(() => {
+    const nextIdx = (activeIndex + 1) % CURVED_ITEMS.length;
+    const prevIdx = (activeIndex - 1 + CURVED_ITEMS.length) % CURVED_ITEMS.length;
+    preloadImage(CURVED_ITEMS[nextIdx].image);
+    preloadImage(CURVED_ITEMS[prevIdx].image);
+  }, [activeIndex]);
 
   // Continuous slow left-to-right auto-scrolling
   useEffect(() => {
@@ -184,7 +193,7 @@ export const EditorialSection: React.FC = () => {
                   key={item.id}
                   animate={{
                     x: translateX,
-                    y: [0, -6, 0],
+                    y: isInView ? [0, -6, 0] : 0,
                     rotateY: rotateY,
                     z: translateZ,
                     scale: scale,
@@ -211,12 +220,16 @@ export const EditorialSection: React.FC = () => {
                       setActiveIndex(idx);
                     }
                   }}
-                  className="absolute cursor-pointer w-60 sm:w-72 aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border border-white/40 bg-[#1C1A19] select-none"
+                  className="absolute cursor-pointer w-60 sm:w-72 aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border border-white/40 bg-[#1C1A19] select-none will-change-transform"
                 >
                   {/* Saree Image */}
                   <img
                     src={item.image}
                     alt={item.name}
+                    loading={offset === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    fetchPriority={offset === 0 ? 'high' : 'auto'}
+                    style={{ aspectRatio: '3 / 4' }}
                     className="w-full h-full object-cover object-top"
                     draggable={false}
                   />
