@@ -25,29 +25,34 @@ export const ReviewsCarousel: React.FC = () => {
     direction: 'left-to-right',
     speed: 36,
     isHovered,
+    pauseOnInteractionDuration: 2000,
   });
 
   const scroll = (direction: 'left' | 'right') => {
     markUserInteraction();
     if (railRef.current) {
-      const { scrollLeft, clientWidth } = railRef.current;
-      const offset = direction === 'left' ? -clientWidth * 0.7 : clientWidth * 0.7;
-      railRef.current.scrollTo({ left: scrollLeft + offset, behavior: 'smooth' });
+      const firstCard = railRef.current.firstElementChild as HTMLElement | null;
+      const step = firstCard ? firstCard.offsetWidth + 20 : 360;
+      const offset = direction === 'left' ? -step : step;
+      railRef.current.scrollBy({ left: offset, behavior: 'smooth' });
     }
   };
 
-  const DISPLAY_REVIEWS = [...CUSTOMER_REVIEWS, ...CUSTOMER_REVIEWS];
+  const DISPLAY_REVIEWS = [
+    ...CUSTOMER_REVIEWS,
+    ...CUSTOMER_REVIEWS,
+    ...CUSTOMER_REVIEWS,
+    ...CUSTOMER_REVIEWS,
+  ];
 
   return (
     <section
       id="words-of-adornment"
-      className="py-20 md:py-28 bg-[#FAF7F0] relative overflow-hidden border-t border-[#C8A96B]/20"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="py-16 md:py-24 bg-[#FAF7F0] relative overflow-hidden border-t border-[#C8A96B]/20"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 text-left">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 text-left">
           <div>
             <div className="flex items-center gap-2 text-[#8B1E3F] text-xs font-semibold uppercase tracking-[0.25em] mb-2">
               <Sparkles className="w-3.5 h-3.5 text-[#C8A96B]" />
@@ -68,14 +73,14 @@ export const ReviewsCarousel: React.FC = () => {
           <div className="hidden md:flex items-center gap-2 mt-4 md:mt-0">
             <button
               onClick={() => scroll('left')}
-              className="p-3 rounded-full border border-[#C8A96B]/40 hover:border-[#651C32] hover:bg-[#651C32] hover:text-[#FAF7F0] text-[#1C1A19] transition-all"
+              className="p-3 rounded-full border border-[#C8A96B]/40 hover:border-[#651C32] hover:bg-[#651C32] hover:text-[#FAF7F0] text-[#1C1A19] transition-all cursor-pointer"
               aria-label="Previous review"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => scroll('right')}
-              className="p-3 rounded-full border border-[#C8A96B]/40 hover:border-[#651C32] hover:bg-[#651C32] hover:text-[#FAF7F0] text-[#1C1A19] transition-all"
+              className="p-3 rounded-full border border-[#C8A96B]/40 hover:border-[#651C32] hover:bg-[#651C32] hover:text-[#FAF7F0] text-[#1C1A19] transition-all cursor-pointer"
               aria-label="Next review"
             >
               <ChevronRight className="w-4 h-4" />
@@ -86,10 +91,12 @@ export const ReviewsCarousel: React.FC = () => {
         {/* Continuous Left-to-Right Auto-Moving Floating Carousel Strip */}
         <div
           ref={railRef}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
           onTouchStart={markUserInteraction}
           onTouchMove={markUserInteraction}
           onWheel={markUserInteraction}
-          className="flex items-stretch gap-6 overflow-x-auto no-scrollbar pb-4 pt-2 -mx-4 px-4 sm:mx-0 sm:px-0 select-none"
+          className="flex items-stretch gap-4 sm:gap-5 overflow-x-auto no-scrollbar pb-4 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0 select-none"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {DISPLAY_REVIEWS.map((rev, idx) => {
@@ -98,36 +105,36 @@ export const ReviewsCarousel: React.FC = () => {
             return (
               <div
                 key={`${rev.id}-${idx}`}
-                className="flex-shrink-0 w-[330px] sm:w-[420px] p-8 rounded-3xl bg-[#F2EBDD] border border-[#C8A96B]/30 flex flex-col justify-between text-left shadow-sm hover:shadow-xl transition-all duration-300 relative"
+                className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[335px] lg:w-[345px] xl:w-[350px] p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#F2EBDD] border border-[#C8A96B]/30 flex flex-col justify-between text-left shadow-sm hover:shadow-xl transition-all duration-300 relative"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <Quote className="w-8 h-8 text-[#C8A96B]/40" />
+                  <div className="flex items-center justify-between mb-2.5 sm:mb-3">
+                    <Quote className="w-7 h-7 sm:w-8 sm:h-8 text-[#C8A96B]/40" />
                     {/* Star rating */}
                     <div className="flex items-center gap-1">
                       {[...Array(rev.rating)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 text-[#C8A96B] fill-current" />
+                        <Star key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C8A96B] fill-current" />
                       ))}
                     </div>
                   </div>
 
-                  <h4 className="font-serif text-lg font-semibold text-[#651C32] mb-2 leading-snug">
+                  <h4 className="font-serif text-base sm:text-lg font-semibold text-[#651C32] mb-1.5 sm:mb-2 leading-snug">
                     "{rev.title}"
                   </h4>
 
-                  <p className="text-xs sm:text-sm text-[#1C1A19]/80 font-sans font-light leading-relaxed mb-6">
+                  <p className="text-xs sm:text-sm text-[#1C1A19]/80 font-sans font-light leading-relaxed mb-4 sm:mb-5">
                     {rev.comment}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-[#C8A96B]/25">
+                <div className="pt-3.5 sm:pt-4 border-t border-[#C8A96B]/25">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                       {authorPhoto && (
                         <img
                           src={authorPhoto}
                           alt={rev.author}
-                          className="w-11 h-11 rounded-full object-cover object-top border-2 border-[#C8A96B]/60 shadow-sm shrink-0"
+                          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover object-top border-2 border-[#C8A96B]/60 shadow-sm shrink-0"
                           loading="lazy"
                           decoding="async"
                         />
@@ -149,7 +156,7 @@ export const ReviewsCarousel: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <p className="text-[10px] text-[#8B1E3F] tracking-wide mt-2 truncate">
+                  <p className="text-[10px] text-[#8B1E3F] tracking-wide mt-1.5 sm:mt-2 truncate">
                     Purchased: {rev.sareePurchased}
                   </p>
                 </div>

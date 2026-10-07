@@ -97,11 +97,15 @@ export function useAutoScrollRail({
         rail.scrollLeft += distance;
         if (rail.scrollLeft >= halfWidth) {
           rail.scrollLeft -= halfWidth;
+        } else if (rail.scrollLeft <= 0) {
+          rail.scrollLeft += halfWidth;
         }
       } else {
         rail.scrollLeft -= distance;
         if (rail.scrollLeft <= 0) {
           rail.scrollLeft += halfWidth;
+        } else if (rail.scrollLeft >= halfWidth) {
+          rail.scrollLeft -= halfWidth;
         }
       }
 
