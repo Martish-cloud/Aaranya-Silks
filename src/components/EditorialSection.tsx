@@ -6,6 +6,7 @@ import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
 import { resolveOptImage } from '../data/outfits';
 import { preloadImage } from '../utils/imagePreloader';
+import riddhiImg from '../assets/Shop All Sarees/Riddhi Vintage Banarasi Silver Sheen/Riddhi Vintage Banarasi Silver Sheen ( Lilac Lavender) (1).webp';
 
 const CURVED_ITEMS = [
   {
@@ -13,7 +14,7 @@ const CURVED_ITEMS = [
     name: 'Ruhani Temple Silk',
     category: 'Kanjivaram Silk',
     price: 38500,
-    image: resolveOptImage('Sarees Section/Bridal Sarees 1.webp'),
+    image: riddhiImg,
     slug: 'mayurakshi-kanjivaram-bridal-silk-saree'
   },
   {

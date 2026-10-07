@@ -6,7 +6,6 @@ import aaranyaBrideImg from '../assets/Shop All Sarees/Mayurakshi Kanjivaram Bri
 import abImg2 from '../assets/AB/Image 2.webp';
 import abImg3 from '../assets/AB/Image 3.webp';
 import abImg4 from '../assets/AB/Image 4.webp';
-import abImg5 from '../assets/AB/Image 5.webp';
 
 const STYLED_POSTS = [
   {
@@ -39,7 +38,7 @@ const STYLED_POSTS = [
   },
   {
     id: 'ab-5',
-    image: abImg5,
+    image: abImg3,
     productName: 'Tarangini Rani Pink Festive Saree',
     tag: '#FestiveSplendor',
     caption: 'Radiant fuchsia and rich chevron brocade for grand family celebrations.',
@@ -256,22 +255,22 @@ export const InstagramGallery: React.FC = () => {
       onMouseLeave={() => setIsPaused(false)}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Header (Preserved intact) */}
-        <div className="max-w-2xl mx-auto mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 text-[#8B1E3F] text-xs font-semibold uppercase tracking-[0.25em] mb-2">
+        {/* Section Header - Centered Typographic Hierarchy matching Patron Testimonials */}
+        <div className="max-w-2xl mx-auto mb-10 sm:mb-14 text-center">
+          <div className="inline-flex items-center justify-center gap-2 text-[#8B1E3F] text-xs font-semibold uppercase tracking-[0.25em] mb-2">
             <Sparkles className="w-3.5 h-3.5 text-[#C8A96B]" />
             <span>Community of Grace</span>
           </div>
 
           <WipeText
             as="h2"
-            direction="left-to-right"
+            direction="bottom-to-top"
             className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-[#651C32] tracking-tight"
           >
             Styled in Aaranya Silks
           </WipeText>
 
-          <p className="text-sm sm:text-base text-[#1C1A19]/70 font-light mt-2">
+          <p className="text-sm sm:text-base text-[#1C1A19]/70 font-light mt-2 max-w-xl mx-auto">
             Moments of celebration, heritage, and quiet grandeur captured by our cherished patrons across India and abroad.
           </p>
         </div>

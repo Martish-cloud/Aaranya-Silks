@@ -6,12 +6,30 @@ import { SAREES_DATA } from '../data/sarees';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
 
-import trendImg1 from '../assets/Need to Update/Trend of the Day/Kanjivaram Sarees 1.webp';
-import trendImg2 from '../assets/Need to Update/Trend of the Day/Gourgeous (1).webp';
-import trendImg3 from '../assets/Need to Update/Trend of the Day/Bright colorful saree (3).webp';
-import trendImg4 from '../assets/Need to Update/Trend of the Day/Miss Gourgeous.webp';
+import mayurakshiImg from '../assets/Need to Update/Trend of the Day/Mayurakshi Kanjivaram Bridal Silk Saree (Auspicious Emerald).png';
+import varanasiImg from '../assets/Need to Update/Trend of the Day/Varanasi Noor Kadhwa Banarasi Brocade (Rani Rose) (1).webp';
+import swarnaImg from '../assets/Need to Update/Trend of the Day/SWARNA HANSA (Liquid Gold).webp';
+import chandrikaImg from '../assets/Need to Update/Trend of the Day/Chandrika Midnight Flora Pure Organza Saree  (Charcoal Black) 1.webp';
 
-const TREND_IMAGES = [trendImg1, trendImg2, trendImg3, trendImg4];
+// Deterministic mapping by full product name to matching image and variant color
+const TREND_PRODUCT_MAP: Record<string, { image: string; variantColor: string }> = {
+  'Mayurakshi Kanjivaram Bridal Silk Saree': {
+    image: mayurakshiImg,
+    variantColor: 'Auspicious Emerald',
+  },
+  'Varanasi Noor Kadhwa Banarasi Brocade': {
+    image: varanasiImg,
+    variantColor: 'Rani Rose',
+  },
+  'Swarna Hansa Pure Tissue Silk Saree': {
+    image: swarnaImg,
+    variantColor: 'Champagne Gold',
+  },
+  'Chandrika Midnight Flora Pure Organza Saree': {
+    image: chandrikaImg,
+    variantColor: 'Charcoal Black',
+  },
+};
 
 const SIZES = ['S', 'M', 'L', 'XL'];
 
@@ -51,7 +69,9 @@ export const TrendOfTheDay: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {trendProducts.map((product, idx) => {
             const currentSize = selectedSizes[product.id] || 'M';
-            const cardImg = TREND_IMAGES[idx] || product.images[0];
+            const mapping = TREND_PRODUCT_MAP[product.name];
+            const cardImg = mapping?.image || product.images[0];
+            const targetColor = mapping?.variantColor || product.color;
 
             return (
               <motion.div
@@ -68,7 +88,7 @@ export const TrendOfTheDay: React.FC = () => {
               >
                 {/* Image Stage */}
                 <div
-                  onClick={() => navigateTo('product', product.slug)}
+                  onClick={() => navigateTo('product', product.slug, undefined, targetColor)}
                   className="relative aspect-[3/4] sm:aspect-[4/5] rounded-xl overflow-hidden bg-white mb-4 cursor-pointer"
                   style={{ aspectRatio: '3 / 4' }}
                 >
@@ -89,7 +109,7 @@ export const TrendOfTheDay: React.FC = () => {
                 <div className="space-y-3">
                   <div>
                     <h3
-                      onClick={() => navigateTo('product', product.slug)}
+                      onClick={() => navigateTo('product', product.slug, undefined, targetColor)}
                       className="font-serif text-base font-semibold text-[#1C1A19] group-hover:text-[#651C32] transition-colors truncate cursor-pointer"
                     >
                       {product.name}
@@ -129,8 +149,8 @@ export const TrendOfTheDay: React.FC = () => {
 
                     {/* Circular Golden Cart Button from Frame 10 */}
                     <button
-                      onClick={() => addToCart(product, product.color, 1)}
-                      className="w-9 h-9 rounded-full bg-[#E5B842] hover:bg-[#F3CA58] text-[#1C1A19] flex items-center justify-center shadow-md transition-transform hover:scale-110"
+                      onClick={() => addToCart(product, targetColor, 1)}
+                      className="w-9 h-9 rounded-full bg-[#E5B842] hover:bg-[#F3CA58] text-[#1C1A19] flex items-center justify-center shadow-md transition-transform hover:scale-110 cursor-pointer"
                       aria-label="Add to bag"
                     >
                       <ShoppingBag className="w-4 h-4 text-[#1C1A19]" />

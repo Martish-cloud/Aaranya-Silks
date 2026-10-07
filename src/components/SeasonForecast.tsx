@@ -287,7 +287,7 @@ export const SeasonForecast: React.FC = () => {
             </div>
 
             {/* Right Column: Editorial Text & Lookbook Story (Stable, No 3D Rotation) */}
-            <div className="md:col-span-6">
+            <div className="md:col-span-6 md:pl-5 lg:pl-7">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentPage.id}
@@ -295,49 +295,49 @@ export const SeasonForecast: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.35, ease: 'easeOut' }}
-                  className="flex flex-col justify-between space-y-4"
+                  className="flex flex-col justify-between space-y-3.5 max-w-[420px]"
                 >
                   <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[10px] sm:text-xs uppercase font-bold tracking-[0.25em] text-[#8B1E3F]">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[9.5px] sm:text-[11px] uppercase font-bold tracking-[0.22em] text-[#8B1E3F]">
                         LOOKBOOK ENTRY
                       </span>
-                      <span className="text-xs font-mono text-[#1C1A19]/50 tracking-wider">
+                      <span className="text-[11px] sm:text-xs font-mono text-[#1C1A19]/50 tracking-wider">
                         Page {currentPage.pageNum} of 03
                       </span>
                     </div>
 
-                    <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl font-light text-[#1C1A19] leading-snug mb-2">
+                    <h3 className="font-serif text-lg sm:text-xl lg:text-2xl font-light text-[#1C1A19] leading-snug mb-1.5">
                       {currentPage.name}
                     </h3>
 
-                    <p className="text-xs sm:text-[13px] text-[#1C1A19]/75 font-sans font-light leading-relaxed mb-4">
+                    <p className="text-[11.5px] sm:text-xs text-[#1C1A19]/75 font-sans font-light leading-relaxed mb-3.5">
                       {currentPage.description}
                     </p>
 
                     {/* Highlights Grid */}
-                    <div className="space-y-2 pt-3 border-t border-[#C8A96B]/25 mb-4">
-                      <span className="text-[10px] uppercase tracking-wider text-[#1C1A19]/60 font-bold block mb-1">
+                    <div className="space-y-1.5 pt-2.5 border-t border-[#C8A96B]/25 mb-3.5">
+                      <span className="text-[9.5px] uppercase tracking-wider text-[#1C1A19]/60 font-bold block mb-1">
                         Atelier Specifications
                       </span>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                         <div className="p-2 sm:p-2.5 rounded-xl bg-[#FAF7F0] border border-[#C8A96B]/20">
-                          <span className="text-[#8B1E3F] text-[10px] uppercase font-bold block">Fabric</span>
-                          <span className="font-serif text-[#1C1A19] font-medium truncate block">{currentPage.fabric}</span>
+                          <span className="text-[#8B1E3F] text-[9.5px] uppercase font-bold block">Fabric</span>
+                          <span className="font-serif text-[11px] sm:text-xs text-[#1C1A19] font-medium truncate block">{currentPage.fabric}</span>
                         </div>
                         <div className="p-2 sm:p-2.5 rounded-xl bg-[#FAF7F0] border border-[#C8A96B]/20">
-                          <span className="text-[#8B1E3F] text-[10px] uppercase font-bold block">Zari & Weave</span>
-                          <span className="font-serif text-[#1C1A19] font-medium truncate block">{currentPage.zari}</span>
+                          <span className="text-[#8B1E3F] text-[9.5px] uppercase font-bold block">Zari & Weave</span>
+                          <span className="font-serif text-[11px] sm:text-xs text-[#1C1A19] font-medium truncate block">{currentPage.zari}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Highlights Pills */}
-                    <div className="flex flex-wrap gap-1.5 mb-4">
+                    <div className="flex flex-wrap gap-1.5 mb-3.5">
                       {currentPage.highlights.map((h, i) => (
                         <span
                           key={i}
-                          className="text-[10px] sm:text-[11px] font-sans px-2.5 py-0.5 rounded-full bg-[#F2EBDD] text-[#651C32] font-medium border border-[#C8A96B]/30"
+                          className="text-[9.5px] sm:text-[10px] font-sans px-2.5 py-0.5 rounded-full bg-[#F2EBDD] text-[#651C32] font-medium border border-[#C8A96B]/30"
                         >
                           • {h}
                         </span>
@@ -346,23 +346,23 @@ export const SeasonForecast: React.FC = () => {
                   </div>
 
                   {/* Price & CTA Action Group */}
-                  <div className="pt-3 border-t border-[#C8A96B]/25 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="pt-2.5 border-t border-[#C8A96B]/25 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <span className="text-[10px] text-[#1C1A19]/60 uppercase tracking-wider block">Privilege Price</span>
+                      <span className="text-[9.5px] text-[#1C1A19]/60 uppercase tracking-wider block">Privilege Price</span>
                       <div className="flex items-baseline gap-2">
-                        <span className="font-serif text-xl sm:text-2xl font-bold text-[#651C32]">
+                        <span className="font-serif text-lg sm:text-xl lg:text-2xl font-bold text-[#651C32]">
                           {formatINR(currentPage.price)}
                         </span>
-                        <span className="text-xs text-[#1C1A19]/50 line-through">
+                        <span className="text-[11px] sm:text-xs text-[#1C1A19]/50 line-through">
                           {formatINR(currentPage.originalPrice)}
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-2">
                       <button
                         onClick={() => navigateTo('catalog', undefined, currentPage.categoryTarget)}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#651C32] hover:bg-[#8B1E3F] text-white text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-xl transition-all cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-4 sm:px-4.5 py-2 sm:py-2.5 rounded-full bg-[#651C32] hover:bg-[#8B1E3F] text-white text-[11px] sm:text-xs font-semibold uppercase tracking-wider shadow-md hover:shadow-xl transition-all cursor-pointer"
                       >
                         <BookOpen className="w-3.5 h-3.5 text-[#E5B842]" />
                         <span>Discover Saree</span>

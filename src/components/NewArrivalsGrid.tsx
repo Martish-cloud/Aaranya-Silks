@@ -102,10 +102,10 @@ export const NewArrivalsGrid: React.FC = () => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 text-left">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 text-[#8B1E3F] text-xs font-semibold uppercase tracking-[0.25em] mb-2">
+        {/* Section Header - Centered Typographic Hierarchy matching Patron Testimonials */}
+        <div className="relative mb-10 sm:mb-12">
+          <div className="max-w-2xl mx-auto text-center">
+            <div className="inline-flex items-center justify-center gap-2 text-[#8B1E3F] text-xs font-semibold uppercase tracking-[0.25em] mb-2">
               <Sparkles className="w-3.5 h-3.5 text-[#C8A96B]" />
               <span>Freshly Unveiled</span>
             </div>
@@ -118,23 +118,23 @@ export const NewArrivalsGrid: React.FC = () => {
               New Arrivals
             </WipeText>
 
-            <p className="text-sm sm:text-base text-[#1C1A19]/70 font-light mt-2">
+            <p className="text-sm sm:text-base text-[#1C1A19]/70 font-light mt-2 max-w-xl mx-auto">
               Discover the latest expressions of timeless elegance, handwoven exclusively in certified silk for this festive and wedding season.
             </p>
           </div>
 
-          {/* Navigation arrow controls */}
-          <div className="hidden sm:flex items-center gap-2 mt-4 md:mt-0">
+          {/* Navigation arrow controls - positioned on desktop, preserved */}
+          <div className="hidden sm:flex absolute right-0 bottom-1 items-center gap-2">
             <button
               onClick={() => handleScroll('left')}
-              className="p-3 rounded-full border border-[#C8A96B]/40 hover:border-[#651C32] hover:bg-[#651C32] hover:text-[#FAF7F0] text-[#1C1A19] transition-all cursor-pointer"
+              className="p-3 rounded-full border border-[#C8A96B]/40 hover:border-[#651C32] hover:bg-[#651C32] hover:text-[#FAF7F0] text-[#1C1A19] transition-all cursor-pointer shadow-sm"
               aria-label="Scroll left"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => handleScroll('right')}
-              className="p-3 rounded-full border border-[#C8A96B]/40 hover:border-[#651C32] hover:bg-[#651C32] hover:text-[#FAF7F0] text-[#1C1A19] transition-all cursor-pointer"
+              className="p-3 rounded-full border border-[#C8A96B]/40 hover:border-[#651C32] hover:bg-[#651C32] hover:text-[#FAF7F0] text-[#1C1A19] transition-all cursor-pointer shadow-sm"
               aria-label="Scroll right"
             >
               <ChevronRight className="w-4 h-4" />

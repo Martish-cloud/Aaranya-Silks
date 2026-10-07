@@ -853,7 +853,7 @@ export const SAREES_DATA: Saree[] = [
     tagline: 'Opulent deep maroon pure Katan silk embellished with intricate golden floral borders.',
     category: 'Banarasi Sarees',
     fabric: 'Pure Katan Silk',
-    color: 'Royal Maroon',
+    color: 'Scarlet Maroon',
     colors: [
       {
         name: 'Royal Maroon',
@@ -883,7 +883,7 @@ export const SAREES_DATA: Saree[] = [
     rating: 4.94,
     reviewCount: 29,
     images: [
-      getNeedToAddImg('Maroon Banarasi Silk Saree with Gold Zari Border', 'Maroon Banarasi Silk Saree with Gold Zari Border (1).png'),
+      getNeedToAddImg('Maroon Banarasi Silk Saree with Gold Zari Border', 'Maroon Banarasi Silk Saree with Gold Zari Border (4).png'),
       getNeedToAddImg('Maroon Banarasi Silk Saree with Gold Zari Border', 'Maroon Banarasi Silk Saree with Gold Zari Border (2).png'),
       getNeedToAddImg('Maroon Banarasi Silk Saree with Gold Zari Border', 'Maroon Banarasi Silk Saree with Gold Zari Border (3).png'),
       getNeedToAddImg('Maroon Banarasi Silk Saree with Gold Zari Border', 'Maroon Banarasi Silk Saree with Gold Zari Border (4).png')
