@@ -11,7 +11,7 @@ const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 interface ProductCardProps {
   product: Saree;
   priority?: boolean;
-  aspectRatio?: '9/5' | '3/4';
+  aspectRatio?: '9/5' | '3/4' | '4/5';
   index?: number;
 }
 
@@ -61,17 +61,30 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     >
       {/* Product Image Stage */}
       <div
-        className={`relative w-full ${aspectRatio === '9/5' ? 'aspect-[9/5]' : 'aspect-[3/4]'} bg-[#F2EBDD] overflow-hidden`}
-        style={{ aspectRatio: aspectRatio === '9/5' ? '9 / 5' : '3 / 4' }}
+        className={`relative w-full ${
+          aspectRatio === '9/5'
+            ? 'aspect-[9/5]'
+            : aspectRatio === '4/5'
+            ? 'aspect-[4/5]'
+            : 'aspect-[3/4]'
+        } bg-[#F2EBDD] overflow-hidden`}
+        style={{
+          aspectRatio:
+            aspectRatio === '9/5'
+              ? '9 / 5'
+              : aspectRatio === '4/5'
+              ? '4 / 5'
+              : '3 / 4'
+        }}
       >
-        {/* Primary Image - Consistent Source of Truth */}
+        {/* Primary Image - Consistent Source of Truth with Face Visibility */}
         <img
           src={primaryImage}
           alt={`${product.name} - ${activeColor.name}`}
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).src = userProductImage;
           }}
-          className={`w-full h-full object-cover ${aspectRatio === '9/5' ? 'object-[center_20%]' : 'object-top'} transition-transform duration-700 ease-out group-hover:scale-105 will-change-transform`}
+          className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105 will-change-transform"
           loading={priority ? 'eager' : 'lazy'}
           decoding="async"
           fetchPriority={priority ? 'high' : 'auto'}

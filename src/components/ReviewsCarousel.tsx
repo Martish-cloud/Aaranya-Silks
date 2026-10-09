@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Sparkles, Star, CheckCircle, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { CUSTOMER_REVIEWS } from '../data/sarees';
 import { WipeText } from './WipeText';
@@ -18,13 +18,11 @@ const AUTHOR_PHOTOS: Record<string, string> = {
 };
 
 export const ReviewsCarousel: React.FC = () => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  // Continuous, slow, smooth horizontal auto-sliding moving from left to right with viewport re-triggering
+  // Continuous, slow, smooth horizontal auto-sliding moving from left to right without hover pausing
   const { railRef, markUserInteraction } = useAutoScrollRail({
     direction: 'left-to-right',
     speed: 36,
-    isHovered,
+    isHovered: false,
     pauseOnInteractionDuration: 2000,
   });
 
@@ -32,7 +30,7 @@ export const ReviewsCarousel: React.FC = () => {
     markUserInteraction();
     if (railRef.current) {
       const firstCard = railRef.current.firstElementChild as HTMLElement | null;
-      const step = firstCard ? firstCard.offsetWidth + 20 : 360;
+      const step = firstCard ? firstCard.offsetWidth + 20 : 320;
       const offset = direction === 'left' ? -step : step;
       railRef.current.scrollBy({ left: offset, behavior: 'smooth' });
     }
@@ -88,11 +86,9 @@ export const ReviewsCarousel: React.FC = () => {
           </div>
         </div>
 
-        {/* Continuous Left-to-Right Auto-Moving Floating Carousel Strip */}
+        {/* Continuous Left-to-Right Auto-Moving Carousel Strip (Continuous, Independent of Hover) */}
         <div
           ref={railRef}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
           onTouchStart={markUserInteraction}
           onTouchMove={markUserInteraction}
           onWheel={markUserInteraction}
@@ -105,11 +101,11 @@ export const ReviewsCarousel: React.FC = () => {
             return (
               <div
                 key={`${rev.id}-${idx}`}
-                className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[335px] lg:w-[345px] xl:w-[350px] p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#F2EBDD] border border-[#C8A96B]/30 flex flex-col justify-between text-left shadow-sm hover:shadow-xl transition-all duration-300 relative"
+                className="flex-shrink-0 w-[250px] sm:w-[285px] md:w-[300px] lg:w-[310px] xl:w-[315px] p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-[#F2EBDD] border border-[#C8A96B]/30 flex flex-col justify-between text-left shadow-sm hover:shadow-xl transition-all duration-300 relative"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-2.5 sm:mb-3">
-                    <Quote className="w-7 h-7 sm:w-8 sm:h-8 text-[#C8A96B]/40" />
+                  <div className="flex items-center justify-between mb-2 sm:mb-2.5">
+                    <Quote className="w-6 h-6 sm:w-7 sm:h-7 text-[#C8A96B]/40" />
                     {/* Star rating */}
                     <div className="flex items-center gap-1">
                       {[...Array(rev.rating)].map((_, i) => (
@@ -118,32 +114,32 @@ export const ReviewsCarousel: React.FC = () => {
                     </div>
                   </div>
 
-                  <h4 className="font-serif text-base sm:text-lg font-semibold text-[#651C32] mb-1.5 sm:mb-2 leading-snug">
+                  <h4 className="font-serif text-[15px] sm:text-base font-semibold text-[#651C32] mb-1.5 sm:mb-2 leading-snug">
                     "{rev.title}"
                   </h4>
 
-                  <p className="text-xs sm:text-sm text-[#1C1A19]/80 font-sans font-light leading-relaxed mb-4 sm:mb-5">
+                  <p className="text-xs sm:text-[13px] text-[#1C1A19]/80 font-sans font-light leading-relaxed mb-3.5 sm:mb-4">
                     {rev.comment}
                   </p>
                 </div>
 
-                <div className="pt-3.5 sm:pt-4 border-t border-[#C8A96B]/25">
+                <div className="pt-3 sm:pt-3.5 border-t border-[#C8A96B]/25">
                   <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5 sm:gap-3">
                       {authorPhoto && (
                         <img
                           src={authorPhoto}
                           alt={rev.author}
-                          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover object-top border-2 border-[#C8A96B]/60 shadow-sm shrink-0"
+                          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover object-top border-2 border-[#C8A96B]/60 shadow-sm shrink-0"
                           loading="lazy"
                           decoding="async"
                         />
                       )}
                       <div>
-                        <span className="font-serif font-bold text-sm text-[#1C1A19] block">
+                        <span className="font-serif font-bold text-[13px] sm:text-sm text-[#1C1A19] block leading-tight">
                           {rev.author}
                         </span>
-                        <p className="text-[11px] text-[#1C1A19]/60 font-light">
+                        <p className="text-[11px] text-[#1C1A19]/60 font-light mt-0.5">
                           {rev.location} • <span className="italic text-[#651C32]">{rev.occasion}</span>
                         </p>
                       </div>

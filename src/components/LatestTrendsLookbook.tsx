@@ -115,9 +115,13 @@ export const LatestTrendsLookbook: React.FC = () => {
     });
   }, [currentPage]);
 
-  // Video playback states
-  const [activePlayingId, setActivePlayingId] = useState<number | null>(null);
-  const activePlayingIdRef = useRef<number | null>(null);
+  // Video playback states - all 4 reels play simultaneously
+  const [playingReels, setPlayingReels] = useState<Record<number, boolean>>({
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+  });
   const [isMuted, setIsMuted] = useState<boolean>(true);
   const [videoProgress, setVideoProgress] = useState<Record<number, number>>({});
   const [modalReel, setModalReel] = useState<ReelItem | null>(null);
@@ -128,61 +132,72 @@ export const LatestTrendsLookbook: React.FC = () => {
 
   const activeLook = LOOKBOOK_PAGES[currentPage - 1];
 
-  useEffect(() => {
-    activePlayingIdRef.current = activePlayingId;
-  }, [activePlayingId]);
-
-  const playReel = (id: number) => {
-    // Pause any other active video
-    videoRefs.current.forEach((v) => {
-      if (v) v.pause();
+  // Play all 4 reels concurrently with graceful autoplay handling
+  const playAllReels = () => {
+    REELS.forEach((reel, idx) => {
+      const vid = videoRefs.current[idx];
+      if (vid) {
+        vid.muted = isMuted;
+        const playPromise = vid.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setPlayingReels((prev) => ({ ...prev, [reel.id]: true }));
+            })
+            .catch(() => {
+              // Graceful fallback for browser autoplay restrictions
+              vid.muted = true;
+              setIsMuted(true);
+              vid.play()
+                .then(() => {
+                  setPlayingReels((prev) => ({ ...prev, [reel.id]: true }));
+                })
+                .catch(() => {});
+            });
+        }
+      }
     });
-
-    const targetVideo = videoRefs.current[id - 1];
-    if (targetVideo) {
-      targetVideo.currentTime = 0;
-      targetVideo.muted = isMuted;
-      targetVideo.play().catch(() => {
-        targetVideo.muted = true;
-        setIsMuted(true);
-        targetVideo.play().catch(() => {});
-      });
-    }
-
-    setActivePlayingId(id);
   };
 
   const togglePlay = (id: number) => {
-    if (activePlayingId === id) {
-      videoRefs.current[id - 1]?.pause();
-      setActivePlayingId(null);
-    } else {
-      playReel(id);
+    const vid = videoRefs.current[id - 1];
+    if (vid) {
+      if (vid.paused) {
+        vid.muted = isMuted;
+        vid.play()
+          .then(() => {
+            setPlayingReels((prev) => ({ ...prev, [id]: true }));
+          })
+          .catch(() => {});
+      } else {
+        vid.pause();
+        setPlayingReels((prev) => ({ ...prev, [id]: false }));
+      }
     }
   };
 
-  // Sequential autoplay (1 -> 2 -> 3 -> 4 -> 1) when video ends
   const handleVideoEnded = (id: number) => {
-    const nextId = (id % REELS.length) + 1;
-    playReel(nextId);
+    const vid = videoRefs.current[id - 1];
+    if (vid) {
+      vid.currentTime = 0;
+      vid.play().catch(() => {});
+    }
   };
 
-  // Viewport intersection: auto-play reel 1 (muted) when section enters view
+  // Viewport intersection: auto-play all four reels together (muted) when section enters view
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            if (!activePlayingIdRef.current) {
-              playReel(1);
-            }
+            playAllReels();
           } else {
             videoRefs.current.forEach((v) => v?.pause());
-            setActivePlayingId(null);
+            setPlayingReels({ 1: false, 2: false, 3: false, 4: false });
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.15 }
     );
 
     if (sectionRef.current) {
@@ -206,32 +221,32 @@ export const LatestTrendsLookbook: React.FC = () => {
     }
   };
 
-  const activeCounter = activePlayingId !== null ? `0${activePlayingId}` : '01';
-
   return (
     <section
       ref={sectionRef}
       className="py-20 md:py-32 bg-[#FAF7F0] relative overflow-hidden border-t border-[#C8A96B]/20 text-[#1C1A19]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Video Reels Preview Strip - Floating Cards with Sequential Autoplay (No Horizontal Sliding) */}
+        {/* Video Reels Preview Strip - Floating Cards with Simultaneous Concurrent Playback */}
         <div className="mb-20">
-          <div className="flex items-center justify-between mb-6 text-left">
+          <div className="flex items-start sm:items-end justify-between mb-6 sm:mb-8 text-left">
             <div>
-              <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] font-bold text-[#8B1E3F]">
+              <span className="block text-[10px] sm:text-xs uppercase tracking-[0.25em] font-bold text-[#8B1E3F] mb-1.5 sm:mb-2">
                 ATELIER REELS
               </span>
-              <WipeText
-                as="h3"
-                direction="bottom-to-top"
-                className="font-serif text-2xl sm:text-3xl font-light text-[#1C1A19]"
-              >
-                Draped in Motion
-              </WipeText>
+              <div>
+                <WipeText
+                  as="h3"
+                  direction="bottom-to-top"
+                  className="font-serif text-2xl sm:text-3xl md:text-4xl font-light text-[#1C1A19] tracking-tight leading-tight"
+                >
+                  Draped in Motion
+                </WipeText>
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-xs text-[#1C1A19]/70 font-mono tracking-wider">
-                {activeCounter} / 04 REELS
+                01 / 04 REELS
               </span>
             </div>
           </div>
@@ -239,7 +254,7 @@ export const LatestTrendsLookbook: React.FC = () => {
           {/* 4 Video Cards Grid with Floating Animation */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 py-2">
             {REELS.map((reel, idx) => {
-              const isPlaying = activePlayingId === reel.id;
+              const isPlaying = !!playingReels[reel.id];
               const progress = videoProgress[reel.id] || 0;
               const hasError = videoErrors[reel.id];
 
@@ -283,6 +298,7 @@ export const LatestTrendsLookbook: React.FC = () => {
                       }}
                       src={reel.videoUrl}
                       playsInline
+                      loop
                       muted={isMuted}
                       preload="metadata"
                       onError={() => setVideoErrors((prev) => ({ ...prev, [reel.id]: true }))}

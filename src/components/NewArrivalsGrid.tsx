@@ -102,23 +102,27 @@ export const NewArrivalsGrid: React.FC = () => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8">
-        {/* Section Header - Centered Typographic Hierarchy matching Patron Testimonials */}
+        {/* Section Header - Centered Typographic Hierarchy matching Community of Grace / Styled in Aaranya Silks */}
         <div className="relative mb-10 sm:mb-12">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="inline-flex items-center justify-center gap-2 text-[#8B1E3F] text-xs font-semibold uppercase tracking-[0.25em] mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#C8A96B]" />
-              <span>Freshly Unveiled</span>
+            <div className="flex justify-center mb-2.5">
+              <div className="inline-flex items-center justify-center gap-2 text-[#8B1E3F] text-xs font-semibold uppercase tracking-[0.25em]">
+                <Sparkles className="w-3.5 h-3.5 text-[#C8A96B]" />
+                <span>Freshly Unveiled</span>
+              </div>
             </div>
 
-            <WipeText
-              as="h2"
-              direction="bottom-to-top"
-              className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-[#651C32] tracking-tight"
-            >
-              New Arrivals
-            </WipeText>
+            <div className="my-1 sm:my-1.5">
+              <WipeText
+                as="h2"
+                direction="bottom-to-top"
+                className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-[#651C32] tracking-tight"
+              >
+                New Arrivals
+              </WipeText>
+            </div>
 
-            <p className="text-sm sm:text-base text-[#1C1A19]/70 font-light mt-2 max-w-xl mx-auto">
+            <p className="text-sm sm:text-base text-[#1C1A19]/70 font-light mt-3 sm:mt-3.5 max-w-xl mx-auto leading-relaxed">
               Discover the latest expressions of timeless elegance, handwoven exclusively in certified silk for this festive and wedding season.
             </p>
           </div>
@@ -176,7 +180,7 @@ export const NewArrivalsGrid: React.FC = () => {
               key={`${product.id}-${idx}`}
               className="shrink-0 w-[calc((100%-12px)/2)] sm:w-[calc((100%-32px)/3)] lg:w-[calc((100%-60px)/4)] transform-gpu"
             >
-              <ProductCard product={product} aspectRatio="9/5" index={idx} />
+              <ProductCard product={product} aspectRatio="4/5" index={idx} />
             </div>
           ))}
         </div>

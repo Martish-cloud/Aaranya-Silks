@@ -231,7 +231,7 @@ export const SignatureCollections: React.FC = () => {
     <section
       ref={sectionRef}
       id="photo-gallery"
-      className="py-16 md:py-24 bg-[#0F0A09] text-[#FAF7F0] relative overflow-hidden select-none"
+      className="py-8 sm:py-10 lg:py-14 bg-[#0F0A09] text-[#FAF7F0] relative overflow-hidden select-none"
     >
       {/* Full Section Background - Same Selected Image with Model's Face Positioned Naturally, Soft Blur & Subdued Transparency */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -263,9 +263,9 @@ export const SignatureCollections: React.FC = () => {
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center max-w-2xl mx-auto mb-12 sm:mb-16"
+          className="text-center max-w-2xl mx-auto mb-6 sm:mb-8 lg:mb-9"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FAF7F0]/5 border border-[#C8A96B]/30 text-[#C8A96B] text-xs font-semibold uppercase tracking-[0.25em] mb-4 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FAF7F0]/5 border border-[#C8A96B]/30 text-[#C8A96B] text-[11px] font-semibold uppercase tracking-[0.25em] mb-2 sm:mb-2.5 backdrop-blur-sm">
             <Sparkles className="w-3.5 h-3.5 text-[#C8A96B]" />
             <span>Haute Couture Lookbook</span>
           </div>
@@ -273,45 +273,45 @@ export const SignatureCollections: React.FC = () => {
           <WipeText
             as="h2"
             direction="bottom-to-top"
-            className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-[#FAF7F0] tracking-tight leading-tight"
+            className="font-serif text-2xl sm:text-3xl md:text-4xl font-light text-[#FAF7F0] tracking-tight leading-tight"
           >
             The Photo Gallery
           </WipeText>
 
-          <p className="text-xs sm:text-sm md:text-base text-[#FAF7F0]/70 font-light mt-3 max-w-xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#FAF7F0]/70 font-light mt-2 max-w-xl mx-auto leading-relaxed">
             Nine iconic editorial portraits capturing the pure silk radiance, heritage weaves, and imperial bridal heirlooms of Aaranya Silks.
           </p>
         </motion.div>
 
         {/* Main Editorial Presentation Frame */}
         <div
-          className="relative max-w-[980px] lg:max-w-[1020px] mx-auto w-full px-4 sm:px-6"
+          className="relative max-w-[960px] lg:max-w-[980px] mx-auto w-full px-4 sm:px-6"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
           {/* Main 9:10 Aspect Ratio Showcase Container */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
             {/* Left/Center Column: Strict 9:10 Main Image with Navigation Arrows Directly Beside It */}
-            <div className="flex justify-center lg:justify-end py-2 px-6 sm:px-8">
-              <div className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[350px] lg:max-w-[365px] aspect-[9/10] flex items-center justify-center">
+            <div className="flex justify-center lg:justify-end py-1 px-5 sm:px-6">
+              <div className="relative w-full max-w-[250px] sm:max-w-[280px] md:max-w-[310px] lg:max-w-[325px] aspect-[9/10] flex items-center justify-center">
                 {/* Left Arrow: Positioned immediately outside the left edge of the main image */}
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="absolute -left-5 sm:-left-6 lg:-left-7 top-1/2 -translate-y-1/2 z-30 p-2.5 sm:p-3 rounded-full bg-black/75 hover:bg-[#8B1E3F] border border-[#C8A96B]/50 hover:border-[#C8A96B] text-white transition-all shadow-xl group cursor-pointer active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#C8A96B] backdrop-blur-md"
+                  className="absolute -left-5 sm:-left-6 lg:-left-7 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-full bg-black/75 hover:bg-[#8B1E3F] border border-[#C8A96B]/50 hover:border-[#C8A96B] text-white transition-all shadow-xl group cursor-pointer active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#C8A96B] backdrop-blur-md"
                   aria-label="Previous photograph"
                 >
-                  <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-0.5 transition-transform" />
+                  <ChevronLeft className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:-translate-x-0.5 transition-transform" />
                 </button>
 
                 {/* Right Arrow: Positioned immediately outside the right edge of the main image */}
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="absolute -right-5 sm:-right-6 lg:-right-7 top-1/2 -translate-y-1/2 z-30 p-2.5 sm:p-3 rounded-full bg-black/75 hover:bg-[#8B1E3F] border border-[#C8A96B]/50 hover:border-[#C8A96B] text-white transition-all shadow-xl group cursor-pointer active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#C8A96B] backdrop-blur-md"
+                  className="absolute -right-5 sm:-right-6 lg:-right-7 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-full bg-black/75 hover:bg-[#8B1E3F] border border-[#C8A96B]/50 hover:border-[#C8A96B] text-white transition-all shadow-xl group cursor-pointer active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#C8A96B] backdrop-blur-md"
                   aria-label="Next photograph"
                 >
-                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-0.5 transition-transform" />
+                  <ChevronRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:translate-x-0.5 transition-transform" />
                 </button>
 
                 <AnimatePresence initial={false} custom={direction} mode="popLayout">
@@ -330,7 +330,7 @@ export const SignatureCollections: React.FC = () => {
                     className="absolute inset-0 w-full h-full flex items-center justify-center"
                   >
                     {/* Single Subtle Rear Depth Card */}
-                    <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none -z-10 shadow-xl border border-[#C8A96B]/20 transform translate-x-2.5 translate-y-2.5 sm:translate-x-3 sm:translate-y-3 scale-[0.98] bg-[#140E0C] opacity-70">
+                    <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none -z-10 shadow-xl border border-[#C8A96B]/20 transform translate-x-2 translate-y-2 sm:translate-x-2.5 sm:translate-y-2.5 scale-[0.98] bg-[#140E0C] opacity-70">
                       <img
                         src={activePhoto.src}
                         alt=""
@@ -347,7 +347,7 @@ export const SignatureCollections: React.FC = () => {
                         transform: `perspective(1000px) rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`,
                         transition: 'transform 0.15s ease-out',
                       }}
-                      className="relative w-full h-full rounded-3xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.85)] border border-[#C8A96B]/40 group bg-[#1A1412]"
+                      className="relative w-full h-full rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-[#C8A96B]/40 group bg-[#1A1412]"
                     >
 
                       {/* Primary High-Resolution Foreground Image */}
@@ -363,7 +363,7 @@ export const SignatureCollections: React.FC = () => {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
 
                         {/* Top Floating Counter Pill */}
-                        <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-[#C8A96B]/40 text-[11px] font-mono tracking-widest text-[#C8A96B] flex items-center gap-1.5">
+                        <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-[#C8A96B]/40 text-[10px] font-mono tracking-widest text-[#C8A96B] flex items-center gap-1.5">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#C8A96B] animate-pulse" />
                           <span>
                             0{currentIndex + 1} / 0{GALLERY_ITEMS.length}
@@ -373,18 +373,18 @@ export const SignatureCollections: React.FC = () => {
                         {/* Top Right Expand / Lightbox Trigger */}
                         <button
                           onClick={() => setLightboxOpen(true)}
-                          className="absolute top-4 right-4 p-2.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 hover:border-[#C8A96B] hover:text-[#C8A96B] text-white/80 transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
+                          className="absolute top-3.5 right-3.5 p-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 hover:border-[#C8A96B] hover:text-[#C8A96B] text-white/80 transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
                           aria-label="View fullscreen photo"
                         >
-                          <Expand className="w-4 h-4" />
+                          <Expand className="w-3.5 h-3.5" />
                         </button>
 
                         {/* Bottom Caption Pill over Image */}
-                        <div className="absolute bottom-5 inset-x-5 text-left pointer-events-none">
-                          <span className="text-[11px] uppercase tracking-[0.2em] font-semibold text-[#C8A96B] block mb-1">
+                        <div className="absolute bottom-4 inset-x-4 text-left pointer-events-none">
+                          <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#C8A96B] block mb-0.5">
                             {activePhoto.category}
                           </span>
-                          <h3 className="font-serif text-xl sm:text-2xl font-light text-white leading-tight drop-shadow-md">
+                          <h3 className="font-serif text-lg sm:text-xl font-light text-white leading-tight drop-shadow-md">
                             {activePhoto.title}
                           </h3>
                         </div>
@@ -396,7 +396,7 @@ export const SignatureCollections: React.FC = () => {
             </div>
 
             {/* Right Column: Editorial Craftsmanship & Controls */}
-            <div className="text-left space-y-4 max-w-[420px] lg:max-w-[440px] w-full mx-auto lg:mx-0">
+            <div className="text-left space-y-3 sm:space-y-3.5 max-w-[390px] lg:max-w-[410px] w-full mx-auto lg:mx-0">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activePhoto.id}
@@ -404,13 +404,13 @@ export const SignatureCollections: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                  className="space-y-3.5 sm:space-y-4 bg-black/60 backdrop-blur-md p-5 sm:p-6 rounded-3xl border border-[#C8A96B]/30 shadow-2xl"
+                  className="space-y-3 bg-black/60 backdrop-blur-md p-4 sm:p-5 rounded-3xl border border-[#C8A96B]/30 shadow-2xl"
                 >
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B1E3F]/40 border border-[#8B1E3F] text-[#FAF7F0] text-xs font-medium tracking-wide">
+                  <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-[#8B1E3F]/40 border border-[#8B1E3F] text-[#FAF7F0] text-[11px] font-medium tracking-wide">
                     <span>{activePhoto.hue}</span>
                   </div>
 
-                  <h3 className="font-serif text-xl sm:text-2xl lg:text-[26px] font-light text-[#FAF7F0] leading-snug drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
+                  <h3 className="font-serif text-lg sm:text-xl lg:text-[22px] font-light text-[#FAF7F0] leading-snug drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
                     {activePhoto.title}
                   </h3>
 
@@ -419,9 +419,9 @@ export const SignatureCollections: React.FC = () => {
                   </p>
 
                   {/* Highlights Spec Card */}
-                  <div className="pt-0.5 sm:pt-1">
-                    <div className="p-2.5 sm:p-3 rounded-2xl bg-white/[0.06] border border-[#C8A96B]/25">
-                      <span className="text-[10px] uppercase text-[#C8A96B] tracking-wider block mb-0.5">
+                  <div className="pt-0.5">
+                    <div className="p-2 sm:p-2.5 rounded-2xl bg-white/[0.06] border border-[#C8A96B]/25">
+                      <span className="text-[9px] uppercase text-[#C8A96B] tracking-wider block mb-0.5">
                         Zari Purity
                       </span>
                       <span className="text-xs sm:text-sm font-serif font-medium text-white">
@@ -431,20 +431,20 @@ export const SignatureCollections: React.FC = () => {
                   </div>
 
                   {/* Actions & Catalog Navigation */}
-                  <div className="pt-2 sm:pt-3 flex flex-wrap items-center gap-3">
+                  <div className="pt-1.5 sm:pt-2 flex flex-wrap items-center gap-3">
                     <button
                       onClick={() => navigateTo('catalog', undefined, 'Silk Sarees')}
-                      className="inline-flex items-center gap-2.5 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-[#8B1E3F] hover:bg-[#651C32] text-white text-xs font-semibold uppercase tracking-[0.2em] transition-all shadow-lg hover:shadow-xl border border-[#C8A96B]/50 hover:border-[#C8A96B] cursor-pointer"
+                      className="inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-[#8B1E3F] hover:bg-[#651C32] text-white text-[11px] sm:text-xs font-semibold uppercase tracking-[0.2em] transition-all shadow-lg hover:shadow-xl border border-[#C8A96B]/50 hover:border-[#C8A96B] cursor-pointer"
                     >
                       <span>Explore Saree Collection</span>
-                      <ArrowRight className="w-4 h-4 text-[#C8A96B]" />
+                      <ArrowRight className="w-3.5 h-3.5 text-[#C8A96B]" />
                     </button>
                   </div>
                 </motion.div>
               </AnimatePresence>
 
               {/* Synchronized Progress bar across 9 slides */}
-              <div className="w-full h-1 bg-white/15 rounded-full overflow-hidden mt-3">
+              <div className="w-full h-1 bg-white/15 rounded-full overflow-hidden mt-2.5">
                 <motion.div
                   className="h-full bg-gradient-to-r from-[#8B1E3F] to-[#C8A96B]"
                   initial={false}
