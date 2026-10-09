@@ -35,8 +35,10 @@ import { CheckCircle, Info } from 'lucide-react';
 const AppContent: React.FC = () => {
   const { activePage, currentProductSlug, toast } = useShop();
 
+  const isHome = activePage === 'home';
+
   return (
-    <div className="min-h-screen bg-[#FAF7F0] text-[#1C1A19] flex flex-col font-sans relative selection:bg-[#651C32] selection:text-[#FAF7F0] overflow-x-clip w-full">
+    <div className={`min-h-screen ${isHome ? 'bg-[#1C1A19]' : 'bg-[#FAF7F0]'} text-[#1C1A19] flex flex-col font-sans relative selection:bg-[#651C32] selection:text-[#FAF7F0] overflow-x-clip w-full`}>
       {/* 1. Announcement Bar */}
       <AnnouncementBar />
 
@@ -48,10 +50,10 @@ const AppContent: React.FC = () => {
         {activePage === 'home' && (
           <motion.div
             key="home-page"
-            initial={{ opacity: 0 }}
+            initial={false}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.3 }}
           >
             {/* 1. Hero Section - Virtual Boutique Showroom */}
             <HeroSection />

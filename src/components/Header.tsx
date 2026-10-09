@@ -16,6 +16,7 @@ export const Header: React.FC = () => {
   } = useShop();
 
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isPastHero, setIsPastHero] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
 
@@ -23,17 +24,48 @@ export const Header: React.FC = () => {
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    let lastScrolled = false;
-    const handleScroll = () => {
-      const scrolled = window.scrollY > 40;
-      if (scrolled !== lastScrolled) {
-        lastScrolled = scrolled;
-        setIsScrolled(scrolled);
+    let ticking = false;
+
+    const checkScroll = () => {
+      const scrollY = window.scrollY;
+      const scrolled = scrollY > 40;
+      setIsScrolled((prev) => (prev !== scrolled ? scrolled : prev));
+
+      if (activePage === 'home') {
+        const heroEl = document.getElementById('hero-section');
+        if (heroEl) {
+          const heroRect = heroEl.getBoundingClientRect();
+          // Header sticky height is ~72px. When hero bottom crosses near header bottom, we're past hero.
+          const pastHero = heroRect.bottom <= 76;
+          setIsPastHero((prev) => (prev !== pastHero ? pastHero : prev));
+        } else {
+          const fallbackThreshold = Math.max(window.innerHeight * 0.85, 600);
+          const pastHero = scrollY > fallbackThreshold;
+          setIsPastHero((prev) => (prev !== pastHero ? pastHero : prev));
+        }
+      } else {
+        setIsPastHero(true);
       }
     };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          checkScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    checkScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener('resize', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [activePage]);
 
   // Accessibility: Handle clicking outside and pressing Escape
   useEffect(() => {
@@ -75,15 +107,19 @@ export const Header: React.FC = () => {
     setIsCollectionsOpen(prev => !prev);
   };
 
-  const isDarkHero = activePage === 'home' && !isScrolled;
+  const isDarkHero = activePage === 'home' && !isPastHero;
 
   return (
     <>
       <header
-        className={`sticky top-0 z-40 w-full transition-all duration-500 ${
-          isScrolled
-            ? 'bg-[#FAF7F0]/95 backdrop-blur-md shadow-sm border-b border-[#C8A96B]/20 py-3'
-            : 'bg-transparent py-4 md:py-5'
+        className={`sticky top-0 z-40 w-full transition-all duration-300 ${
+          isDarkHero
+            ? isScrolled
+              ? 'bg-[#1C1A19]/85 backdrop-blur-md shadow-lg border-b border-[#C8A96B]/25 py-3'
+              : 'bg-transparent py-4 md:py-5'
+            : isScrolled
+              ? 'bg-[#FAF7F0]/95 backdrop-blur-md shadow-sm border-b border-[#C8A96B]/20 py-3'
+              : 'bg-transparent py-4 md:py-5'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

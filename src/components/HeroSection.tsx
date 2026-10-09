@@ -9,7 +9,7 @@ export const HeroSection: React.FC = () => {
   const { navigateTo } = useShop();
 
   return (
-    <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden bg-[#1C1A19] -mt-20 pt-20">
+    <section id="hero-section" className="relative min-h-[92vh] flex items-center justify-center overflow-hidden bg-[#1C1A19] -mt-20 pt-20">
       {/* Background Luxury Virtual Showroom Composition */}
       <div className="absolute inset-0 z-0">
         <img
@@ -100,7 +100,7 @@ export const HeroSection: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.6 }}
-          className="pt-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-t border-white/15"
+          className="pt-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-6 border-t border-[#C8A96B]/20"
         >
           {/* Poetic quote from reference video */}
           <div className="text-left">

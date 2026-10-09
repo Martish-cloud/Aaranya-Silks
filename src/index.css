@@ -218,7 +218,7 @@
 
 /* Image rendering optimizations */
 img {
-  content-visibility: auto;
+  text-indent: -9999px; /* Hide broken alt text flash while loading */
 }
 
 /* Hardware accelerated transform utility */

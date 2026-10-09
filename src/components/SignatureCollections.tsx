@@ -134,7 +134,6 @@ export const SignatureCollections: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isInView, setIsInView] = useState(false);
-  const [entranceKey, setEntranceKey] = useState(0);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -177,12 +176,7 @@ export const SignatureCollections: React.FC = () => {
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          setEntranceKey((k) => k + 1);
-        } else {
-          setIsInView(false);
-        }
+        setIsInView(entry.isIntersecting);
       },
       {
         threshold: 0.08,
@@ -259,7 +253,6 @@ export const SignatureCollections: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Editorial Section Header with Re-triggerable Entrance Animation */}
         <motion.div
-          key={`header-${entranceKey}`}
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}

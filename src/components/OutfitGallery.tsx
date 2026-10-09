@@ -308,7 +308,7 @@ export const OutfitGallery: React.FC = () => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          const imgsToPreload = OUTFITS_DATA.map((o) => o.image).filter(Boolean);
+          const imgsToPreload = OUTFITS_DATA.slice(0, 8).map((o) => o.image).filter(Boolean);
           preloadImages(imgsToPreload);
           observer.disconnect();
         }

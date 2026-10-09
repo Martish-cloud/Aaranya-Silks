@@ -3,10 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronLeft,
   ChevronRight,
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
   Maximize2,
   X
 } from 'lucide-react';
@@ -122,7 +118,7 @@ export const LatestTrendsLookbook: React.FC = () => {
     3: false,
     4: false,
   });
-  const [isMuted, setIsMuted] = useState<boolean>(true);
+  const [hasStarted, setHasStarted] = useState<Record<number, boolean>>({});
   const [videoProgress, setVideoProgress] = useState<Record<number, number>>({});
   const [modalReel, setModalReel] = useState<ReelItem | null>(null);
   const [videoErrors, setVideoErrors] = useState<Record<number, boolean>>({});
@@ -137,20 +133,21 @@ export const LatestTrendsLookbook: React.FC = () => {
     REELS.forEach((reel, idx) => {
       const vid = videoRefs.current[idx];
       if (vid) {
-        vid.muted = isMuted;
+        vid.muted = true;
         const playPromise = vid.play();
         if (playPromise !== undefined) {
           playPromise
             .then(() => {
               setPlayingReels((prev) => ({ ...prev, [reel.id]: true }));
+              setHasStarted((prev) => ({ ...prev, [reel.id]: true }));
             })
             .catch(() => {
               // Graceful fallback for browser autoplay restrictions
               vid.muted = true;
-              setIsMuted(true);
               vid.play()
                 .then(() => {
                   setPlayingReels((prev) => ({ ...prev, [reel.id]: true }));
+                  setHasStarted((prev) => ({ ...prev, [reel.id]: true }));
                 })
                 .catch(() => {});
             });
@@ -163,10 +160,11 @@ export const LatestTrendsLookbook: React.FC = () => {
     const vid = videoRefs.current[id - 1];
     if (vid) {
       if (vid.paused) {
-        vid.muted = isMuted;
+        vid.muted = true;
         vid.play()
           .then(() => {
             setPlayingReels((prev) => ({ ...prev, [id]: true }));
+            setHasStarted((prev) => ({ ...prev, [id]: true }));
           })
           .catch(() => {});
       } else {
@@ -205,7 +203,7 @@ export const LatestTrendsLookbook: React.FC = () => {
     }
 
     return () => observer.disconnect();
-  }, [isMuted]);
+  }, []);
 
   const lastProgressTimeRef = useRef<Record<number, number>>({});
   const handleTimeUpdate = (id: number, e: React.SyntheticEvent<HTMLVideoElement>) => {
@@ -270,7 +268,7 @@ export const LatestTrendsLookbook: React.FC = () => {
                     ease: 'easeInOut',
                     delay: idx * 0.35
                   }}
-                  onClick={() => setModalReel(reel)}
+                  onClick={() => togglePlay(reel.id)}
                   className={`group relative w-full aspect-[9/14] rounded-2xl overflow-hidden bg-black cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 border select-none ${
                     isPlaying
                       ? 'border-[#E5B842] ring-2 ring-[#E5B842]/50 shadow-2xl scale-[1.01]'
@@ -284,7 +282,7 @@ export const LatestTrendsLookbook: React.FC = () => {
                     loading="lazy"
                     decoding="async"
                     className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-700 ${
-                      isPlaying && !hasError
+                      hasStarted[reel.id] && !hasError
                         ? 'opacity-0 pointer-events-none'
                         : 'opacity-85 group-hover:opacity-95 group-hover:scale-105'
                     }`}
@@ -299,13 +297,13 @@ export const LatestTrendsLookbook: React.FC = () => {
                       src={reel.videoUrl}
                       playsInline
                       loop
-                      muted={isMuted}
+                      muted
                       preload="metadata"
                       onError={() => setVideoErrors((prev) => ({ ...prev, [reel.id]: true }))}
                       onTimeUpdate={(e) => handleTimeUpdate(reel.id, e)}
                       onEnded={() => handleVideoEnded(reel.id)}
                       className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-500 ${
-                        isPlaying ? 'opacity-100 z-0' : 'opacity-0 pointer-events-none'
+                        hasStarted[reel.id] ? 'opacity-100 z-0' : 'opacity-0 pointer-events-none'
                       }`}
                     />
                   )}
@@ -320,31 +318,13 @@ export const LatestTrendsLookbook: React.FC = () => {
                     </span>
 
                     <div className="flex items-center gap-1.5">
-                      {/* Audio Mute/Unmute Toggle */}
-                      {isPlaying && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const newMuted = !isMuted;
-                            setIsMuted(newMuted);
-                            videoRefs.current.forEach((v) => {
-                              if (v) v.muted = newMuted;
-                            });
-                          }}
-                          className="p-1.5 rounded-full bg-black/60 backdrop-blur-md hover:bg-[#E5B842] text-white hover:text-black transition-colors"
-                          title={isMuted ? 'Unmute video' : 'Mute video'}
-                        >
-                          {isMuted ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
-                        </button>
-                      )}
-
                       {/* Modal Expand Button */}
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           setModalReel(reel);
                         }}
-                        className="p-1.5 rounded-full bg-black/40 backdrop-blur-md hover:bg-white/20 text-white transition-colors opacity-0 group-hover:opacity-100"
+                        className="p-1.5 rounded-full bg-black/40 backdrop-blur-md hover:bg-white/20 text-white transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
                         title="Expand Cinematic View"
                       >
                         <Maximize2 className="w-3 h-3" />
@@ -352,29 +332,8 @@ export const LatestTrendsLookbook: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Centered Play/Pause Button (inline preview toggle) */}
-                  <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                    <div
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        togglePlay(reel.id);
-                      }}
-                      className={`pointer-events-auto w-12 h-12 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-xl ${
-                        isPlaying
-                          ? 'bg-black/40 text-white opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100'
-                          : 'bg-white/20 group-hover:bg-[#E5B842] text-white group-hover:text-[#1C1A19] scale-100 group-hover:scale-110'
-                      }`}
-                    >
-                      {isPlaying ? (
-                        <Pause className="w-5 h-5 fill-current" />
-                      ) : (
-                        <Play className="w-5 h-5 fill-current ml-0.5" />
-                      )}
-                    </div>
-                  </div>
-
                   {/* Bottom Text Information */}
-                  <div className="absolute bottom-3 inset-x-3 text-left z-20">
+                  <div className="absolute bottom-3 inset-x-3 text-left z-20 pointer-events-none">
                     <p className="text-xs font-serif font-bold text-white line-clamp-1">
                       {reel.title}
                     </p>
