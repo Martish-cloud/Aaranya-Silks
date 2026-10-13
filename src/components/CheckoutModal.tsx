@@ -1,9 +1,21 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, CheckCircle2, ShieldCheck, CreditCard, QrCode, Building, Truck, ArrowLeft, ArrowRight } from 'lucide-react';
+import {
+  X,
+  CheckCircle2,
+  ShieldCheck,
+  Truck,
+  ArrowLeft,
+  ArrowRight,
+  Sparkles,
+  Loader2,
+  Check,
+} from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { shopService } from '../services/shopService';
 import { formatINR } from '../utils/formatters';
 import confetti from 'canvas-confetti';
+import type { DeliveryAddress, PaymentMethod } from '../types';
 
 export const CheckoutModal: React.FC = () => {
   const {
@@ -15,59 +27,125 @@ export const CheckoutModal: React.FC = () => {
     discountAmount,
     appliedCoupon,
     includeGiftBox,
-    navigateTo
+    navigateTo,
+    user,
+    setIsAuthOpen,
+    setOnAuthSuccessAction,
+    setSelectedTrackingOrderId,
+    setIsOrderTrackingOpen,
   } = useShop();
 
-  const [step, setStep] = useState<'shipping' | 'payment' | 'confirmation'>('shipping');
+  const [step, setStep] = useState<'shipping' | 'payment' | 'demo_processing' | 'confirmation'>('shipping');
 
-  const [formData, setFormData] = useState({
-    email: 'radhika.rao@example.com',
-    phone: '+91 98450 12890',
-    firstName: 'Radhika',
-    lastName: 'Rao',
-    address: '42, Lavelle Road, Shanthala Nagar',
-    apartment: 'Apartment 4B, Regency Court',
-    city: 'Bengaluru',
-    state: 'Karnataka',
-    pincode: '560001',
-    paymentMethod: 'upi',
-    specialInstructions: 'Please deliver in the bespoke Aaranya Silks archival gift box.'
+  const [formData, setFormData] = useState(() => {
+    const parts = user?.name ? user.name.split(' ') : [];
+    return {
+      firstName: parts[0] || 'Radhika',
+      lastName: parts.slice(1).join(' ') || 'Rao',
+      email: user?.email || 'radhika.rao@example.com',
+      phone: user?.phone || '+91 98450 12890',
+      address: '42, Lavelle Road, Shanthala Nagar',
+      apartment: 'Apartment 4B, Regency Court',
+      city: 'Bengaluru',
+      state: 'Karnataka',
+      pincode: '560001',
+      paymentMethod: 'demo_online' as PaymentMethod,
+      specialInstructions: 'Please deliver in the bespoke Aaranya Silks archival gift box.',
+    };
   });
 
-  const [orderNumber, setOrderNumber] = useState('');
+  const [confirmedOrderId, setConfirmedOrderId] = useState<string | null>(null);
+  const [demoPaymentStep, setDemoPaymentStep] = useState<number>(1);
 
   if (!isCheckoutOpen) return null;
 
   const shippingCost = cartSubtotal >= 30000 ? 0 : 450;
   const finalTotal = Math.max(0, cartSubtotal - discountAmount + shippingCost);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleProceedToPayment = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Check authentication requirement before order placement
+    if (!user) {
+      setOnAuthSuccessAction(() => {
+        setIsCheckoutOpen(true);
+        setStep('payment');
+      });
+      setIsAuthOpen(true);
+      return;
+    }
+
     if (!formData.address || !formData.pincode || !formData.phone) {
       alert('Please fill out all required shipping details.');
       return;
     }
+
     setStep('payment');
   };
 
-  const handlePlaceOrder = () => {
-    const generatedOrderNum = `AS-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
-    setOrderNumber(generatedOrderNum);
-    setStep('confirmation');
-    clearCart();
+  const executeOrderCreation = (method: PaymentMethod) => {
+    const shippingAddress: DeliveryAddress = {
+      id: `addr_${Date.now()}`,
+      name: `${formData.firstName} ${formData.lastName}`.trim(),
+      phone: formData.phone,
+      address: formData.address,
+      apartment: formData.apartment,
+      city: formData.city,
+      state: formData.state,
+      pincode: formData.pincode,
+    };
 
-    // Celebration Confetti
+    const newOrder = shopService.createOrder({
+      items: [...cart],
+      shippingAddress,
+      paymentMethod: method,
+      subtotal: cartSubtotal,
+      discount: discountAmount,
+      shippingFee: shippingCost,
+      user,
+    });
+
+    setConfirmedOrderId(newOrder.id);
+    clearCart();
+    setStep('confirmation');
+
+    // Confetti celebration
     confetti({
       particleCount: 80,
       spread: 90,
       origin: { y: 0.6 },
-      colors: ['#C8A96B', '#8B1E3F', '#651C32', '#FAF7F0']
+      colors: ['#C8A96B', '#8B1E3F', '#651C32', '#FAF7F0'],
     });
+  };
+
+  const handleConfirmOrder = () => {
+    if (formData.paymentMethod === 'cod') {
+      // Cash on delivery: directly place order (unpaid state)
+      executeOrderCreation('cod');
+    } else {
+      // Online Demo Payment Flow
+      setStep('demo_processing');
+      setDemoPaymentStep(1);
+
+      setTimeout(() => {
+        setDemoPaymentStep(2);
+      }, 1000);
+
+      setTimeout(() => {
+        setDemoPaymentStep(3);
+      }, 2200);
+
+      setTimeout(() => {
+        executeOrderCreation('demo_online');
+      }, 3100);
+    }
   };
 
   return (
@@ -78,7 +156,7 @@ export const CheckoutModal: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={() => step !== 'confirmation' && setIsCheckoutOpen(false)}
+          onClick={() => step !== 'confirmation' && step !== 'demo_processing' && setIsCheckoutOpen(false)}
           className="fixed inset-0 bg-black/75 backdrop-blur-md"
         />
 
@@ -87,8 +165,8 @@ export const CheckoutModal: React.FC = () => {
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ duration: 0.3 }}
-          className="relative w-full max-w-4xl bg-[#FAF7F0] rounded-3xl shadow-2xl overflow-hidden border border-[#C8A96B]/30 z-10 my-auto text-left"
+          transition={{ duration: 0.25 }}
+          className="relative w-full max-w-4xl bg-[#FAF7F0] rounded-3xl shadow-2xl overflow-hidden border border-[#C8A96B]/35 z-10 my-auto text-left"
         >
           {/* Header */}
           <div className="p-5 sm:p-6 border-b border-[#C8A96B]/25 flex items-center justify-between bg-[#F2EBDD]">
@@ -102,16 +180,17 @@ export const CheckoutModal: React.FC = () => {
                 </h3>
                 <p className="text-[11px] text-[#1C1A19]/60 font-light">
                   {step === 'shipping' && 'Step 1: Contact & Delivery Address'}
-                  {step === 'payment' && 'Step 2: Insured Order Review & Payment'}
+                  {step === 'payment' && 'Step 2: Payment Method & Demonstration Mode'}
+                  {step === 'demo_processing' && 'Processing Simulated Demo Payment...'}
                   {step === 'confirmation' && 'Order Placed & Confirmed'}
                 </p>
               </div>
             </div>
 
-            {step !== 'confirmation' && (
+            {step !== 'confirmation' && step !== 'demo_processing' && (
               <button
                 onClick={() => setIsCheckoutOpen(false)}
-                className="p-2 rounded-full hover:bg-black/5 text-[#1C1A19] transition-colors"
+                className="p-2 rounded-full hover:bg-black/5 text-[#1C1A19] transition-colors cursor-pointer"
                 aria-label="Close checkout"
               >
                 <X className="w-5 h-5" />
@@ -125,9 +204,30 @@ export const CheckoutModal: React.FC = () => {
               <form onSubmit={handleProceedToPayment} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Form fields (7 cols) */}
                 <div className="lg:col-span-7 space-y-4">
-                  <h4 className="font-serif text-lg font-semibold text-[#651C32] border-b border-[#C8A96B]/20 pb-2">
-                    Contact & Delivery Details
-                  </h4>
+                  <div className="flex items-center justify-between border-b border-[#C8A96B]/20 pb-2">
+                    <h4 className="font-serif text-lg font-semibold text-[#651C32]">
+                      Contact & Delivery Details
+                    </h4>
+                    {user ? (
+                      <span className="text-xs text-emerald-700 font-semibold flex items-center gap-1">
+                        <Check className="w-3.5 h-3.5" />
+                        <span>Verified Patron</span>
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOnAuthSuccessAction(() => {
+                            setIsCheckoutOpen(true);
+                          });
+                          setIsAuthOpen(true);
+                        }}
+                        className="text-xs text-[#8B1E3F] hover:underline cursor-pointer"
+                      >
+                        Sign in for faster checkout
+                      </button>
+                    )}
+                  </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
@@ -259,23 +359,10 @@ export const CheckoutModal: React.FC = () => {
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-[#1C1A19]/80 mb-1">
-                      Personalized Message / Gift Instructions
-                    </label>
-                    <textarea
-                      name="specialInstructions"
-                      rows={2}
-                      value={formData.specialInstructions}
-                      onChange={handleInputChange}
-                      className="w-full px-3.5 py-2 rounded-xl bg-white border border-[#C8A96B]/30 text-xs text-[#1C1A19] focus:outline-none focus:border-[#651C32]"
-                    />
-                  </div>
-
                   <div className="pt-2">
                     <button
                       type="submit"
-                      className="w-full flex items-center justify-center gap-2 py-3.5 rounded-full bg-[#651C32] hover:bg-[#8B1E3F] text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow-md"
+                      className="w-full flex items-center justify-center gap-2 py-3.5 rounded-full bg-[#651C32] hover:bg-[#8B1E3F] text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow-md cursor-pointer"
                     >
                       <span>Continue to Payment Selection</span>
                       <ArrowRight className="w-4 h-4 text-[#C8A96B]" />
@@ -343,7 +430,9 @@ export const CheckoutModal: React.FC = () => {
 
                   <div className="flex items-center gap-2 p-3 rounded-xl bg-white/70 border border-[#C8A96B]/30 text-[11px] text-[#1C1A19]/80">
                     <Truck className="w-4 h-4 text-[#8B1E3F] shrink-0" />
-                    <span>Estimated delivery to {formData.pincode}: <strong>2 to 4 business days</strong></span>
+                    <span>
+                      Estimated delivery to {formData.pincode}: <strong>2 to 4 business days</strong>
+                    </span>
                   </div>
                 </div>
               </form>
@@ -355,22 +444,33 @@ export const CheckoutModal: React.FC = () => {
                 <div className="lg:col-span-7 space-y-5">
                   <div className="flex items-center justify-between border-b border-[#C8A96B]/20 pb-2">
                     <h4 className="font-serif text-lg font-semibold text-[#651C32]">
-                      Select Payment Gateway
+                      Select Payment Mode
                     </h4>
                     <button
                       onClick={() => setStep('shipping')}
-                      className="text-xs text-[#8B1E3F] hover:underline flex items-center gap-1"
+                      className="text-xs text-[#8B1E3F] hover:underline flex items-center gap-1 cursor-pointer"
                     >
                       <ArrowLeft className="w-3 h-3" />
                       <span>Back to Address</span>
                     </button>
                   </div>
 
+                  {/* Prominent Demo Notice */}
+                  <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 text-xs space-y-1">
+                    <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[11px] text-amber-800">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>DEMO PAYMENT SYSTEM — NO REAL MONEY CHARGED</span>
+                    </div>
+                    <p className="opacity-90">
+                      This checkout simulates high-value transaction authorization without charging any payment or collecting financial card credentials.
+                    </p>
+                  </div>
+
                   <div className="space-y-3">
-                    {/* UPI */}
+                    {/* Option 1: Demo Online Payment */}
                     <label
                       className={`flex items-start gap-3.5 p-4 rounded-2xl border cursor-pointer transition-all ${
-                        formData.paymentMethod === 'upi'
+                        formData.paymentMethod === 'demo_online'
                           ? 'border-[#651C32] bg-[#FAF7F0] shadow ring-1 ring-[#651C32]'
                           : 'border-[#C8A96B]/30 bg-white hover:border-[#651C32]'
                       }`}
@@ -378,28 +478,30 @@ export const CheckoutModal: React.FC = () => {
                       <input
                         type="radio"
                         name="paymentMethod"
-                        value="upi"
-                        checked={formData.paymentMethod === 'upi'}
-                        onChange={handleInputChange}
+                        value="demo_online"
+                        checked={formData.paymentMethod === 'demo_online'}
+                        onChange={() => setFormData((p) => ({ ...p, paymentMethod: 'demo_online' }))}
                         className="mt-1 accent-[#651C32]"
                       />
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
                           <span className="font-serif font-bold text-sm text-[#1C1A19]">
-                            Instant UPI / QR Payment
+                            Online Payment — Demo Mode (Simulated)
                           </span>
-                          <QrCode className="w-4 h-4 text-[#8B1E3F]" />
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold uppercase">
+                            Zero Cost
+                          </span>
                         </div>
                         <p className="text-xs text-[#1C1A19]/70 mt-1">
-                          Google Pay, PhonePe, Paytm, or BHIM UPI instant zero-fee verification.
+                          Simulates Instant UPI, Credit Cards, Net Banking with zero real funds transferred.
                         </p>
                       </div>
                     </label>
 
-                    {/* Credit / Debit Card */}
+                    {/* Option 2: Cash on Delivery */}
                     <label
                       className={`flex items-start gap-3.5 p-4 rounded-2xl border cursor-pointer transition-all ${
-                        formData.paymentMethod === 'card'
+                        formData.paymentMethod === 'cod'
                           ? 'border-[#651C32] bg-[#FAF7F0] shadow ring-1 ring-[#651C32]'
                           : 'border-[#C8A96B]/30 bg-white hover:border-[#651C32]'
                       }`}
@@ -407,49 +509,20 @@ export const CheckoutModal: React.FC = () => {
                       <input
                         type="radio"
                         name="paymentMethod"
-                        value="card"
-                        checked={formData.paymentMethod === 'card'}
-                        onChange={handleInputChange}
+                        value="cod"
+                        checked={formData.paymentMethod === 'cod'}
+                        onChange={() => setFormData((p) => ({ ...p, paymentMethod: 'cod' }))}
                         className="mt-1 accent-[#651C32]"
                       />
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
                           <span className="font-serif font-bold text-sm text-[#1C1A19]">
-                            Credit / Debit Cards
+                            Cash on Delivery / Pay on Delivery (COD)
                           </span>
-                          <CreditCard className="w-4 h-4 text-[#8B1E3F]" />
+                          <Truck className="w-4 h-4 text-[#8B1E3F]" />
                         </div>
                         <p className="text-xs text-[#1C1A19]/70 mt-1">
-                          Visa, MasterCard, American Express, RuPay with 3D Secure OTP authentication.
-                        </p>
-                      </div>
-                    </label>
-
-                    {/* Net Banking */}
-                    <label
-                      className={`flex items-start gap-3.5 p-4 rounded-2xl border cursor-pointer transition-all ${
-                        formData.paymentMethod === 'netbanking'
-                          ? 'border-[#651C32] bg-[#FAF7F0] shadow ring-1 ring-[#651C32]'
-                          : 'border-[#C8A96B]/30 bg-white hover:border-[#651C32]'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="netbanking"
-                        checked={formData.paymentMethod === 'netbanking'}
-                        onChange={handleInputChange}
-                        className="mt-1 accent-[#651C32]"
-                      />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <span className="font-serif font-bold text-sm text-[#1C1A19]">
-                            Net Banking
-                          </span>
-                          <Building className="w-4 h-4 text-[#8B1E3F]" />
-                        </div>
-                        <p className="text-xs text-[#1C1A19]/70 mt-1">
-                          HDFC, ICICI, SBI, Axis, Kotak, and 50+ major Indian banks.
+                          Pay upon insured doorstep inspection. Order is recorded as Pay on Delivery (Unpaid).
                         </p>
                       </div>
                     </label>
@@ -457,16 +530,20 @@ export const CheckoutModal: React.FC = () => {
 
                   <div className="pt-4">
                     <button
-                      onClick={handlePlaceOrder}
-                      className="w-full flex items-center justify-center gap-2 py-4 rounded-full bg-[#651C32] hover:bg-[#8B1E3F] text-white text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] transition-all shadow-xl hover:shadow-2xl"
+                      onClick={handleConfirmOrder}
+                      className="w-full flex items-center justify-center gap-2 py-4 rounded-full bg-[#651C32] hover:bg-[#8B1E3F] text-white text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] transition-all shadow-xl hover:shadow-2xl cursor-pointer"
                     >
                       <ShieldCheck className="w-4 h-4 text-[#C8A96B]" />
-                      <span>Confirm & Place Order ({formatINR(finalTotal)})</span>
+                      <span>
+                        {formData.paymentMethod === 'cod'
+                          ? `Confirm Order with Cash on Delivery (${formatINR(finalTotal)})`
+                          : `Complete Demo Payment (${formatINR(finalTotal)})`}
+                      </span>
                     </button>
                   </div>
                 </div>
 
-                {/* Right: Summary in payment step */}
+                {/* Right: Summary */}
                 <div className="lg:col-span-5 bg-[#F2EBDD] p-5 rounded-2xl border border-[#C8A96B]/25 space-y-3">
                   <h4 className="font-serif text-base font-semibold text-[#651C32]">
                     Delivering To
@@ -477,14 +554,16 @@ export const CheckoutModal: React.FC = () => {
                     </p>
                     <p>{formData.address}</p>
                     {formData.apartment && <p>{formData.apartment}</p>}
-                    <p>{formData.city}, {formData.state} - {formData.pincode}</p>
+                    <p>
+                      {formData.city}, {formData.state} - {formData.pincode}
+                    </p>
                     <p className="text-[#8B1E3F]">{formData.phone}</p>
                   </div>
 
                   <div className="pt-3 border-t border-[#C8A96B]/20 space-y-1 text-xs">
                     <div className="flex justify-between">
                       <span>Total Items</span>
-                      <span>{cart.length} Sarees</span>
+                      <span>{cart.length} Creations</span>
                     </div>
                     <div className="flex justify-between font-bold text-sm text-[#651C32]">
                       <span>Amount Payable</span>
@@ -495,16 +574,83 @@ export const CheckoutModal: React.FC = () => {
               </div>
             )}
 
-            {/* Step 3: Confirmation */}
-            {step === 'confirmation' && (
-              <div className="text-center py-8 px-4 max-w-lg mx-auto space-y-5">
+            {/* Step: Simulated Demo Processing */}
+            {step === 'demo_processing' && (
+              <div className="text-center py-12 px-4 max-w-md mx-auto space-y-6">
+                <div className="w-16 h-16 rounded-full bg-[#651C32] text-[#C8A96B] flex items-center justify-center mx-auto shadow-xl">
+                  {demoPaymentStep < 3 ? (
+                    <Loader2 className="w-8 h-8 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-[#8B1E3F] block">
+                    DEMO SIMULATOR • SAFE ZERO MONEY TEST
+                  </span>
+                  <h3 className="font-serif text-2xl font-light text-[#651C32]">
+                    {demoPaymentStep === 1 && 'Initiating Demo Session...'}
+                    {demoPaymentStep === 2 && 'Processing Demonstration Payment...'}
+                    {demoPaymentStep === 3 && 'Simulated Payment Successful!'}
+                  </h3>
+                  <p className="text-xs text-[#1C1A19]/70">
+                    Communicating with mock banking gateway layer. Zero funds charged.
+                  </p>
+                </div>
+
+                {/* Simulated Steps Visual */}
+                <div className="p-4 rounded-2xl bg-white border border-[#C8A96B]/30 space-y-2.5 text-xs text-left">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${
+                        demoPaymentStep >= 1 ? 'bg-emerald-600 text-white' : 'bg-black/20 text-transparent'
+                      }`}
+                    >
+                      ✓
+                    </span>
+                    <span className={demoPaymentStep >= 1 ? 'font-semibold text-emerald-900' : 'text-black/40'}>
+                      Simulated Token Authorized
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${
+                        demoPaymentStep >= 2 ? 'bg-emerald-600 text-white' : 'bg-black/20 text-transparent'
+                      }`}
+                    >
+                      ✓
+                    </span>
+                    <span className={demoPaymentStep >= 2 ? 'font-semibold text-emerald-900' : 'text-black/40'}>
+                      Idempotent Backend Verification
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${
+                        demoPaymentStep >= 3 ? 'bg-emerald-600 text-white' : 'bg-black/20 text-transparent'
+                      }`}
+                    >
+                      ✓
+                    </span>
+                    <span className={demoPaymentStep >= 3 ? 'font-semibold text-emerald-900' : 'text-black/40'}>
+                      Generating Order Reference & Timeline
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Step: Confirmation */}
+            {step === 'confirmation' && confirmedOrderId && (
+              <div className="text-center py-6 px-4 max-w-lg mx-auto space-y-5">
                 <div className="w-16 h-16 rounded-full bg-[#651C32] text-[#C8A96B] flex items-center justify-center mx-auto shadow-xl">
                   <CheckCircle2 className="w-9 h-9" />
                 </div>
 
                 <div>
                   <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#8B1E3F] block mb-1">
-                    Order Confirmed
+                    Order Placed Successfully
                   </span>
                   <h3 className="font-serif text-3xl font-light text-[#651C32]">
                     Thank You, {formData.firstName}!
@@ -514,34 +660,50 @@ export const CheckoutModal: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-[#F2EBDD] border border-[#C8A96B]/30 text-xs text-left space-y-1.5">
+                <div className="p-4 rounded-2xl bg-[#F2EBDD] border border-[#C8A96B]/30 text-xs text-left space-y-2">
                   <div className="flex justify-between">
                     <span className="text-[#1C1A19]/60">Order Reference:</span>
-                    <strong className="font-mono text-[#651C32]">{orderNumber}</strong>
+                    <strong className="font-mono text-[#651C32] text-sm">{confirmedOrderId}</strong>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#1C1A19]/60">Payment Method:</span>
+                    <strong>
+                      {formData.paymentMethod === 'cod' ? 'Cash on Delivery (Pay upon Receipt)' : 'Online Demo Mode (Simulated)'}
+                    </strong>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#1C1A19]/60">Delivery Address:</span>
-                    <span className="text-right truncate max-w-[200px]">{formData.address}, {formData.city}</span>
+                    <span className="text-right truncate max-w-[200px]">
+                      {formData.address}, {formData.city}
+                    </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#1C1A19]/60">Estimated Transit:</span>
+                    <span className="text-[#1C1A19]/60">Estimated Delivery:</span>
                     <span className="text-[#8B1E3F] font-semibold">2 to 4 business days</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#1C1A19]/60">Confirmation Dispatched:</span>
-                    <span>{formData.email}</span>
                   </div>
                 </div>
 
-                <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                  <button
+                    onClick={() => {
+                      setIsCheckoutOpen(false);
+                      setSelectedTrackingOrderId(confirmedOrderId);
+                      setIsOrderTrackingOpen(true);
+                    }}
+                    className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#651C32] hover:bg-[#8B1E3F] text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <Truck className="w-4 h-4 text-[#C8A96B]" />
+                    <span>Track Order Progress</span>
+                  </button>
+
                   <button
                     onClick={() => {
                       setIsCheckoutOpen(false);
                       navigateTo('catalog');
                     }}
-                    className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#651C32] hover:bg-[#8B1E3F] text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow"
+                    className="w-full sm:w-auto px-6 py-3 rounded-full bg-white hover:bg-[#FAF7F0] text-[#651C32] border border-[#651C32] text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer"
                   >
-                    Continue Exploring Collections
+                    Continue Browsing
                   </button>
                 </div>
               </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, ShoppingBag, Eye, ArrowRight } from 'lucide-react';
+import { Sparkles, ShoppingBag, Eye, ArrowRight, Heart } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { SAREES_DATA } from '../data/sarees';
 import { formatINR } from '../utils/formatters';
@@ -19,7 +19,7 @@ const BRIDAL_SLUG_MAP: Record<string, string> = {
 };
 
 export const BridalDarkSection: React.FC = () => {
-  const { addToCart, openQuickView, navigateTo } = useShop();
+  const { addToCart, openQuickView, navigateTo, isInWishlist, toggleWishlist } = useShop();
 
   const bridalSarees = SAREES_DATA.filter((s) => s.category === 'Bridal Sarees').slice(0, 4);
 
@@ -120,6 +120,22 @@ export const BridalDarkSection: React.FC = () => {
                       {saree.fabric}
                     </span>
                   </div>
+
+                  {/* Wishlist Button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleWishlist(saree.id);
+                    }}
+                    className={`absolute top-2.5 right-2.5 p-2 rounded-full backdrop-blur-md transition-all duration-300 shadow-md cursor-pointer ${
+                      isInWishlist(saree.id)
+                        ? 'bg-[#8B1E3F] text-white scale-110'
+                        : 'bg-black/40 text-white hover:bg-black/70 hover:text-[#E5B842]'
+                    }`}
+                    aria-label={isInWishlist(saree.id) ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                  >
+                    <Heart className={`w-3.5 h-3.5 ${isInWishlist(saree.id) ? 'fill-current' : ''}`} />
+                  </button>
                 </div>
 
                 {/* Info & Golden Add to Cart Button */}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingBag, Sparkles, Star } from 'lucide-react';
+import { ShoppingBag, Sparkles, Star, Heart } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { SAREES_DATA } from '../data/sarees';
 import { formatINR } from '../utils/formatters';
@@ -34,7 +34,7 @@ const TREND_PRODUCT_MAP: Record<string, { image: string; variantColor: string }>
 const SIZES = ['S', 'M', 'L', 'XL'];
 
 export const TrendOfTheDay: React.FC = () => {
-  const { addToCart, navigateTo } = useShop();
+  const { addToCart, navigateTo, isInWishlist, toggleWishlist } = useShop();
 
   const [selectedSizes, setSelectedSizes] = useState<{ [key: string]: string }>({
     'aaranya-01': 'M',
@@ -103,6 +103,22 @@ export const TrendOfTheDay: React.FC = () => {
                     <Star className="w-3 h-3 text-[#E5B842] fill-current" />
                     <span>{product.rating.toFixed(1)}</span>
                   </div>
+
+                  {/* Wishlist Button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleWishlist(product.id);
+                    }}
+                    className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md transition-all duration-300 shadow-md cursor-pointer ${
+                      isInWishlist(product.id)
+                        ? 'bg-[#8B1E3F] text-white scale-110'
+                        : 'bg-[#FAF7F0]/85 text-[#1C1A19] hover:bg-[#FAF7F0] hover:text-[#8B1E3F]'
+                    }`}
+                    aria-label={isInWishlist(product.id) ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                  >
+                    <Heart className={`w-3.5 h-3.5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                  </button>
                 </div>
 
                 {/* Details */}

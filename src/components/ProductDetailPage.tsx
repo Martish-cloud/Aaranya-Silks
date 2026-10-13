@@ -18,13 +18,24 @@ import { formatINR } from '../utils/formatters';
 import { ProductCard } from './ProductCard';
 import userProductImage from '../assets/user-product-image.webp';
 import { preloadImages } from '../utils/imagePreloader';
+import { checkDeliveryAvailability } from '../data/deliveryCoverage';
 
 interface ProductDetailPageProps {
   slug: string;
 }
 
 export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) => {
-  const { addToCart, isInWishlist, toggleWishlist, setIsCheckoutOpen, showToast, navigateTo, goBack, selectedVariantColor } = useShop();
+  const {
+    addToCart,
+    isInWishlist,
+    toggleWishlist,
+    setIsCheckoutOpen,
+    showToast,
+    navigateTo,
+    goBack,
+    selectedVariantColor,
+    openDeliveryChecker,
+  } = useShop();
 
   const product: Saree = SAREES_DATA.find((s) => s.slug === slug) || SAREES_DATA[0];
 
@@ -105,11 +116,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
 
   const handleCheckPincode = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pincodeInput.trim().length === 6 && /^\d+$/.test(pincodeInput.trim())) {
-      setPincodeStatus(`Express delivery available to ${pincodeInput} in 2-3 business days.`);
-    } else {
-      setPincodeStatus('Please enter a valid 6-digit Indian pincode.');
-    }
+    const res = checkDeliveryAvailability(pincodeInput, product.id);
+    setPincodeStatus(res.message);
   };
 
   const handleBuyNow = () => {
@@ -383,30 +391,39 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
               </div>
 
               {/* Compact Inline Pincode Checker */}
-              <form onSubmit={handleCheckPincode} className="flex items-center gap-2 pt-0.5">
-                <div className="relative flex-1">
-                  <MapPin className="w-3.5 h-3.5 text-[#8B1E3F] absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    maxLength={6}
-                    value={pincodeInput}
-                    onChange={(e) => setPincodeInput(e.target.value)}
-                    placeholder="Enter 6-digit Pincode"
-                    className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-white border border-[#C8A96B]/30 text-xs text-[#1C1A19] focus:outline-none focus:border-[#651C32]"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="px-3.5 py-1.5 bg-[#FAF7F0] hover:bg-[#651C32] text-[#651C32] hover:text-white border border-[#651C32]/40 rounded-lg text-xs font-semibold transition-colors shrink-0"
-                >
-                  Verify
-                </button>
-              </form>
-              {pincodeStatus && (
-                <p className="text-[11px] text-[#8B1E3F] font-medium pl-1">
-                  {pincodeStatus}
-                </p>
-              )}
+              <div className="space-y-1.5 pt-0.5">
+                <form onSubmit={handleCheckPincode} className="flex items-center gap-2">
+                  <div className="relative flex-1">
+                    <MapPin className="w-3.5 h-3.5 text-[#8B1E3F] absolute left-3 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={pincodeInput}
+                      onChange={(e) => setPincodeInput(e.target.value)}
+                      placeholder="Enter 6-digit Pincode"
+                      className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-white border border-[#C8A96B]/30 text-xs text-[#1C1A19] focus:outline-none focus:border-[#651C32]"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="px-3.5 py-1.5 bg-[#FAF7F0] hover:bg-[#651C32] text-[#651C32] hover:text-white border border-[#651C32]/40 rounded-lg text-xs font-semibold transition-colors shrink-0 cursor-pointer"
+                  >
+                    Verify
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => openDeliveryChecker(product.name, product.id)}
+                    className="text-[11px] text-[#8B1E3F] hover:text-[#651C32] hover:underline font-semibold whitespace-nowrap cursor-pointer px-1"
+                  >
+                    Check Hubs
+                  </button>
+                </form>
+                {pincodeStatus && (
+                  <p className="text-[11px] text-[#8B1E3F] font-medium pl-1 leading-tight">
+                    {pincodeStatus}
+                  </p>
+                )}
+              </div>
 
               {/* Secondary Details Compact Tabs */}
               <div className="pt-2 border-t border-[#C8A96B]/20">

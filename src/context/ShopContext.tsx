@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
-import type { Saree, CartItem } from '../types';
+import type { Saree, CartItem, User } from '../types';
 import { SAREES_DATA } from '../data/sarees';
+import { shopService } from '../services/shopService';
 import confetti from 'canvas-confetti';
 
 interface ShopContextType {
@@ -26,6 +27,30 @@ interface ShopContextType {
   quickViewSelectedColor: string | null;
   openQuickView: (product: Saree, selectedColor?: string) => void;
   closeQuickView: () => void;
+
+  // Authentication & Patron Profile
+  user: User | null;
+  setUser: (user: User | null) => void;
+  logout: () => void;
+  isAuthOpen: boolean;
+  setIsAuthOpen: (open: boolean) => void;
+  onAuthSuccessAction: (() => void) | null;
+  setOnAuthSuccessAction: (cb: (() => void) | null) => void;
+
+  // Delivery Availability Checker
+  isDeliveryOpen: boolean;
+  setIsDeliveryOpen: (open: boolean) => void;
+  deliveryProductContext: { name: string; id: string } | null;
+  openDeliveryChecker: (productName?: string, productId?: string) => void;
+
+  // Order Tracking & History
+  isOrderTrackingOpen: boolean;
+  setIsOrderTrackingOpen: (open: boolean) => void;
+  selectedTrackingOrderId: string | null;
+  setSelectedTrackingOrderId: (id: string | null) => void;
+  isOrderHistoryOpen: boolean;
+  setIsOrderHistoryOpen: (open: boolean) => void;
+  trackOrder: (orderId: string) => void;
   
   // Navigation / views
   activePage: 'home' | 'catalog' | 'product' | 'story';
@@ -35,6 +60,7 @@ interface ShopContextType {
   selectedVariantColor: string | null;
   currentCategoryFilter: string | null;
   setCurrentCategoryFilter: (cat: string | null) => void;
+
 
   // Cart totals
   cartSubtotal: number;
@@ -102,6 +128,45 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState<Saree | null>(null);
   const [quickViewSelectedColor, setQuickViewSelectedColor] = useState<string | null>(null);
+
+  // Authentication & Patron Profile
+  const [user, setUserState] = useState<User | null>(() => shopService.getCurrentUser());
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [onAuthSuccessAction, setOnAuthSuccessAction] = useState<(() => void) | null>(null);
+
+  const setUser = (u: User | null) => {
+    setUserState(u);
+    shopService.setCurrentUser(u);
+  };
+
+  const logout = () => {
+    setUser(null);
+    showToast('Signed out from patron account', 'info');
+  };
+
+  // Delivery Availability Checker
+  const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
+  const [deliveryProductContext, setDeliveryProductContext] = useState<{ name: string; id: string } | null>(null);
+
+  const openDeliveryChecker = (productName?: string, productId?: string) => {
+    if (productName && productId) {
+      setDeliveryProductContext({ name: productName, id: productId });
+    } else {
+      setDeliveryProductContext(null);
+    }
+    setIsDeliveryOpen(true);
+  };
+
+  // Order Tracking & History
+  const [isOrderTrackingOpen, setIsOrderTrackingOpen] = useState(false);
+  const [selectedTrackingOrderId, setSelectedTrackingOrderId] = useState<string | null>(null);
+  const [isOrderHistoryOpen, setIsOrderHistoryOpen] = useState(false);
+
+  const trackOrder = (orderId: string) => {
+    setSelectedTrackingOrderId(orderId);
+    setIsOrderTrackingOpen(true);
+  };
+
 
   // Navigation
   const [activePage, setActivePage] = useState<'home' | 'catalog' | 'product' | 'story'>(() => {
@@ -189,6 +254,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsWishlistOpen(false);
         setIsSearchOpen(false);
         setIsCheckoutOpen(false);
+        setIsAuthOpen(false);
+        setIsDeliveryOpen(false);
+        setIsOrderTrackingOpen(false);
+        setIsOrderHistoryOpen(false);
 
         const targetY = state.scrollY ?? 0;
         const restoreScroll = () => {
@@ -379,6 +448,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsWishlistOpen(false);
     setIsSearchOpen(false);
     setIsCheckoutOpen(false);
+    setIsAuthOpen(false);
+    setIsDeliveryOpen(false);
+    setIsOrderTrackingOpen(false);
+    setIsOrderHistoryOpen(false);
 
     // 3. Update React states
     setActivePage(page);
@@ -464,6 +537,24 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         quickViewSelectedColor,
         openQuickView,
         closeQuickView,
+        user,
+        setUser,
+        logout,
+        isAuthOpen,
+        setIsAuthOpen,
+        onAuthSuccessAction,
+        setOnAuthSuccessAction,
+        isDeliveryOpen,
+        setIsDeliveryOpen,
+        deliveryProductContext,
+        openDeliveryChecker,
+        isOrderTrackingOpen,
+        setIsOrderTrackingOpen,
+        selectedTrackingOrderId,
+        setSelectedTrackingOrderId,
+        isOrderHistoryOpen,
+        setIsOrderHistoryOpen,
+        trackOrder,
         activePage,
         navigateTo,
         goBack,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Heart, ShoppingBag, Menu, X, ChevronDown, Sparkles } from 'lucide-react';
+import { Search, Heart, ShoppingBag, Menu, X, ChevronDown, Sparkles, Truck, User, Package } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { CATEGORIES_DATA } from '../data/sarees';
 
@@ -12,7 +12,12 @@ export const Header: React.FC = () => {
     setIsWishlistOpen,
     setIsSearchOpen,
     navigateTo,
-    activePage
+    activePage,
+    openDeliveryChecker,
+    setIsAuthOpen,
+    user,
+    logout,
+    setIsOrderHistoryOpen,
   } = useShop();
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -465,19 +470,55 @@ export const Header: React.FC = () => {
               </button>
             </nav>
 
-            {/* Right: Actions (Search, Wishlist, Shopping Bag) */}
-            <div className="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
+            {/* Right: Actions (Delivery, Search, Account, Wishlist, Shopping Bag) */}
+            <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
+              {/* Delivery Availability Button */}
+              <button
+                onClick={() => openDeliveryChecker()}
+                className={`flex items-center gap-1 px-2 py-1.5 rounded-full transition-colors cursor-pointer text-xs uppercase tracking-wider font-medium ${
+                  isDarkHero ? 'text-[#FAF7F0] hover:text-[#C8A96B]' : 'text-[#1C1A19] hover:text-[#651C32]'
+                }`}
+                aria-label="Check Delivery Availability"
+                title="Check Delivery Availability"
+              >
+                <Truck className="w-4 h-4 shrink-0" />
+                <span className="text-[11px] font-sans font-light whitespace-nowrap hidden xl:inline">
+                  Delivery
+                </span>
+              </button>
+
               {/* Desktop Search Button */}
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className={`hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-colors cursor-pointer ${
+                className={`hidden md:flex items-center gap-1.5 px-2 py-1.5 rounded-full transition-colors cursor-pointer ${
                   isDarkHero ? 'text-[#FAF7F0] hover:text-[#C8A96B]' : 'text-[#1C1A19] hover:text-[#651C32]'
                 }`}
                 aria-label="Search catalog"
               >
                 <Search className="w-4 h-4 shrink-0" />
-                <span className="text-xs uppercase tracking-wider font-light whitespace-nowrap hidden lg:inline">
+                <span className="text-xs uppercase tracking-wider font-light whitespace-nowrap hidden 2xl:inline">
                   Search
+                </span>
+              </button>
+
+              {/* Patron Account / Orders Button */}
+              <button
+                onClick={() => {
+                  if (user) {
+                    setIsOrderHistoryOpen(true);
+                  } else {
+                    setIsAuthOpen(true);
+                  }
+                }}
+                className={`flex items-center gap-1.5 px-2 py-1.5 rounded-full transition-colors cursor-pointer text-xs uppercase tracking-wider font-medium ${
+                  isDarkHero ? 'text-[#FAF7F0] hover:text-[#C8A96B]' : 'text-[#1C1A19] hover:text-[#651C32]'
+                }`}
+                aria-label={user ? 'Patron Orders' : 'Sign In'}
+                title={user ? `Signed in as ${user.name}` : 'Patron Account & Orders'}
+              >
+                <User className="w-4 h-4 shrink-0" />
+                <span className="hidden lg:inline text-[11px] truncate max-w-[85px]">
+                  {user ? user.name.split(' ')[0] : 'Sign In'}
                 </span>
               </button>
 
@@ -650,16 +691,67 @@ export const Header: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Our Story */}
+                  {/* Check Delivery Availability */}
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);
-                      navigateTo('story');
+                      openDeliveryChecker();
                     }}
-                    className="w-full text-left font-serif text-base sm:text-lg text-[#1C1A19] hover:text-[#651C32] font-semibold py-2 border-b border-black/5 cursor-pointer"
+                    className="w-full text-left font-serif text-base text-[#1C1A19] hover:text-[#651C32] font-semibold py-2 border-b border-black/5 flex items-center justify-between cursor-pointer"
                   >
-                    Our Story & Heritage
+                    <span className="flex items-center gap-2">
+                      <Truck className="w-4 h-4 text-[#8B1E3F]" />
+                      <span>Check Delivery Availability</span>
+                    </span>
+                    <span className="text-[10px] text-[#C8A96B] font-mono">Pincode Check</span>
                   </button>
+
+                  {/* My Orders & Tracking */}
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setIsOrderHistoryOpen(true);
+                    }}
+                    className="w-full text-left font-serif text-base text-[#1C1A19] hover:text-[#651C32] font-semibold py-2 border-b border-black/5 flex items-center justify-between cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Package className="w-4 h-4 text-[#8B1E3F]" />
+                      <span>My Orders & Tracking</span>
+                    </span>
+                    <span className="text-[10px] text-[#8B1E3F] font-semibold">Active Orders</span>
+                  </button>
+
+                  {/* Patron Account Access */}
+                  <div className="pt-2">
+                    {user ? (
+                      <div className="p-3 rounded-xl bg-white border border-[#C8A96B]/30 flex items-center justify-between">
+                        <div>
+                          <p className="text-xs font-semibold text-[#651C32]">{user.name}</p>
+                          <p className="text-[10px] text-[#1C1A19]/60">{user.email || user.phone}</p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            logout();
+                            setMobileMenuOpen(false);
+                          }}
+                          className="text-[11px] text-[#8B1E3F] hover:underline font-semibold"
+                        >
+                          Sign Out
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          setIsAuthOpen(true);
+                        }}
+                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white border border-[#C8A96B]/40 text-[#651C32] text-xs font-semibold uppercase tracking-wider shadow-2xs hover:bg-[#FAF7F0] cursor-pointer"
+                      >
+                        <User className="w-3.5 h-3.5" />
+                        <span>Patron Sign In / OTP Access</span>
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 

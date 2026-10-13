@@ -25,6 +25,10 @@ import { WishlistDrawer } from './components/WishlistDrawer';
 import { QuickViewModal } from './components/QuickViewModal';
 import { SearchModal } from './components/SearchModal';
 import { CheckoutModal } from './components/CheckoutModal';
+import { AuthModal } from './components/AuthModal';
+import { DeliveryCheckerModal } from './components/DeliveryCheckerModal';
+import { OrderTrackingModal } from './components/OrderTrackingModal';
+import { OrderHistoryModal } from './components/OrderHistoryModal';
 import { CatalogPage } from './components/CatalogPage';
 import { ProductDetailPage } from './components/ProductDetailPage';
 import { StoryPage } from './components/StoryPage';
@@ -33,7 +37,21 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle, Info } from 'lucide-react';
 
 const AppContent: React.FC = () => {
-  const { activePage, currentProductSlug, toast } = useShop();
+  const {
+    user,
+    activePage,
+    currentProductSlug,
+    toast,
+    isDeliveryOpen,
+    setIsDeliveryOpen,
+    deliveryProductContext,
+    isOrderTrackingOpen,
+    setIsOrderTrackingOpen,
+    selectedTrackingOrderId,
+    setSelectedTrackingOrderId,
+    isOrderHistoryOpen,
+    setIsOrderHistoryOpen,
+  } = useShop();
 
   const isHome = activePage === 'home';
 
@@ -156,7 +174,30 @@ const AppContent: React.FC = () => {
       <WishlistDrawer />
       <QuickViewModal />
       <SearchModal />
-      <CheckoutModal />
+      <CheckoutModal key={user?.id || 'guest'} />
+      <AuthModal />
+      <DeliveryCheckerModal
+        isOpen={isDeliveryOpen}
+        onClose={() => setIsDeliveryOpen(false)}
+        productName={deliveryProductContext?.name}
+        productId={deliveryProductContext?.id}
+      />
+      <OrderTrackingModal
+        isOpen={isOrderTrackingOpen}
+        orderId={selectedTrackingOrderId}
+        onClose={() => {
+          setIsOrderTrackingOpen(false);
+          setSelectedTrackingOrderId(null);
+        }}
+      />
+      <OrderHistoryModal
+        isOpen={isOrderHistoryOpen}
+        onClose={() => setIsOrderHistoryOpen(false)}
+        onSelectOrderToTrack={(id) => {
+          setSelectedTrackingOrderId(id);
+          setIsOrderTrackingOpen(true);
+        }}
+      />
 
       {/* 6. Toast Notification Banner */}
       <AnimatePresence>

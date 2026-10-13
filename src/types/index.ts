@@ -85,6 +85,90 @@ export interface CheckoutFormData {
   city: string;
   state: string;
   pincode: string;
-  paymentMethod: 'upi' | 'card' | 'netbanking' | 'cod';
+  paymentMethod: 'cod' | 'demo_online' | 'upi' | 'card' | 'netbanking';
   giftNote?: string;
 }
+
+export interface DeliveryCoverageResult {
+  status: 'available' | 'unavailable' | 'unknown';
+  locationName: string;
+  pincode?: string;
+  city?: string;
+  state?: string;
+  estimatedDays?: string;
+  codAvailable: boolean;
+  message: string;
+  courierPartner?: string;
+}
+
+export interface DeliveryAddress {
+  id: string;
+  name: string;
+  phone: string;
+  address: string;
+  apartment?: string;
+  city: string;
+  state: string;
+  pincode: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
+  savedAddresses: DeliveryAddress[];
+  createdAt: string;
+}
+
+export type OrderStatus =
+  | 'Order Placed'
+  | 'Order Confirmed'
+  | 'Preparing Your Saree'
+  | 'Quality Check'
+  | 'Packed'
+  | 'Handed to Courier'
+  | 'In Transit'
+  | 'Out for Delivery'
+  | 'Delivered'
+  | 'Cancelled';
+
+export type PaymentStatus =
+  | 'Pay on Delivery'
+  | 'Demo Payment Pending'
+  | 'Demo Payment Successful'
+  | 'Failed';
+
+export type PaymentMethod = 'cod' | 'demo_online';
+
+export interface OrderEvent {
+  stage: OrderStatus;
+  timestamp: string;
+  description: string;
+  completed: boolean;
+  isSimulated: boolean;
+}
+
+export interface Order {
+  id: string;
+  userId: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  items: CartItem[];
+  shippingAddress: DeliveryAddress;
+  orderStatus: OrderStatus;
+  paymentStatus: PaymentStatus;
+  paymentMethod: PaymentMethod;
+  subtotal: number;
+  discount: number;
+  shippingFee: number;
+  total: number;
+  events: OrderEvent[];
+  estimatedDelivery: string;
+  trackingNumber: string;
+  createdAt: string;
+}
+
