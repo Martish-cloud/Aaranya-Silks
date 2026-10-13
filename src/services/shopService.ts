@@ -235,9 +235,10 @@ export const shopService = {
       paymentStatus: 'Demo Payment Successful',
       paymentMethod: 'demo_online',
       subtotal: 78500,
-      discount: 7850,
+      discount: 15700,
+      gst: 11304,
       shippingFee: 0,
-      total: 70650,
+      total: 74104,
       estimatedDelivery: 'Tomorrow, by 6:00 PM',
       trackingNumber: 'BLR-EXP-2026-9912',
       createdAt: new Date(Date.now() - 28 * 3600 * 1000).toISOString(),
@@ -332,6 +333,7 @@ export const shopService = {
     paymentMethod: PaymentMethod;
     subtotal: number;
     discount: number;
+    gst?: number;
     shippingFee: number;
     user?: User | null;
   }): Order {
@@ -412,6 +414,10 @@ export const shopService = {
       },
     ];
 
+    const taxable = Math.max(0, payload.subtotal - payload.discount);
+    const gstAmount = payload.gst !== undefined ? payload.gst : Math.round(taxable * 0.18);
+    const totalPayable = taxable + gstAmount + payload.shippingFee;
+
     const order: Order = {
       id: orderId,
       userId: user ? user.id : 'guest',
@@ -425,8 +431,9 @@ export const shopService = {
       paymentMethod: payload.paymentMethod,
       subtotal: payload.subtotal,
       discount: payload.discount,
+      gst: gstAmount,
       shippingFee: payload.shippingFee,
-      total: Math.max(0, payload.subtotal - payload.discount + payload.shippingFee),
+      total: totalPayable,
       events: initialEvents,
       estimatedDelivery: '3 to 4 business days',
       trackingNumber,

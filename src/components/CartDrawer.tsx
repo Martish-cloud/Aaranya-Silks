@@ -17,6 +17,9 @@ export const CartDrawer: React.FC = () => {
     cartTotalCount,
     appliedCoupon,
     discountAmount,
+    gstAmount,
+    shippingFee,
+    finalTotal,
     applyCouponCode,
     removeCouponCode,
     includeGiftBox,
@@ -29,8 +32,6 @@ export const CartDrawer: React.FC = () => {
 
   const freeShippingProgress = Math.min(100, Math.round((cartSubtotal / FREE_SHIPPING_THRESHOLD) * 100));
   const remainingForFree = Math.max(0, FREE_SHIPPING_THRESHOLD - cartSubtotal);
-
-  const finalTotal = Math.max(0, cartSubtotal - discountAmount);
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
@@ -253,13 +254,13 @@ export const CartDrawer: React.FC = () => {
                       type="text"
                       value={couponInput}
                       onChange={(e) => setCouponInput(e.target.value)}
-                      placeholder="Coupon (e.g. AARANYA10)"
+                      placeholder="Coupon (e.g. ARANYA20)"
                       className="w-full pl-9 pr-3 py-2 rounded-xl bg-white border border-[#C8A96B]/30 text-xs text-[#1C1A19] focus:outline-none focus:border-[#651C32] uppercase"
                     />
                   </div>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-[#651C32] text-white rounded-xl text-xs font-semibold uppercase tracking-wider hover:bg-[#8B1E3F] transition-colors"
+                    className="px-4 py-2 bg-[#651C32] text-white rounded-xl text-xs font-semibold uppercase tracking-wider hover:bg-[#8B1E3F] transition-colors cursor-pointer"
                   >
                     Apply
                   </button>
@@ -268,11 +269,11 @@ export const CartDrawer: React.FC = () => {
                 {appliedCoupon && (
                   <div className="flex items-center justify-between px-3 py-1.5 bg-[#651C32]/10 rounded-lg text-xs">
                     <span className="text-[#651C32] font-semibold">
-                      Coupon Applied: {appliedCoupon}
+                      Coupon Applied: {appliedCoupon} (20% Off)
                     </span>
                     <button
                       onClick={removeCouponCode}
-                      className="text-rose-600 text-[11px] underline"
+                      className="text-rose-600 text-[11px] underline cursor-pointer"
                     >
                       Remove
                     </button>
@@ -282,28 +283,33 @@ export const CartDrawer: React.FC = () => {
                 {/* Subtotal & Calculations */}
                 <div className="space-y-1.5 text-xs text-[#1C1A19]/80 pt-1">
                   <div className="flex justify-between">
-                    <span>Subtotal</span>
+                    <span>Item Subtotal</span>
                     <span className="font-serif font-medium">{formatINR(cartSubtotal)}</span>
                   </div>
 
                   {discountAmount > 0 && (
                     <div className="flex justify-between text-[#8B1E3F] font-medium">
-                      <span>Privilege Discount</span>
+                      <span>Coupon Discount ({appliedCoupon})</span>
                       <span>-{formatINR(discountAmount)}</span>
                     </div>
                   )}
 
                   <div className="flex justify-between">
+                    <span>GST (18%)</span>
+                    <span className="font-serif font-medium">{formatINR(gstAmount)}</span>
+                  </div>
+
+                  <div className="flex justify-between">
                     <span>Insured Air Delivery</span>
                     <span className="text-[#8B1E3F] font-semibold">
-                      {remainingForFree === 0 ? 'Complimentary' : '₹450'}
+                      {shippingFee === 0 ? 'Complimentary' : formatINR(shippingFee)}
                     </span>
                   </div>
 
                   <div className="flex justify-between text-sm font-bold text-[#651C32] pt-2 border-t border-[#C8A96B]/25">
-                    <span>Total Amount</span>
+                    <span>Final Total</span>
                     <span className="font-serif text-lg">
-                      {formatINR(finalTotal + (remainingForFree === 0 ? 0 : 450))}
+                      {formatINR(finalTotal)}
                     </span>
                   </div>
                 </div>

@@ -5,6 +5,7 @@ import type { Saree } from '../types';
 import userProductImage from '../assets/user-product-image.webp';
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
+import { preloadImage } from '../utils/imagePreloader';
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -184,6 +185,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                   onClick={(e) => {
                     e.stopPropagation();
                     setSelectedColorIdx(i);
+                  }}
+                  onMouseEnter={() => {
+                    if (c.image) preloadImage(c.image);
+                  }}
+                  onFocus={() => {
+                    if (c.image) preloadImage(c.image);
                   }}
                   className={`w-3.5 h-3.5 rounded-full border transition-all ${
                     selectedColorIdx === i

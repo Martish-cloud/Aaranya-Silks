@@ -26,6 +26,9 @@ export const CheckoutModal: React.FC = () => {
     cartSubtotal,
     discountAmount,
     appliedCoupon,
+    gstAmount,
+    shippingFee,
+    finalTotal,
     includeGiftBox,
     navigateTo,
     user,
@@ -59,8 +62,7 @@ export const CheckoutModal: React.FC = () => {
 
   if (!isCheckoutOpen) return null;
 
-  const shippingCost = cartSubtotal >= 30000 ? 0 : 450;
-  const finalTotal = Math.max(0, cartSubtotal - discountAmount + shippingCost);
+  const shippingCost = shippingFee;
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -108,6 +110,7 @@ export const CheckoutModal: React.FC = () => {
       paymentMethod: method,
       subtotal: cartSubtotal,
       discount: discountAmount,
+      gst: gstAmount,
       shippingFee: shippingCost,
       user,
     });
@@ -401,15 +404,19 @@ export const CheckoutModal: React.FC = () => {
 
                   <div className="space-y-1.5 text-xs text-[#1C1A19]/80 pt-3 border-t border-[#C8A96B]/20">
                     <div className="flex justify-between">
-                      <span>Subtotal</span>
+                      <span>Item Subtotal</span>
                       <span className="font-serif">{formatINR(cartSubtotal)}</span>
                     </div>
                     {discountAmount > 0 && (
                       <div className="flex justify-between text-[#8B1E3F]">
-                        <span>Coupon ({appliedCoupon})</span>
+                        <span>Coupon Discount ({appliedCoupon})</span>
                         <span>-{formatINR(discountAmount)}</span>
                       </div>
                     )}
+                    <div className="flex justify-between">
+                      <span>GST (18%)</span>
+                      <span className="font-serif">{formatINR(gstAmount)}</span>
+                    </div>
                     <div className="flex justify-between">
                       <span>Insured Express Shipping</span>
                       <span className="font-semibold text-[#8B1E3F]">
@@ -423,7 +430,7 @@ export const CheckoutModal: React.FC = () => {
                       </div>
                     )}
                     <div className="flex justify-between text-sm font-bold text-[#651C32] pt-2 border-t border-[#C8A96B]/25">
-                      <span>Total Payable</span>
+                      <span>Final Total</span>
                       <span className="font-serif text-lg">{formatINR(finalTotal)}</span>
                     </div>
                   </div>
@@ -560,13 +567,29 @@ export const CheckoutModal: React.FC = () => {
                     <p className="text-[#8B1E3F]">{formData.phone}</p>
                   </div>
 
-                  <div className="pt-3 border-t border-[#C8A96B]/20 space-y-1 text-xs">
-                    <div className="flex justify-between">
-                      <span>Total Items</span>
-                      <span>{cart.length} Creations</span>
+                  <div className="pt-3 border-t border-[#C8A96B]/20 space-y-1.5 text-xs">
+                    <div className="flex justify-between text-[#1C1A19]/80">
+                      <span>Item Subtotal ({cart.length} Creations)</span>
+                      <span className="font-serif">{formatINR(cartSubtotal)}</span>
                     </div>
-                    <div className="flex justify-between font-bold text-sm text-[#651C32]">
-                      <span>Amount Payable</span>
+                    {discountAmount > 0 && (
+                      <div className="flex justify-between text-[#8B1E3F]">
+                        <span>Coupon Discount ({appliedCoupon})</span>
+                        <span>-{formatINR(discountAmount)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between text-[#1C1A19]/80">
+                      <span>GST (18%)</span>
+                      <span className="font-serif">{formatINR(gstAmount)}</span>
+                    </div>
+                    <div className="flex justify-between text-[#1C1A19]/80">
+                      <span>Insured Express Shipping</span>
+                      <span className="font-semibold text-[#8B1E3F]">
+                        {shippingCost === 0 ? 'Complimentary' : formatINR(shippingCost)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between font-bold text-sm text-[#651C32] pt-2 border-t border-[#C8A96B]/25">
+                      <span>Final Amount Payable</span>
                       <span className="font-serif text-base">{formatINR(finalTotal)}</span>
                     </div>
                   </div>
@@ -687,8 +710,10 @@ export const CheckoutModal: React.FC = () => {
                   <button
                     onClick={() => {
                       setIsCheckoutOpen(false);
+                      setStep('shipping');
                       setSelectedTrackingOrderId(confirmedOrderId);
                       setIsOrderTrackingOpen(true);
+                      setConfirmedOrderId(null);
                     }}
                     className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#651C32] hover:bg-[#8B1E3F] text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow flex items-center justify-center gap-1.5 cursor-pointer"
                   >
@@ -699,6 +724,8 @@ export const CheckoutModal: React.FC = () => {
                   <button
                     onClick={() => {
                       setIsCheckoutOpen(false);
+                      setStep('shipping');
+                      setConfirmedOrderId(null);
                       navigateTo('catalog');
                     }}
                     className="w-full sm:w-auto px-6 py-3 rounded-full bg-white hover:bg-[#FAF7F0] text-[#651C32] border border-[#651C32] text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer"

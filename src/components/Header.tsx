@@ -517,7 +517,7 @@ export const Header: React.FC = () => {
                 title={user ? `Signed in as ${user.name}` : 'Patron Account & Orders'}
               >
                 <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                <span className="text-[10px] xl:text-[11px] font-medium whitespace-nowrap shrink-0 inline-block">
+                <span className="text-[10px] xl:text-[11px] font-medium whitespace-nowrap shrink-0 hidden sm:inline-block">
                   {user ? user.name.split(' ')[0] : 'Sign In'}
                 </span>
               </button>
@@ -719,6 +719,23 @@ export const Header: React.FC = () => {
                       <span>My Orders & Tracking</span>
                     </span>
                     <span className="text-[10px] text-[#8B1E3F] font-semibold">Active Orders</span>
+                  </button>
+
+                  {/* Your Shopping Bag */}
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setIsCartOpen(true);
+                    }}
+                    className="w-full text-left font-serif text-base text-[#1C1A19] hover:text-[#651C32] font-semibold py-2 border-b border-black/5 flex items-center justify-between cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2">
+                      <ShoppingBag className="w-4 h-4 text-[#8B1E3F]" />
+                      <span>Your Shopping Bag</span>
+                    </span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#651C32] text-white font-semibold">
+                      {cartTotalCount} items
+                    </span>
                   </button>
 
                   {/* Patron Account Access */}

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import {
   Star,
   Heart,
@@ -73,8 +72,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
     const chosenColor = product.colors[colIdx];
     setActiveImg(chosenColor?.image || product.images[0]);
     setActiveImgIdx(0);
-    if (product.images && product.images.length > 1) {
+    if (product.images && product.images.length > 0) {
       preloadImages(product.images);
+    }
+    if (product.colors && product.colors.length > 0) {
+      preloadImages(product.colors.map((c) => c.image).filter(Boolean));
     }
   }, [slug, selectedVariantColor, product]);
 
@@ -178,11 +180,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
             <div className="lg:col-span-5 flex flex-col space-y-3">
               {/* Main Image Stage - Compact Sizing with Face Fully Visible */}
               <div className="relative w-full max-h-[440px] sm:max-h-[480px] aspect-[9/10] sm:aspect-[3/4] rounded-2xl overflow-hidden bg-[#F2EBDD] border border-[#C8A96B]/30 shadow-md group mx-auto">
-                <motion.img
-                  key={displayedImage}
-                  initial={{ opacity: 0.85, scale: 1.01 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3 }}
+                <img
                   src={displayedImage}
                   alt={product.name}
                   onError={(e) => {

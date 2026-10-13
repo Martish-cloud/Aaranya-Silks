@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { useShop } from '../context/ShopContext';
 
 export const NewsletterSection: React.FC = () => {
+  const { applyCouponCode } = useShop();
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
@@ -25,6 +27,7 @@ export const NewsletterSection: React.FC = () => {
     // Simulate reliable subscription
     setTimeout(() => {
       setStatus('success');
+      applyCouponCode('ARANYA20');
       confetti({
         particleCount: 35,
         spread: 70,
@@ -60,7 +63,7 @@ export const NewsletterSection: React.FC = () => {
           </h2>
 
           <p className="text-sm sm:text-base text-[#FAF7F0]/85 font-sans font-light leading-relaxed max-w-xl mx-auto mb-9">
-            Discover new collections, timeless styling inspiration, and exclusive updates from Aaranya Silks. Enjoy 10% privilege on your debut saree.
+            Discover new collections, timeless styling inspiration, and exclusive updates from Aaranya Silks. Enjoy 20% privilege on your debut saree.
           </p>
 
           {status === 'success' ? (
@@ -70,7 +73,7 @@ export const NewsletterSection: React.FC = () => {
                 Welcome to the Aaranya Circle
               </h4>
               <p className="text-xs text-[#FAF7F0]/80 font-light">
-                Your debut privilege code <span className="font-mono font-bold text-[#C8A96B]">AARANYA10</span> has been unlocked in your shopping bag.
+                Your debut privilege code <span className="font-mono font-bold text-[#C8A96B]">ARANYA20</span> has been unlocked in your shopping bag.
               </p>
             </div>
           ) : (

@@ -164,6 +164,7 @@ export interface Order {
   paymentMethod: PaymentMethod;
   subtotal: number;
   discount: number;
+  gst?: number;
   shippingFee: number;
   total: number;
   events: OrderEvent[];

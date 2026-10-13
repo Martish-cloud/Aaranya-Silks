@@ -466,20 +466,20 @@ export const LatestTrendsLookbook: React.FC = () => {
           <div className="lg:col-span-5 flex flex-col items-center">
             {/* 3D Book Frame */}
             <div className="relative w-full max-w-sm aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-white group cursor-pointer">
-              <AnimatePresence mode="wait">
+              <AnimatePresence initial={false}>
                 <motion.div
                   key={activeLook.id}
-                  initial={{ opacity: 0, rotateY: 15 }}
-                  animate={{ opacity: 1, rotateY: 0 }}
-                  exit={{ opacity: 0, rotateY: -15 }}
-                  transition={{ duration: 0.5 }}
+                  initial={{ scale: 0.99 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0.99 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
                   onClick={() => navigateTo('catalog', undefined, activeLook.categoryTarget)}
                   className="w-full h-full relative"
                 >
                   <img
                     src={activeLook.image}
                     alt={activeLook.title}
-                    loading="lazy"
+                    loading="eager"
                     decoding="async"
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
                   />

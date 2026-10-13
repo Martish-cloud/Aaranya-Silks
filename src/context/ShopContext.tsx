@@ -67,6 +67,10 @@ interface ShopContextType {
   cartTotalCount: number;
   appliedCoupon: string | null;
   discountAmount: number;
+  taxableSubtotal: number;
+  gstAmount: number;
+  shippingFee: number;
+  finalTotal: number;
   applyCouponCode: (code: string) => boolean;
   removeCouponCode: () => void;
   includeGiftBox: boolean;
@@ -291,7 +295,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   // Discount & Perks
-  const [appliedCoupon, setAppliedCoupon] = useState<string | null>('AARANYA10');
+  const [appliedCoupon, setAppliedCoupon] = useState<string | null>('ARANYA20');
   const [includeGiftBox, setIncludeGiftBox] = useState(true);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' } | null>(null);
 
@@ -487,21 +491,30 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Calculations
+  // Step 1: Item subtotal = Sum of (Unit Price * Quantity)
   const cartSubtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const cartTotalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const applyCouponCode = (code: string) => {
     const clean = code.trim().toUpperCase();
-    if (clean === 'AARANYA10' || clean === 'ROYALTY10') {
-      setAppliedCoupon('AARANYA10');
-      showToast('Coupon AARANYA10 applied! (10% Off)', 'success');
+    if (clean === 'ARANYA20' || clean === 'AARANYA20') {
+      if (appliedCoupon === 'ARANYA20') {
+        showToast('Coupon ARANYA20 is already applied', 'info');
+        return false;
+      }
+      setAppliedCoupon('ARANYA20');
+      showToast('Coupon ARANYA20 applied! (20% Off)', 'success');
       return true;
     } else if (clean === 'FESTIVE15') {
+      if (appliedCoupon === 'FESTIVE15') {
+        showToast('Coupon FESTIVE15 is already applied', 'info');
+        return false;
+      }
       setAppliedCoupon('FESTIVE15');
       showToast('Coupon FESTIVE15 applied! (15% Off)', 'success');
       return true;
     } else {
-      showToast('Invalid coupon code. Try AARANYA10', 'info');
+      showToast('Invalid coupon code. Try ARANYA20', 'info');
       return false;
     }
   };
@@ -511,8 +524,21 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     showToast('Coupon removed', 'info');
   };
 
-  const discountRate = appliedCoupon === 'FESTIVE15' ? 0.15 : appliedCoupon === 'AARANYA10' ? 0.10 : 0;
+  // Step 2: Coupon discount = 20% on eligible Item Subtotal before GST
+  const discountRate = appliedCoupon === 'ARANYA20' ? 0.20 : appliedCoupon === 'FESTIVE15' ? 0.15 : 0;
   const discountAmount = Math.round(cartSubtotal * discountRate);
+
+  // Step 3: Taxable Subtotal = Item Subtotal - Discount
+  const taxableSubtotal = Math.max(0, cartSubtotal - discountAmount);
+
+  // Step 4: GST = Taxable Subtotal * 18%
+  const gstAmount = Math.round(taxableSubtotal * 0.18);
+
+  // Existing shipping fee: Complimentary if subtotal >= 30,000 or empty, else 450
+  const shippingFee = cartSubtotal >= 30000 || cartSubtotal === 0 ? 0 : 450;
+
+  // Step 5: Final Total = Taxable Subtotal + GST (+ shippingFee if applicable)
+  const finalTotal = taxableSubtotal + gstAmount + shippingFee;
 
   return (
     <ShopContext.Provider
@@ -566,6 +592,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         cartTotalCount,
         appliedCoupon,
         discountAmount,
+        taxableSubtotal,
+        gstAmount,
+        shippingFee,
+        finalTotal,
         applyCouponCode,
         removeCouponCode,
         includeGiftBox,

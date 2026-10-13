@@ -31,6 +31,23 @@ const AUTUMN_WINTER_PAGES: SareePage[] = [
   {
     id: 1,
     pageNum: '01',
+    name: 'Suhani Crimson Zari Saree',
+    headline: 'SUHANI CRIMSON ZARI',
+    slug: 'suhani-crimson-zari-saree',
+    palette: 'Crimson & 24k Tested Gold',
+    fabric: 'Heritage Korvai Pure Katan Silk',
+    zari: 'Certified 24-Karat Tested Gold Zari',
+    price: 26500,
+    originalPrice: 31500,
+    image: wowImg2,
+    description:
+      'Auspicious vermillion bridal heirloom woven with certified 24-karat tested gold zari on sacred pit looms. Features centuries-old Korvai interlock motifs for timeless royalty.',
+    highlights: ['Certified Pure Gold Zari', 'Dual-Artisan Korvai Interlock', 'Heirloom Trousseau Archival Box'],
+    categoryTarget: 'Bridal Sarees'
+  },
+  {
+    id: 2,
+    pageNum: '02',
     name: 'Rosé Net Embroidered Saree',
     headline: 'ROSÉ NET EMBROIDERED',
     slug: 'rose-net-embroidered-saree',
@@ -44,23 +61,6 @@ const AUTUMN_WINTER_PAGES: SareePage[] = [
       'A gossamer-light translucent net sheer adorned with hand-placed micro-sequin florals, scalloped pearl edgings, and an ethereal liquid drape crafted for gala evenings.',
     highlights: ['Micro-Resham Threadwork', 'Handcrafted Scallop Borders', 'Featherweight Evening Drape'],
     categoryTarget: 'Party Wear Sarees'
-  },
-  {
-    id: 2,
-    pageNum: '02',
-    name: 'Suhani Crimson Zari Saree',
-    headline: 'SUHANI CRIMSON ZARI',
-    slug: 'suhani-crimson-zari-saree',
-    palette: 'Crimson Red & 24k Tested Gold',
-    fabric: 'Heritage Korvai Pure Katan Silk',
-    zari: 'Certified 24-Karat Tested Gold Zari',
-    price: 26500,
-    originalPrice: 31500,
-    image: wowImg2,
-    description:
-      'Auspicious vermillion bridal heirloom woven with certified 24-karat tested gold zari on sacred pit looms. Features centuries-old Korvai interlock motifs for timeless royalty.',
-    highlights: ['Certified Pure Gold Zari', 'Dual-Artisan Korvai Interlock', 'Heirloom Trousseau Archival Box'],
-    categoryTarget: 'Bridal Sarees'
   },
   {
     id: 3,
@@ -99,7 +99,11 @@ export const SeasonForecast: React.FC = () => {
     setCurrentPageIdx((prev) => (prev === AUTUMN_WINTER_PAGES.length - 1 ? 0 : prev + 1));
   };
 
-  // Predictive preloading: preload next and previous lookbook images
+  // Immediate and predictive preloading: preload all lookbook images on mount & adjacent
+  React.useEffect(() => {
+    AUTUMN_WINTER_PAGES.forEach((page) => preloadImage(page.image));
+  }, []);
+
   React.useEffect(() => {
     const nextIdx = (currentPageIdx + 1) % AUTUMN_WINTER_PAGES.length;
     const prevIdx = (currentPageIdx - 1 + AUTUMN_WINTER_PAGES.length) % AUTUMN_WINTER_PAGES.length;
@@ -122,31 +126,29 @@ export const SeasonForecast: React.FC = () => {
     touchStartX.current = null;
   };
 
-  // 3D Luxury Lookbook Image-Only Page-Flip Animation Variants
+  // Snappy Luxury Lookbook Page Transitions - immediate visual response without blank/fade-out
   const imageVariants: Variants = {
     enter: (dir: number) => ({
-      rotateY: dir > 0 ? 50 : -50,
-      opacity: 0,
-      scale: 0.95,
-      transformOrigin: dir > 0 ? 'left center' : 'right center'
+      x: dir > 0 ? 12 : -12,
+      opacity: 1,
+      scale: 0.99
     }),
     center: {
-      rotateY: 0,
+      x: 0,
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 0.6,
-        ease: 'easeInOut'
+        duration: 0.22,
+        ease: 'easeOut'
       }
     },
     exit: (dir: number) => ({
-      rotateY: dir > 0 ? -50 : 50,
-      opacity: 0,
-      scale: 0.95,
-      transformOrigin: dir > 0 ? 'left center' : 'right center',
+      x: dir > 0 ? -12 : 12,
+      opacity: 0.96,
+      scale: 0.99,
       transition: {
-        duration: 0.45,
-        ease: 'easeInOut'
+        duration: 0.18,
+        ease: 'easeIn'
       }
     })
   };
@@ -246,7 +248,7 @@ export const SeasonForecast: React.FC = () => {
                 <ChevronRight className="w-4 h-4" />
               </button>
 
-              <AnimatePresence custom={direction} mode="wait">
+              <AnimatePresence custom={direction} initial={false}>
                 <motion.div
                   key={currentPage.id}
                   custom={direction}
@@ -259,7 +261,7 @@ export const SeasonForecast: React.FC = () => {
                   <img
                     src={currentPage.image}
                     alt={currentPage.name}
-                    loading="lazy"
+                    loading="eager"
                     decoding="async"
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
@@ -288,13 +290,13 @@ export const SeasonForecast: React.FC = () => {
 
             {/* Right Column: Editorial Text & Lookbook Story (Stable, No 3D Rotation) */}
             <div className="md:col-span-6 md:pl-5 lg:pl-7">
-              <AnimatePresence mode="wait">
+              <AnimatePresence initial={false}>
                 <motion.div
                   key={currentPage.id}
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={{ opacity: 0.9, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                  exit={{ opacity: 0.9, y: -4 }}
+                  transition={{ duration: 0.18, ease: 'easeOut' }}
                   className="flex flex-col justify-between space-y-3.5 max-w-[420px]"
                 >
                   <div>

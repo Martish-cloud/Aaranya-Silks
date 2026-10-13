@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Star, Heart, ArrowRight, Box } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
@@ -84,14 +84,12 @@ export const ChangeLookStudio: React.FC = () => {
   const currentImage = activeColor.image;
 
   React.useEffect(() => {
-    if (look?.colors) {
-      preloadImages(look.colors.map((c) => c.image));
-    }
-    const nextLook = STUDIO_LOOKS[(activeLookIdx + 1) % STUDIO_LOOKS.length];
-    if (nextLook?.thumbnail) {
-      preloadImages([nextLook.thumbnail]);
-    }
-  }, [activeLookIdx, look]);
+    // Eagerly preload all studio looks and all color variants upfront
+    STUDIO_LOOKS.forEach((item) => {
+      preloadImages(item.colors.map((c) => c.image));
+      if (item.thumbnail) preloadImages([item.thumbnail]);
+    });
+  }, []);
 
   const handleAddToCart = () => {
     // Construct saree-like object
@@ -163,20 +161,17 @@ export const ChangeLookStudio: React.FC = () => {
           {/* Center Column: Full-Length Model in Saree (5 cols on lg) */}
           <div className="lg:col-span-5 relative flex justify-center">
             <div className="relative w-full max-w-md aspect-[3/4] sm:aspect-[4/5] rounded-3xl overflow-hidden bg-[#F2EBDD] border border-[#C8A96B]/30 shadow-2xl">
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={`${look.id}-${selectedColorIdx}`}
-                  initial={{ opacity: 0, scale: 1.05 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.4 }}
-                  src={currentImage}
-                  alt={`${look.name} - ${activeColor.name}`}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover object-top"
-                />
-              </AnimatePresence>
+              <motion.img
+                key={`${look.id}-${selectedColorIdx}`}
+                initial={{ scale: 1.01 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.18, ease: 'easeOut' }}
+                src={currentImage}
+                alt={`${look.name} - ${activeColor.name}`}
+                loading="eager"
+                decoding="async"
+                className="w-full h-full object-cover object-top"
+              />
 
               {/* Ambient bottom gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40" />

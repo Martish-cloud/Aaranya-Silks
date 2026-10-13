@@ -222,6 +222,28 @@ export const OrderTrackingModal: React.FC<OrderTrackingModalProps> = ({ isOpen =
                     {activeOrder.paymentStatus}
                   </span>
                 </div>
+                <div className="pt-2 border-t border-[#C8A96B]/20 space-y-1">
+                  <div className="flex justify-between text-[#1C1A19]/70">
+                    <span>Item Subtotal:</span>
+                    <span className="font-serif">{formatINR(activeOrder.subtotal)}</span>
+                  </div>
+                  {activeOrder.discount > 0 && (
+                    <div className="flex justify-between text-[#8B1E3F]">
+                      <span>Coupon Discount:</span>
+                      <span>-{formatINR(activeOrder.discount)}</span>
+                    </div>
+                  )}
+                  {activeOrder.gst !== undefined && activeOrder.gst > 0 && (
+                    <div className="flex justify-between text-[#1C1A19]/70">
+                      <span>GST (18%):</span>
+                      <span className="font-serif">{formatINR(activeOrder.gst)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-[#1C1A19]/70">
+                    <span>Express Shipping:</span>
+                    <span>{activeOrder.shippingFee === 0 ? 'Complimentary' : formatINR(activeOrder.shippingFee)}</span>
+                  </div>
+                </div>
                 <div className="flex justify-between font-bold text-sm text-[#651C32] pt-1 border-t border-[#C8A96B]/20">
                   <span>Final Total:</span>
                   <span className="font-serif">{formatINR(activeOrder.total)}</span>

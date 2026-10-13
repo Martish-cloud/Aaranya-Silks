@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Star, ShoppingBag, Heart, ArrowRight, ShieldCheck } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
+import { preloadImages } from '../utils/imagePreloader';
 
 export const QuickViewModal: React.FC = () => {
   const {
@@ -36,6 +37,13 @@ export const QuickViewModal: React.FC = () => {
       const imgIdx = quickViewProduct.images.indexOf(initialImg);
       setActiveImgIdx(imgIdx >= 0 ? imgIdx : 0);
       setQuantity(1);
+
+      if (quickViewProduct.images && quickViewProduct.images.length > 0) {
+        preloadImages(quickViewProduct.images);
+      }
+      if (quickViewProduct.colors && quickViewProduct.colors.length > 0) {
+        preloadImages(quickViewProduct.colors.map((c) => c.image).filter(Boolean));
+      }
     }
   }, [quickViewProduct?.id, quickViewSelectedColor]);
 
