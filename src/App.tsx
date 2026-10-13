@@ -66,13 +66,7 @@ const AppContent: React.FC = () => {
       {/* 3. Main Dynamic Content Area */}
       <main className="flex-1">
         {activePage === 'home' && (
-          <motion.div
-            key="home-page"
-            initial={false}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
+          <div key="home-page" className="w-full">
             {/* 1. Hero Section - Virtual Boutique Showroom */}
             <HeroSection />
 
@@ -126,7 +120,7 @@ const AppContent: React.FC = () => {
 
             {/* 17. VIP Newsletter Invitation */}
             <NewsletterSection />
-          </motion.div>
+          </div>
         )}
 
         {activePage === 'catalog' && (

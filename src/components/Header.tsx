@@ -127,13 +127,13 @@ export const Header: React.FC = () => {
               : 'bg-transparent py-4 md:py-5'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-2 sm:gap-4">
-            {/* Left: Mobile Menu Toggle & Mobile Search (Visible on small screens / high zoom) */}
-            <div className="flex items-center gap-2 md:hidden shrink-0">
+        <div className="w-full max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-6 xl:px-8">
+          <div className="flex items-center justify-between gap-1.5 sm:gap-3 lg:gap-4">
+            {/* Left: Mobile Menu Toggle & Mobile Search (Visible on tablets and mobile) */}
+            <div className="flex items-center gap-1 sm:gap-2 lg:hidden shrink-0">
               <button
                 onClick={() => setMobileMenuOpen(true)}
-                className={`p-2 rounded-full transition-colors ${
+                className={`p-2 rounded-full transition-colors cursor-pointer ${
                   isDarkHero ? 'text-[#FAF7F0] hover:bg-white/10' : 'text-[#1C1A19] hover:bg-black/5'
                 }`}
                 aria-label="Open navigation menu"
@@ -143,7 +143,7 @@ export const Header: React.FC = () => {
 
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className={`p-2 rounded-full transition-colors ${
+                className={`p-2 rounded-full transition-colors cursor-pointer ${
                   isDarkHero ? 'text-[#FAF7F0] hover:bg-white/10' : 'text-[#1C1A19] hover:bg-black/5'
                 }`}
                 aria-label="Search sarees"
@@ -153,16 +153,16 @@ export const Header: React.FC = () => {
             </div>
 
             {/* Brand Logo (Preserved intact) */}
-            <div className="flex-1 md:flex-none flex items-center justify-center md:justify-start shrink-0">
+            <div className="flex-1 lg:flex-none flex items-center justify-center lg:justify-start shrink-0">
               <button
                 onClick={() => navigateTo('home')}
-                className="group flex flex-col items-center md:items-start text-center focus:outline-none cursor-pointer"
+                className="group flex flex-col items-center lg:items-start text-center focus:outline-none cursor-pointer"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2">
                   {/* Subtle luxury lotus / loom emblem */}
                   <svg 
                     viewBox="0 0 40 40" 
-                    className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-500 group-hover:rotate-12 ${
+                    className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-500 group-hover:rotate-12 shrink-0 ${
                       isDarkHero ? 'text-[#C8A96B]' : 'text-[#651C32]'
                     }`}
                     fill="currentColor"
@@ -174,7 +174,7 @@ export const Header: React.FC = () => {
                   </svg>
                   
                   <span
-                    className={`font-serif tracking-[0.2em] text-lg sm:text-xl xl:text-2xl font-bold uppercase transition-colors duration-300 whitespace-nowrap ${
+                    className={`font-serif tracking-[0.16em] sm:tracking-[0.2em] text-base sm:text-lg lg:text-xl xl:text-2xl font-bold uppercase transition-colors duration-300 whitespace-nowrap ${
                       isDarkHero ? 'text-[#FAF7F0]' : 'text-[#651C32]'
                     }`}
                   >
@@ -182,7 +182,7 @@ export const Header: React.FC = () => {
                   </span>
                 </div>
                 <span
-                  className={`text-[8px] sm:text-[9px] uppercase tracking-[0.3em] mt-0.5 font-sans font-light hidden sm:block whitespace-nowrap ${
+                  className={`text-[8px] sm:text-[9px] uppercase tracking-[0.24em] mt-0.5 font-sans font-light hidden sm:block whitespace-nowrap ${
                     isDarkHero ? 'text-[#C8A96B]' : 'text-[#8B1E3F]'
                   }`}
                 >
@@ -192,31 +192,31 @@ export const Header: React.FC = () => {
             </div>
 
             {/* Center: Intelligent Responsive Desktop Navigation Bar */}
-            <nav className="hidden md:flex items-center space-x-2 sm:space-x-3 lg:space-x-4 xl:space-x-5">
-              {/* Primary Direct Link: New Arrivals (Always visible on md and up) */}
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-2 2xl:gap-3.5 shrink-0">
+              {/* Primary Direct Link: New Arrivals */}
               <button
                 onClick={() => navigateTo('catalog')}
-                className={`text-[11px] xl:text-xs uppercase tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 whitespace-nowrap cursor-pointer ${
+                className={`text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer ${
                   isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
                 }`}
               >
                 New Arrivals
               </button>
 
-              {/* Shop All Sarees: Visible on lg and up (1024px+) */}
+              {/* Shop All Sarees */}
               <button
                 onClick={() => navigateTo('catalog')}
-                className={`hidden lg:inline-block text-[11px] xl:text-xs uppercase tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 whitespace-nowrap cursor-pointer ${
+                className={`text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer ${
                   isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
                 }`}
               >
                 Shop All Sarees
               </button>
 
-              {/* Interactive Collections & Menu Button with Shimmer & Glow Hover Effect */}
+              {/* Interactive Collections & Menu Button */}
               <div 
                 ref={dropdownRef}
-                className="relative"
+                className="relative shrink-0"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
@@ -232,7 +232,7 @@ export const Header: React.FC = () => {
                   aria-expanded={isCollectionsOpen}
                   aria-haspopup="true"
                   aria-label="Collections menu"
-                  className={`group/col-btn relative px-3 py-1.5 rounded-full border text-[11px] xl:text-xs uppercase tracking-[0.14em] font-medium transition-all duration-300 flex items-center gap-1.5 cursor-pointer select-none overflow-hidden ${
+                  className={`group/col-btn relative px-2.5 xl:px-3 py-1.5 rounded-full border text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-all duration-300 flex items-center gap-1.5 cursor-pointer select-none overflow-hidden shrink-0 ${
                     isDarkHero
                       ? isCollectionsOpen
                         ? 'border-[#C8A96B] bg-[#C8A96B]/25 text-[#FAF7F0] shadow-[0_0_18px_rgba(200,169,107,0.35)]'
@@ -432,14 +432,14 @@ export const Header: React.FC = () => {
               {/* Bridal Edit: Visible on xl and up (1280px+) */}
               <button
                 onClick={() => navigateTo('catalog', undefined, 'Bridal Sarees')}
-                className={`hidden xl:inline-block text-[11px] xl:text-xs uppercase tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 whitespace-nowrap cursor-pointer ${
+                className={`hidden xl:inline-block text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer ${
                   isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
                 }`}
               >
                 Bridal Edit
               </button>
 
-              {/* Outfit Gallery: Visible on lg and up (1024px+) */}
+              {/* Outfit Gallery: Visible on xl and up */}
               <button
                 onClick={() => {
                   if (activePage !== 'home') {
@@ -451,7 +451,7 @@ export const Header: React.FC = () => {
                     document.getElementById('outfit-gallery')?.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
-                className={`hidden lg:inline-flex items-center gap-1.5 text-[11px] xl:text-xs uppercase tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 whitespace-nowrap cursor-pointer ${
+                className={`hidden xl:inline-flex items-center gap-1.5 text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer ${
                   isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
                 }`}
               >
@@ -462,7 +462,7 @@ export const Header: React.FC = () => {
               {/* Our Story: Visible on 2xl screens (1400px+) */}
               <button
                 onClick={() => navigateTo('story')}
-                className={`hidden 2xl:inline-block text-[11px] xl:text-xs uppercase tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 whitespace-nowrap cursor-pointer ${
+                className={`hidden 2xl:inline-block text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer ${
                   isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
                 }`}
               >
@@ -471,18 +471,18 @@ export const Header: React.FC = () => {
             </nav>
 
             {/* Right: Actions (Delivery, Search, Account, Wishlist, Shopping Bag) */}
-            <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
+            <div className="flex items-center gap-1 sm:gap-1.5 xl:gap-2 shrink-0">
               {/* Delivery Availability Button */}
               <button
                 onClick={() => openDeliveryChecker()}
-                className={`flex items-center gap-1 px-2 py-1.5 rounded-full transition-colors cursor-pointer text-xs uppercase tracking-wider font-medium ${
+                className={`flex items-center gap-1 px-1.5 sm:px-2 py-1.5 rounded-full transition-colors cursor-pointer text-xs uppercase tracking-wider font-medium shrink-0 ${
                   isDarkHero ? 'text-[#FAF7F0] hover:text-[#C8A96B]' : 'text-[#1C1A19] hover:text-[#651C32]'
                 }`}
                 aria-label="Check Delivery Availability"
                 title="Check Delivery Availability"
               >
-                <Truck className="w-4 h-4 shrink-0" />
-                <span className="text-[11px] font-sans font-light whitespace-nowrap hidden xl:inline">
+                <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                <span className="text-[10px] xl:text-[11px] font-sans font-medium whitespace-nowrap hidden xl:inline">
                   Delivery
                 </span>
               </button>
@@ -490,13 +490,13 @@ export const Header: React.FC = () => {
               {/* Desktop Search Button */}
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className={`hidden md:flex items-center gap-1.5 px-2 py-1.5 rounded-full transition-colors cursor-pointer ${
+                className={`hidden md:flex items-center gap-1 px-1.5 sm:px-2 py-1.5 rounded-full transition-colors cursor-pointer shrink-0 ${
                   isDarkHero ? 'text-[#FAF7F0] hover:text-[#C8A96B]' : 'text-[#1C1A19] hover:text-[#651C32]'
                 }`}
                 aria-label="Search catalog"
               >
-                <Search className="w-4 h-4 shrink-0" />
-                <span className="text-xs uppercase tracking-wider font-light whitespace-nowrap hidden 2xl:inline">
+                <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                <span className="text-[10px] xl:text-[11px] uppercase tracking-wider font-medium whitespace-nowrap hidden 2xl:inline">
                   Search
                 </span>
               </button>
@@ -510,14 +510,14 @@ export const Header: React.FC = () => {
                     setIsAuthOpen(true);
                   }
                 }}
-                className={`flex items-center gap-1.5 px-2 py-1.5 rounded-full transition-colors cursor-pointer text-xs uppercase tracking-wider font-medium ${
+                className={`flex items-center gap-1.5 px-2 xl:px-2.5 py-1.5 rounded-full transition-colors cursor-pointer text-xs uppercase tracking-wider font-medium shrink-0 ${
                   isDarkHero ? 'text-[#FAF7F0] hover:text-[#C8A96B]' : 'text-[#1C1A19] hover:text-[#651C32]'
                 }`}
                 aria-label={user ? 'Patron Orders' : 'Sign In'}
                 title={user ? `Signed in as ${user.name}` : 'Patron Account & Orders'}
               >
-                <User className="w-4 h-4 shrink-0" />
-                <span className="hidden lg:inline text-[11px] truncate max-w-[85px]">
+                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                <span className="text-[10px] xl:text-[11px] font-medium whitespace-nowrap shrink-0 inline-block">
                   {user ? user.name.split(' ')[0] : 'Sign In'}
                 </span>
               </button>
@@ -525,14 +525,14 @@ export const Header: React.FC = () => {
               {/* Wishlist Button */}
               <button
                 onClick={() => setIsWishlistOpen(true)}
-                className={`relative p-2 rounded-full transition-colors cursor-pointer ${
+                className={`relative p-1.5 sm:p-2 rounded-full transition-colors cursor-pointer shrink-0 ${
                   isDarkHero ? 'text-[#FAF7F0] hover:text-[#C8A96B]' : 'text-[#1C1A19] hover:text-[#651C32]'
                 }`}
                 aria-label={`Wishlist with ${wishlist.length} items`}
               >
-                <Heart className="w-5 h-5 shrink-0" />
+                <Heart className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
                 {wishlist.length > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#8B1E3F] text-white text-[10px] flex items-center justify-center font-bold">
+                  <span className="absolute top-1 right-1 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#8B1E3F] text-white text-[9px] sm:text-[10px] flex items-center justify-center font-bold">
                     {wishlist.length}
                   </span>
                 )}
@@ -541,10 +541,10 @@ export const Header: React.FC = () => {
               {/* Shopping Bag Button */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#651C32] text-[#FAF7F0] hover:bg-[#8B1E3F] transition-all duration-300 shadow-md border border-[#C8A96B]/30 hover:border-[#C8A96B] shrink-0 cursor-pointer"
+                className="relative flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-full bg-[#651C32] text-[#FAF7F0] hover:bg-[#8B1E3F] transition-all duration-300 shadow-md border border-[#C8A96B]/30 hover:border-[#C8A96B] shrink-0 cursor-pointer"
                 aria-label={`Shopping bag with ${cartTotalCount} items`}
               >
-                <ShoppingBag className="w-4 h-4 text-[#C8A96B] shrink-0" />
+                <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C8A96B] shrink-0" />
                 <span className="text-xs font-semibold tracking-wide">
                   {cartTotalCount}
                 </span>
@@ -563,7 +563,7 @@ export const Header: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 md:hidden"
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden"
             />
             <motion.div
               initial={{ x: '-100%' }}
