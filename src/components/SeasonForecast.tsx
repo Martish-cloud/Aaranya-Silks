@@ -4,7 +4,6 @@ import { Compass, ChevronLeft, ChevronRight, Sparkles, ArrowRight, BookOpen } fr
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
-import { preloadImage } from '../utils/imagePreloader';
 
 import wowImg1 from '../assets/Wow/Image (1).webp';
 import wowImg2 from '../assets/Wow/Image (4).webp';
@@ -81,35 +80,82 @@ const AUTUMN_WINTER_PAGES: SareePage[] = [
   }
 ];
 
+// Permanent in-memory cache for lookbook images to prevent re-downloads and GC de-allocation
+const lookbookImageCache = new Map<string, HTMLImageElement>();
+
+function preloadLookbookImage(src: string): void {
+  if (!src || lookbookImageCache.has(src)) return;
+  const img = new Image();
+  img.src = src;
+  img.decoding = 'async';
+  lookbookImageCache.set(src, img);
+  if (typeof img.decode === 'function') {
+    img.decode().catch(() => {});
+  }
+}
+
+// Prime cache immediately at module load time for instantaneous navigation
+AUTUMN_WINTER_PAGES.forEach((page) => preloadLookbookImage(page.image));
+
 export const SeasonForecast: React.FC = () => {
   const { navigateTo } = useShop();
   const [currentPageIdx, setCurrentPageIdx] = useState(0);
   const [direction, setDirection] = useState(1);
   const touchStartX = useRef<number | null>(null);
+  const isAnimatingRef = useRef(false);
+  const animTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const currentPage = AUTUMN_WINTER_PAGES[currentPageIdx];
 
+  const startAnimationLock = () => {
+    isAnimatingRef.current = true;
+    if (animTimeoutRef.current) clearTimeout(animTimeoutRef.current);
+    // Safety fallback timeout to ensure animation lock never gets stuck
+    animTimeoutRef.current = setTimeout(() => {
+      isAnimatingRef.current = false;
+    }, 550);
+  };
+
+  const handleAnimationComplete = () => {
+    isAnimatingRef.current = false;
+    if (animTimeoutRef.current) clearTimeout(animTimeoutRef.current);
+  };
+
   const handlePrevPage = () => {
+    if (isAnimatingRef.current) return;
+    startAnimationLock();
     setDirection(-1);
     setCurrentPageIdx((prev) => (prev === 0 ? AUTUMN_WINTER_PAGES.length - 1 : prev - 1));
   };
 
   const handleNextPage = () => {
+    if (isAnimatingRef.current) return;
+    startAnimationLock();
     setDirection(1);
     setCurrentPageIdx((prev) => (prev === AUTUMN_WINTER_PAGES.length - 1 ? 0 : prev + 1));
   };
 
-  // Immediate and predictive preloading: preload all lookbook images on mount & adjacent
-  React.useEffect(() => {
-    AUTUMN_WINTER_PAGES.forEach((page) => preloadImage(page.image));
-  }, []);
+  const handleGoToPage = (idx: number) => {
+    if (isAnimatingRef.current || idx === currentPageIdx) return;
+    startAnimationLock();
+    setDirection(idx > currentPageIdx ? 1 : -1);
+    setCurrentPageIdx(idx);
+  };
 
+  // Preload adjacent images whenever page changes
   React.useEffect(() => {
     const nextIdx = (currentPageIdx + 1) % AUTUMN_WINTER_PAGES.length;
     const prevIdx = (currentPageIdx - 1 + AUTUMN_WINTER_PAGES.length) % AUTUMN_WINTER_PAGES.length;
-    preloadImage(AUTUMN_WINTER_PAGES[nextIdx].image);
-    preloadImage(AUTUMN_WINTER_PAGES[prevIdx].image);
+    preloadLookbookImage(AUTUMN_WINTER_PAGES[nextIdx].image);
+    preloadLookbookImage(AUTUMN_WINTER_PAGES[prevIdx].image);
   }, [currentPageIdx]);
+
+  // Clean up any pending animation lock timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (animTimeoutRef.current) clearTimeout(animTimeoutRef.current);
+    };
+  }, []);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -126,30 +172,55 @@ export const SeasonForecast: React.FC = () => {
     touchStartX.current = null;
   };
 
-  // Snappy Luxury Lookbook Page Transitions - immediate visual response without blank/fade-out
-  const imageVariants: Variants = {
+  // 3D Realistic Fashion Lookbook Page-Turn Variants
+  const pageTurnVariants: Variants = {
     enter: (dir: number) => ({
-      x: dir > 0 ? 12 : -12,
-      opacity: 1,
-      scale: 0.99
+      // When NEXT (dir > 0): incoming page is underneath at zIndex 10
+      // When PREVIOUS (dir < 0): incoming page turns in from left at zIndex 20
+      zIndex: dir > 0 ? 10 : 20,
+      transformOrigin: 'left center',
+      rotateY: dir > 0 ? 0 : -85,
+      opacity: dir > 0 ? 1 : 0.6,
+      scale: dir > 0 ? 0.98 : 1,
     }),
     center: {
-      x: 0,
+      zIndex: 15,
+      transformOrigin: 'left center',
+      rotateY: 0,
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 0.22,
-        ease: 'easeOut'
+        duration: 0.45,
+        ease: [0.33, 1, 0.68, 1],
       }
     },
     exit: (dir: number) => ({
-      x: dir > 0 ? -12 : 12,
-      opacity: 0.96,
-      scale: 0.99,
+      // When NEXT (dir > 0): outgoing page is on top at zIndex 20, turning leftwards
+      // When PREVIOUS (dir < 0): outgoing page is underneath at zIndex 10
+      zIndex: dir > 0 ? 20 : 10,
+      transformOrigin: 'left center',
+      rotateY: dir > 0 ? -85 : 0,
+      opacity: dir > 0 ? 0 : 0.85,
+      scale: dir > 0 ? 0.98 : 0.98,
       transition: {
-        duration: 0.18,
-        ease: 'easeIn'
+        duration: 0.45,
+        ease: [0.33, 1, 0.68, 1],
       }
+    })
+  };
+
+  // Subtle Dynamic Lighting Shadow for realistic paper curvature during turn
+  const pageShadowVariants: Variants = {
+    enter: (dir: number) => ({
+      opacity: dir > 0 ? 0.35 : 0.45,
+    }),
+    center: {
+      opacity: 0,
+      transition: { duration: 0.45, ease: 'easeOut' }
+    },
+    exit: (dir: number) => ({
+      opacity: dir > 0 ? 0.5 : 0.2,
+      transition: { duration: 0.45, ease: 'easeIn' }
     })
   };
 
@@ -221,82 +292,101 @@ export const SeasonForecast: React.FC = () => {
           {/* Stable Outer Grid Card */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-5 lg:gap-8 items-center rounded-2xl bg-white p-4 sm:p-6 lg:p-7 border border-[#C8A96B]/20 shadow-md text-left relative overflow-hidden">
             {/* Left Column: Saree Visual Showcase with Image-Only 3D Page Flip */}
-            <div className="md:col-span-6 relative" style={{ perspective: '1200px' }}>
-              {/* Image-Side Navigation: Previous Arrow Control */}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePrevPage();
-                }}
-                aria-label="Previous lookbook image"
-                className="absolute left-2.5 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/60 hover:bg-[#651C32] text-white hover:text-[#FAF7F0] backdrop-blur-md border border-[#C8A96B]/50 flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg cursor-pointer"
+            <div className="md:col-span-6 relative flex justify-center items-center">
+              {/* Rock-Solid Fixed Dimension Stage (Zero Vertical Jumps, Stable 3D Perspective) */}
+              <div
+                className="relative w-full aspect-[3/4] sm:aspect-[4/5] max-h-[380px] sm:max-h-[430px] rounded-2xl overflow-hidden bg-[#FAF7F0] border border-[#C8A96B]/25 shadow-xl group mx-auto"
+                style={{ perspective: '1400px' }}
               >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-
-              {/* Image-Side Navigation: Next Arrow Control */}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleNextPage();
-                }}
-                aria-label="Next lookbook image"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/60 hover:bg-[#651C32] text-white hover:text-[#FAF7F0] backdrop-blur-md border border-[#C8A96B]/50 flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg cursor-pointer"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-
-              <AnimatePresence custom={direction} initial={false}>
-                <motion.div
-                  key={currentPage.id}
-                  custom={direction}
-                  variants={imageVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  className="relative aspect-[3/4] sm:aspect-[4/5] max-h-[380px] sm:max-h-[430px] rounded-2xl overflow-hidden bg-[#FAF7F0] border border-[#C8A96B]/25 shadow-xl group mx-auto"
+                {/* Image-Side Navigation: Previous Arrow Control */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePrevPage();
+                  }}
+                  aria-label="Previous lookbook image"
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/60 hover:bg-[#651C32] text-white hover:text-[#FAF7F0] backdrop-blur-md border border-[#C8A96B]/50 flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg cursor-pointer"
                 >
-                  <img
-                    src={currentPage.image}
-                    alt={currentPage.name}
-                    loading="eager"
-                    decoding="async"
-                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20 pointer-events-none" />
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
 
-                  {/* Saree Badge */}
-                  <div className="absolute top-3 left-3 z-10">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-[#E5B842] text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-white/20">
-                      <Sparkles className="w-3 h-3 text-[#E5B842]" />
-                      <span>{currentPage.palette}</span>
-                    </span>
-                  </div>
+                {/* Image-Side Navigation: Next Arrow Control */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleNextPage();
+                  }}
+                  aria-label="Next lookbook image"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/60 hover:bg-[#651C32] text-white hover:text-[#FAF7F0] backdrop-blur-md border border-[#C8A96B]/50 flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg cursor-pointer"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
 
-                  {/* Bottom Overlay Label */}
-                  <div className="absolute bottom-3 inset-x-3 text-white z-10">
-                    <span className="text-[10px] font-mono text-[#E5B842] tracking-widest block uppercase mb-0.5">
-                      Plate {currentPage.pageNum} • Autumn—Winter Edit
-                    </span>
-                    <h4 className="font-serif text-lg sm:text-xl font-light text-white leading-tight">
-                      {currentPage.headline}
-                    </h4>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+                <AnimatePresence custom={direction} initial={false}>
+                  <motion.div
+                    key={currentPage.id}
+                    custom={direction}
+                    variants={pageTurnVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    onAnimationComplete={handleAnimationComplete}
+                    style={{
+                      transformStyle: 'preserve-3d',
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden',
+                    }}
+                    className="absolute inset-0 w-full h-full overflow-hidden rounded-2xl bg-[#FAF7F0]"
+                  >
+                    <img
+                      src={currentPage.image}
+                      alt={currentPage.name}
+                      loading="eager"
+                      decoding="async"
+                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20 pointer-events-none" />
+
+                    {/* Realistic 3D Paper Curvature Lighting Shadow */}
+                    <motion.div
+                      custom={direction}
+                      variants={pageShadowVariants}
+                      className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent pointer-events-none"
+                    />
+
+                    {/* Saree Badge */}
+                    <div className="absolute top-3 left-3 z-10">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-[#E5B842] text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-white/20">
+                        <Sparkles className="w-3 h-3 text-[#E5B842]" />
+                        <span>{currentPage.palette}</span>
+                      </span>
+                    </div>
+
+                    {/* Bottom Overlay Label */}
+                    <div className="absolute bottom-3 inset-x-3 text-white z-10">
+                      <span className="text-[10px] font-mono text-[#E5B842] tracking-widest block uppercase mb-0.5">
+                        Plate {currentPage.pageNum} • Autumn—Winter Edit
+                      </span>
+                      <h4 className="font-serif text-lg sm:text-xl font-light text-white leading-tight">
+                        {currentPage.headline}
+                      </h4>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
             </div>
 
             {/* Right Column: Editorial Text & Lookbook Story (Stable, No 3D Rotation) */}
-            <div className="md:col-span-6 md:pl-5 lg:pl-7">
-              <AnimatePresence initial={false}>
+            <div className="md:col-span-6 md:pl-5 lg:pl-7 relative">
+              <AnimatePresence mode="wait">
                 <motion.div
                   key={currentPage.id}
-                  initial={{ opacity: 0.9, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0.9, y: -4 }}
-                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                  initial={{ opacity: 0, x: direction > 0 ? 12 : -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: direction > 0 ? -12 : 12 }}
+                  transition={{ duration: 0.22, ease: 'easeOut' }}
                   className="flex flex-col justify-between space-y-3.5 max-w-[420px]"
                 >
                   <div>
@@ -382,11 +472,8 @@ export const SeasonForecast: React.FC = () => {
             {AUTUMN_WINTER_PAGES.map((page, idx) => (
               <button
                 key={page.id}
-                onClick={() => {
-                  setDirection(idx > currentPageIdx ? 1 : -1);
-                  setCurrentPageIdx(idx);
-                }}
-                className={`transition-all duration-300 rounded-full ${
+                onClick={() => handleGoToPage(idx)}
+                className={`transition-all duration-300 rounded-full cursor-pointer ${
                   currentPageIdx === idx
                     ? 'w-6 h-2 bg-[#651C32]'
                     : 'w-2 h-2 bg-[#C8A96B]/50 hover:bg-[#C8A96B]'
