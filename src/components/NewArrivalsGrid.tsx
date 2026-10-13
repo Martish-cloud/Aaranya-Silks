@@ -1,93 +1,90 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Sparkles, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { SAREES_DATA } from '../data/sarees';
 import { ProductCard } from './ProductCard';
 import { useShop } from '../context/ShopContext';
 import { WipeText } from './WipeText';
-import { useAutoScrollRail } from '../utils/useAutoScrollRail';
+import type { Saree } from '../types';
 
 const TABS = ['All Arrivals', 'Bridal Sarees', 'Banarasi Sarees', 'Silk Sarees', 'Organza Sarees'];
 
 export const NewArrivalsGrid: React.FC = () => {
   const { navigateTo } = useShop();
   const [activeTab, setActiveTab] = useState('All Arrivals');
-  const [isHovered, setIsHovered] = useState(false);
+  const railRef = useRef<HTMLDivElement | null>(null);
 
-  // Smooth, continuous right-to-left auto-sliding with moderately increased elegant speed (65px/s)
-  const { railRef, markUserInteraction } = useAutoScrollRail({
-    direction: 'right-to-left',
-    speed: 65,
-    isHovered,
-  });
+  // Reset scroll position to 0 whenever the category filter changes or visitor returns to "All Arrivals"
+  useEffect(() => {
+    if (railRef.current) {
+      railRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+    }
+  }, [activeTab]);
 
   const filteredProducts = useMemo(() => {
+    let list: Saree[];
     switch (activeTab) {
       case 'Bridal Sarees': {
-        const list = SAREES_DATA.filter(
+        list = SAREES_DATA.filter(
           (item) =>
             item.category === 'Bridal Sarees' ||
             item.category === 'Kanjivaram Sarees' ||
             item.occasions.includes('Bridal') ||
             item.name.toLowerCase().includes('bridal')
         );
-        return list.length > 0 ? list : SAREES_DATA;
+        break;
       }
       case 'Banarasi Sarees': {
-        const list = SAREES_DATA.filter(
+        list = SAREES_DATA.filter(
           (item) =>
             item.category === 'Banarasi Sarees' ||
             item.fabric === 'Banarasi Brocade' ||
             item.name.toLowerCase().includes('banarasi')
         );
-        return list.length > 0 ? list : SAREES_DATA;
+        break;
       }
       case 'Silk Sarees': {
-        const list = SAREES_DATA.filter(
+        list = SAREES_DATA.filter(
           (item) =>
             item.category === 'Silk Sarees' ||
             item.category === 'Kanjivaram Sarees' ||
             item.fabric.includes('Silk')
         );
-        return list.length > 0 ? list : SAREES_DATA;
+        break;
       }
       case 'Organza Sarees': {
-        const list = SAREES_DATA.filter(
+        list = SAREES_DATA.filter(
           (item) =>
             item.category === 'Organza Sarees' ||
             item.fabric === 'Pure Organza' ||
             item.name.toLowerCase().includes('organza')
         );
-        return list.length > 0 ? list : SAREES_DATA;
+        break;
       }
       case 'All Arrivals':
       default:
-        return SAREES_DATA;
+        list = SAREES_DATA;
+        break;
     }
+
+    // Deduplicate strictly by product id to ensure every card in the rail is unique
+    const seen = new Set<string>();
+    return list.filter((item) => {
+      if (seen.has(item.id)) return false;
+      seen.add(item.id);
+      return true;
+    });
   }, [activeTab]);
 
-  // Ensure enough items for seamless, continuous looping with zero blank spaces
-  const baseProducts = useMemo(() => {
-    let list = filteredProducts;
-    if (list.length === 0) list = SAREES_DATA;
-    while (list.length < 8) {
-      list = [...list, ...list];
-    }
-    return list;
-  }, [filteredProducts]);
-
-  const DISPLAY_PRODUCTS = useMemo(() => {
-    return [...baseProducts, ...baseProducts, ...baseProducts];
-  }, [baseProducts]);
-
   const handleScroll = (direction: 'left' | 'right') => {
-    markUserInteraction();
     if (railRef.current) {
       const containerWidth = railRef.current.clientWidth;
-      let step = (containerWidth - 60) / 4 + 20;
+      let step = containerWidth;
       if (containerWidth < 640) {
-        step = (containerWidth - 12) / 2 + 12;
+        step = containerWidth + 12; // 2 cards visible on mobile
       } else if (containerWidth < 1024) {
-        step = (containerWidth - 32) / 3 + 16;
+        step = containerWidth + 16; // 3 cards visible on tablet
+      } else {
+        step = containerWidth + 20; // 4 cards visible on desktop
       }
       const scrollAmount = direction === 'left' ? -step : step;
       railRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
@@ -98,8 +95,6 @@ export const NewArrivalsGrid: React.FC = () => {
     <section
       id="new-arrivals"
       className="py-20 md:py-28 bg-[#FAF7F0] relative overflow-hidden"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8">
         {/* Section Header - Centered Typographic Hierarchy matching Community of Grace / Styled in Aaranya Silks */}
@@ -151,10 +146,7 @@ export const NewArrivalsGrid: React.FC = () => {
           {TABS.map((tab) => (
             <button
               key={tab}
-              onClick={() => {
-                markUserInteraction();
-                setActiveTab(tab);
-              }}
+              onClick={() => setActiveTab(tab)}
               className={`px-4 sm:px-5 py-2 rounded-full text-xs font-medium tracking-wider uppercase transition-all duration-300 whitespace-nowrap cursor-pointer ${
                 activeTab === tab
                   ? 'bg-[#651C32] text-[#FAF7F0] shadow-md border border-[#C8A96B]'
@@ -166,18 +158,15 @@ export const NewArrivalsGrid: React.FC = () => {
           ))}
         </div>
 
-        {/* Continuous Right-to-Left Auto-Moving Horizontal Product Rail (No Floating Animation) */}
+        {/* Stationary Horizontal Product Rail (Manual Arrow/Touch Navigation Only) */}
         <div
           ref={railRef}
-          onTouchStart={markUserInteraction}
-          onTouchMove={markUserInteraction}
-          onWheel={markUserInteraction}
-          className="flex items-stretch gap-3 sm:gap-4 lg:gap-5 overflow-x-auto no-scrollbar py-2 select-none"
+          className="flex items-stretch gap-3 sm:gap-4 lg:gap-5 overflow-x-auto no-scrollbar py-2 select-none scroll-smooth"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {DISPLAY_PRODUCTS.map((product, idx) => (
+          {filteredProducts.map((product, idx) => (
             <div
-              key={`${product.id}-${idx}`}
+              key={product.id}
               className="shrink-0 w-[calc((100%-12px)/2)] sm:w-[calc((100%-32px)/3)] lg:w-[calc((100%-60px)/4)] transform-gpu"
             >
               <ProductCard product={product} aspectRatio="4/5" index={idx} />
