@@ -221,50 +221,47 @@ export const SAREES_DATA: Saree[] = [
     trending: true
   },
   {
-    id: 'aaranya-03',
-    name: 'Swarna Hansa Pure Tissue Silk Saree',
-    slug: 'swarna-hansa-pure-tissue-silk-saree',
-    tagline: 'Luminous champagne gold tissue silk that catches every glimmer of candlelight.',
+    id: 'aaranya-06',
+    name: 'Ananya Ivory & Gold Shalu Heritage Saree',
+    slug: 'ananya-ivory-gold-shalu-heritage-saree',
+    tagline: 'Warm ivory mulberry silk adorned with pure antique gold meenakari motifs.',
     category: 'Silk Sarees',
-    fabric: 'Tissue Silk',
-    color: 'Champagne Gold',
+    fabric: 'Pure Katan Silk',
+    color: 'Warm Ivory',
     colors: [
-      {
-        name: 'Champagne Gold',
-        hex: '#C8A96B',
-        image: getShopSareeImg('Swarna Hansa Pure Tissue Silk Saree', 'SWARNA HANSA (Champagne Gold).png')
-      },
       {
         name: 'Warm Ivory',
         hex: '#FAF7F0',
-        image: getShopSareeImg('Swarna Hansa Pure Tissue Silk Saree', 'SWARNA HANSA (Warm Ivory).png')
+        image: getShopSareeImg('Ananya Ivory & Gold Shalu Heritage Saree', 'Ananya Ivory & Gold Shalu Heritage Saree (Warm Ivory).png')
+      },
+      {
+        name: 'Champagne Gold',
+        hex: '#C8A96B',
+        image: getShopSareeImg('Ananya Ivory & Gold Shalu Heritage Saree', 'Ananya Ivory & Gold Shalu Heritage Saree (Champagne Gold) (1).png')
       }
     ],
-    price: 24800,
-    originalPrice: 29500,
+    price: 21900,
+    originalPrice: 26000,
     discountBadge: '16% OFF',
-    badge: 'Bestseller',
-    rating: 4.88,
-    reviewCount: 38,
+    badge: 'Classic Heritage',
+    rating: 4.86,
+    reviewCount: 22,
     images: [
-      getShopSareeImg('Swarna Hansa Pure Tissue Silk Saree', 'SWARNA HANSA (Champagne Gold).png'),
-      getShopSareeImg('Swarna Hansa Pure Tissue Silk Saree', 'SWARNA HANSA (Champagne Gold) (2).png'),
-      getShopSareeImg('Swarna Hansa Pure Tissue Silk Saree', 'SWARNA HANSA (Warm Ivory).png')
+      getShopSareeImg('Ananya Ivory & Gold Shalu Heritage Saree', 'Ananya Ivory & Gold Shalu Heritage Saree (Warm Ivory).png'),
+      getShopSareeImg('Ananya Ivory & Gold Shalu Heritage Saree', 'Ananya Ivory & Gold Shalu Heritage Saree (Champagne Gold) (1).png'),
+      getShopSareeImg('Ananya Ivory & Gold Shalu Heritage Saree', 'Ananya Ivory & Gold Shalu Heritage Saree (Champagne Gold) (2).png')
     ],
-    description: 'Crafted with fine metallic silk threads woven closely with mulberry filament silk, creating a mesmerizing iridescent sheen. The Swarna Hansa flows with unmatched liquid drape, making it the choice for gala soirees and high-fashion celebrations.',
-    weaveDetail: 'Tissue jacquard weave with zero-twist zari threads.',
-    zariType: 'Subtle Champagne Gold High-Luster Zari',
-    palluDetail: 'Intricate geometric herringbone zari detailing with hand-knotted silk tassels',
+    description: 'An ode to serene, understated elegance. The Ananya saree balances pristine cream ivory Katan silk with intricate antique gold bel foliage and sacred kalga motifs.',
+    weaveDetail: 'Fine Banarasi pit loom weave.',
+    zariType: 'Antique Champagne Gold Zari',
+    palluDetail: 'Intricate paisley and lotus petal motifs',
     blouseIncluded: true,
-    blouseDetails: '0.85m matching heavy tissue silk unstitched blouse piece',
-    sareeLength: '5.5 meters length x 1.16 meters width',
-    careInstructions: [
-      'Professional dry cleaning only.',
-      'Iron on lowest silk setting with a protective press cloth.'
-    ],
-    occasions: ['Cocktail', 'Reception', 'Wedding Guest'],
+    blouseDetails: '0.85m running ivory silk fabric with gold border',
+    sareeLength: '5.5 meters length x 1.15 meters width',
+    careInstructions: ['Dry clean only.', 'Store in cotton bag.'],
+    occasions: ['Puja & Rituals', 'Wedding Guest', 'Festive'],
     inStock: true,
-    featured: true,
+    featured: false,
     trending: true
   },
   {
@@ -360,48 +357,51 @@ export const SAREES_DATA: Saree[] = [
     trending: false
   },
   {
-    id: 'aaranya-06',
-    name: 'Ananya Ivory & Gold Shalu Heritage Saree',
-    slug: 'ananya-ivory-gold-shalu-heritage-saree',
-    tagline: 'Warm ivory mulberry silk adorned with pure antique gold meenakari motifs.',
+    id: 'aaranya-03',
+    name: 'Swarna Hansa Pure Tissue Silk Saree',
+    slug: 'swarna-hansa-pure-tissue-silk-saree',
+    tagline: 'Luminous champagne gold tissue silk that catches every glimmer of candlelight.',
     category: 'Silk Sarees',
-    fabric: 'Pure Katan Silk',
-    color: 'Warm Ivory',
+    fabric: 'Tissue Silk',
+    color: 'Champagne Gold',
     colors: [
-      {
-        name: 'Warm Ivory',
-        hex: '#FAF7F0',
-        image: getShopSareeImg('Ananya Ivory & Gold Shalu Heritage Saree', 'Ananya Ivory & Gold Shalu Heritage Saree (Warm Ivory).png')
-      },
       {
         name: 'Champagne Gold',
         hex: '#C8A96B',
-        image: getShopSareeImg('Ananya Ivory & Gold Shalu Heritage Saree', 'Ananya Ivory & Gold Shalu Heritage Saree (Champagne Gold) (1).png')
+        image: getShopSareeImg('Swarna Hansa Pure Tissue Silk Saree', 'SWARNA HANSA (Champagne Gold).png')
+      },
+      {
+        name: 'Warm Ivory',
+        hex: '#FAF7F0',
+        image: getShopSareeImg('Swarna Hansa Pure Tissue Silk Saree', 'SWARNA HANSA (Warm Ivory).png')
       }
     ],
-    price: 21900,
-    originalPrice: 26000,
+    price: 24800,
+    originalPrice: 29500,
     discountBadge: '16% OFF',
-    badge: 'Classic Heritage',
-    rating: 4.86,
-    reviewCount: 22,
+    badge: 'Bestseller',
+    rating: 4.88,
+    reviewCount: 38,
     images: [
-      getShopSareeImg('Ananya Ivory & Gold Shalu Heritage Saree', 'Ananya Ivory & Gold Shalu Heritage Saree (Warm Ivory).png'),
-      getShopSareeImg('Ananya Ivory & Gold Shalu Heritage Saree', 'Ananya Ivory & Gold Shalu Heritage Saree (Champagne Gold) (1).png'),
-      getShopSareeImg('Ananya Ivory & Gold Shalu Heritage Saree', 'Ananya Ivory & Gold Shalu Heritage Saree (Champagne Gold) (2).png')
+      getShopSareeImg('Swarna Hansa Pure Tissue Silk Saree', 'SWARNA HANSA (Champagne Gold).png'),
+      getShopSareeImg('Swarna Hansa Pure Tissue Silk Saree', 'SWARNA HANSA (Champagne Gold) (2).png'),
+      getShopSareeImg('Swarna Hansa Pure Tissue Silk Saree', 'SWARNA HANSA (Warm Ivory).png')
     ],
-    description: 'An ode to serene, understated elegance. The Ananya saree balances pristine cream ivory Katan silk with intricate antique gold bel foliage and sacred kalga motifs.',
-    weaveDetail: 'Fine Banarasi pit loom weave.',
-    zariType: 'Antique Champagne Gold Zari',
-    palluDetail: 'Intricate paisley and lotus petal motifs',
+    description: 'Crafted with fine metallic silk threads woven closely with mulberry filament silk, creating a mesmerizing iridescent sheen. The Swarna Hansa flows with unmatched liquid drape, making it the choice for gala soirees and high-fashion celebrations.',
+    weaveDetail: 'Tissue jacquard weave with zero-twist zari threads.',
+    zariType: 'Subtle Champagne Gold High-Luster Zari',
+    palluDetail: 'Intricate geometric herringbone zari detailing with hand-knotted silk tassels',
     blouseIncluded: true,
-    blouseDetails: '0.85m running ivory silk fabric with gold border',
-    sareeLength: '5.5 meters length x 1.15 meters width',
-    careInstructions: ['Dry clean only.', 'Store in cotton bag.'],
-    occasions: ['Puja & Rituals', 'Wedding Guest', 'Festive'],
+    blouseDetails: '0.85m matching heavy tissue silk unstitched blouse piece',
+    sareeLength: '5.5 meters length x 1.16 meters width',
+    careInstructions: [
+      'Professional dry cleaning only.',
+      'Iron on lowest silk setting with a protective press cloth.'
+    ],
+    occasions: ['Cocktail', 'Reception', 'Wedding Guest'],
     inStock: true,
-    featured: false,
-    trending: false
+    featured: true,
+    trending: true
   },
   {
     id: 'aaranya-07',

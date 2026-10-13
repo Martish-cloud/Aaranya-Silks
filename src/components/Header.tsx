@@ -20,57 +20,11 @@ export const Header: React.FC = () => {
     setIsOrderHistoryOpen,
   } = useShop();
 
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isPastHero, setIsPastHero] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    let ticking = false;
-
-    const checkScroll = () => {
-      const scrollY = window.scrollY;
-      const scrolled = scrollY > 40;
-      setIsScrolled((prev) => (prev !== scrolled ? scrolled : prev));
-
-      if (activePage === 'home') {
-        const heroEl = document.getElementById('hero-section');
-        if (heroEl) {
-          const heroRect = heroEl.getBoundingClientRect();
-          // Header sticky height is ~72px. When hero bottom crosses near header bottom, we're past hero.
-          const pastHero = heroRect.bottom <= 76;
-          setIsPastHero((prev) => (prev !== pastHero ? pastHero : prev));
-        } else {
-          const fallbackThreshold = Math.max(window.innerHeight * 0.85, 600);
-          const pastHero = scrollY > fallbackThreshold;
-          setIsPastHero((prev) => (prev !== pastHero ? pastHero : prev));
-        }
-      } else {
-        setIsPastHero(true);
-      }
-    };
-
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          checkScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    checkScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-    };
-  }, [activePage]);
 
   // Accessibility: Handle clicking outside and pressing Escape
   useEffect(() => {
@@ -112,20 +66,10 @@ export const Header: React.FC = () => {
     setIsCollectionsOpen(prev => !prev);
   };
 
-  const isDarkHero = activePage === 'home' && !isPastHero;
-
   return (
     <>
       <header
-        className={`sticky top-0 z-40 w-full transition-all duration-300 ${
-          isDarkHero
-            ? isScrolled
-              ? 'bg-[#1C1A19]/85 backdrop-blur-md shadow-lg border-b border-[#C8A96B]/25 py-3'
-              : 'bg-transparent py-4 md:py-5'
-            : isScrolled
-              ? 'bg-[#FAF7F0]/95 backdrop-blur-md shadow-sm border-b border-[#C8A96B]/20 py-3'
-              : 'bg-transparent py-4 md:py-5'
-        }`}
+        className="sticky top-0 z-40 w-full transition-colors duration-300 bg-black border-b border-[#C8A96B]/25 py-3 shadow-md"
       >
         <div className="w-full max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-6 xl:px-8">
           <div className="flex items-center justify-between gap-1.5 sm:gap-3 lg:gap-4">
@@ -133,9 +77,7 @@ export const Header: React.FC = () => {
             <div className="flex items-center gap-1 sm:gap-2 lg:hidden shrink-0">
               <button
                 onClick={() => setMobileMenuOpen(true)}
-                className={`p-2 rounded-full transition-colors cursor-pointer ${
-                  isDarkHero ? 'text-[#FAF7F0] hover:bg-white/10' : 'text-[#1C1A19] hover:bg-black/5'
-                }`}
+                className="p-2 rounded-full transition-colors cursor-pointer text-white hover:text-[#C8A96B] hover:bg-white/10"
                 aria-label="Open navigation menu"
               >
                 <Menu className="w-5 h-5" />
@@ -143,12 +85,10 @@ export const Header: React.FC = () => {
 
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className={`p-2 rounded-full transition-colors cursor-pointer ${
-                  isDarkHero ? 'text-[#FAF7F0] hover:bg-white/10' : 'text-[#1C1A19] hover:bg-black/5'
-                }`}
+                className="p-2 rounded-full transition-colors cursor-pointer text-white hover:text-[#C8A96B] hover:bg-white/10"
                 aria-label="Search sarees"
               >
-                <Search className="w-5 h-5" />
+                <Search className="w-5 h-5 text-[#C8A96B]" />
               </button>
             </div>
 
@@ -162,9 +102,7 @@ export const Header: React.FC = () => {
                   {/* Subtle luxury lotus / loom emblem */}
                   <svg 
                     viewBox="0 0 40 40" 
-                    className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-500 group-hover:rotate-12 shrink-0 ${
-                      isDarkHero ? 'text-[#C8A96B]' : 'text-[#651C32]'
-                    }`}
+                    className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-500 group-hover:rotate-12 shrink-0 text-[#C8A96B]"
                     fill="currentColor"
                   >
                     <path d="M20 2C20.5 8 23 13 28 17C23 18 20 23 20 30C20 23 17 18 12 17C17 13 19.5 8 20 2Z" fill="currentColor" opacity="0.9" />
@@ -174,17 +112,13 @@ export const Header: React.FC = () => {
                   </svg>
                   
                   <span
-                    className={`font-serif tracking-[0.16em] sm:tracking-[0.2em] text-base sm:text-lg lg:text-xl xl:text-2xl font-bold uppercase transition-colors duration-300 whitespace-nowrap ${
-                      isDarkHero ? 'text-[#FAF7F0]' : 'text-[#651C32]'
-                    }`}
+                    className="font-serif tracking-[0.16em] sm:tracking-[0.2em] text-base sm:text-lg lg:text-xl xl:text-2xl font-bold uppercase transition-colors duration-300 whitespace-nowrap text-white"
                   >
                     Aaranya Silks
                   </span>
                 </div>
                 <span
-                  className={`text-[8px] sm:text-[9px] uppercase tracking-[0.24em] mt-0.5 font-sans font-light hidden sm:block whitespace-nowrap ${
-                    isDarkHero ? 'text-[#C8A96B]' : 'text-[#8B1E3F]'
-                  }`}
+                  className="text-[8px] sm:text-[9px] uppercase tracking-[0.24em] mt-0.5 font-sans font-light hidden sm:block whitespace-nowrap text-[#C8A96B]"
                 >
                   Elegance Woven in Every Thread
                 </span>
@@ -196,9 +130,7 @@ export const Header: React.FC = () => {
               {/* Primary Direct Link: New Arrivals */}
               <button
                 onClick={() => navigateTo('catalog')}
-                className={`text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer ${
-                  isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
-                }`}
+                className="text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer text-white"
               >
                 New Arrivals
               </button>
@@ -206,9 +138,7 @@ export const Header: React.FC = () => {
               {/* Shop All Sarees */}
               <button
                 onClick={() => navigateTo('catalog')}
-                className={`text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer ${
-                  isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
-                }`}
+                className="text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer text-white"
               >
                 Shop All Sarees
               </button>
@@ -233,13 +163,9 @@ export const Header: React.FC = () => {
                   aria-haspopup="true"
                   aria-label="Collections menu"
                   className={`group/col-btn relative px-2.5 xl:px-3 py-1.5 rounded-full border text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-all duration-300 flex items-center gap-1.5 cursor-pointer select-none overflow-hidden shrink-0 ${
-                    isDarkHero
-                      ? isCollectionsOpen
-                        ? 'border-[#C8A96B] bg-[#C8A96B]/25 text-[#FAF7F0] shadow-[0_0_18px_rgba(200,169,107,0.35)]'
-                        : 'border-white/25 bg-white/[0.06] text-[#FAF7F0] hover:border-[#C8A96B] hover:bg-[#C8A96B]/15 hover:shadow-[0_0_16px_rgba(200,169,107,0.25)]'
-                      : isCollectionsOpen
-                        ? 'border-[#651C32] bg-[#8B1E3F]/12 text-[#651C32] shadow-[0_0_16px_rgba(101,28,50,0.18)]'
-                        : 'border-[#C8A96B]/40 bg-[#C8A96B]/10 text-[#1C1A19] hover:border-[#651C32] hover:bg-[#8B1E3F]/10 hover:text-[#651C32] hover:shadow-[0_0_14px_rgba(101,28,50,0.14)]'
+                    isCollectionsOpen
+                      ? 'border-[#C8A96B] bg-[#C8A96B]/25 text-white shadow-[0_0_18px_rgba(200,169,107,0.35)]'
+                      : 'border-white/20 bg-white/[0.06] text-white hover:border-[#C8A96B] hover:bg-[#C8A96B]/15 hover:shadow-[0_0_16px_rgba(200,169,107,0.25)]'
                   }`}
                 >
                   {/* Subtle shimmer sweep highlight on hover */}
@@ -432,9 +358,7 @@ export const Header: React.FC = () => {
               {/* Bridal Edit: Visible on xl and up (1280px+) */}
               <button
                 onClick={() => navigateTo('catalog', undefined, 'Bridal Sarees')}
-                className={`hidden xl:inline-block text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer ${
-                  isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
-                }`}
+                className="hidden xl:inline-block text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer text-white"
               >
                 Bridal Edit
               </button>
@@ -451,9 +375,7 @@ export const Header: React.FC = () => {
                     document.getElementById('outfit-gallery')?.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
-                className={`hidden xl:inline-flex items-center gap-1.5 text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer ${
-                  isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
-                }`}
+                className="hidden xl:inline-flex items-center gap-1.5 text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer text-white"
               >
                 <span>Outfit Gallery</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#C8A96B] animate-pulse" />
@@ -462,9 +384,7 @@ export const Header: React.FC = () => {
               {/* Our Story: Visible on 2xl screens (1400px+) */}
               <button
                 onClick={() => navigateTo('story')}
-                className={`hidden 2xl:inline-block text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer ${
-                  isDarkHero ? 'text-[#FAF7F0]' : 'text-[#1C1A19]'
-                }`}
+                className="hidden 2xl:inline-block text-[10px] xl:text-[11px] 2xl:text-xs uppercase tracking-[0.1em] xl:tracking-[0.14em] font-medium transition-colors hover:text-[#C8A96B] py-1.5 px-1.5 xl:px-2 whitespace-nowrap cursor-pointer text-white"
               >
                 Our Story
               </button>
@@ -475,14 +395,12 @@ export const Header: React.FC = () => {
               {/* Delivery Availability Button */}
               <button
                 onClick={() => openDeliveryChecker()}
-                className={`flex items-center gap-1 px-1.5 sm:px-2 py-1.5 rounded-full transition-colors cursor-pointer text-xs uppercase tracking-wider font-medium shrink-0 ${
-                  isDarkHero ? 'text-[#FAF7F0] hover:text-[#C8A96B]' : 'text-[#1C1A19] hover:text-[#651C32]'
-                }`}
+                className="flex items-center gap-1 px-1.5 sm:px-2 py-1.5 rounded-full transition-colors cursor-pointer text-xs uppercase tracking-wider font-medium shrink-0 text-white hover:text-[#C8A96B]"
                 aria-label="Check Delivery Availability"
                 title="Check Delivery Availability"
               >
-                <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                <span className="text-[10px] xl:text-[11px] font-sans font-medium whitespace-nowrap hidden xl:inline">
+                <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 text-[#C8A96B]" />
+                <span className="text-[10px] xl:text-[11px] font-sans font-medium whitespace-nowrap hidden xl:inline text-white">
                   Delivery
                 </span>
               </button>
@@ -490,13 +408,11 @@ export const Header: React.FC = () => {
               {/* Desktop Search Button */}
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className={`hidden md:flex items-center gap-1 px-1.5 sm:px-2 py-1.5 rounded-full transition-colors cursor-pointer shrink-0 ${
-                  isDarkHero ? 'text-[#FAF7F0] hover:text-[#C8A96B]' : 'text-[#1C1A19] hover:text-[#651C32]'
-                }`}
+                className="hidden md:flex items-center gap-1 px-1.5 sm:px-2 py-1.5 rounded-full transition-colors cursor-pointer shrink-0 text-white hover:text-[#C8A96B]"
                 aria-label="Search catalog"
               >
-                <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                <span className="text-[10px] xl:text-[11px] uppercase tracking-wider font-medium whitespace-nowrap hidden 2xl:inline">
+                <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 text-[#C8A96B]" />
+                <span className="text-[10px] xl:text-[11px] uppercase tracking-wider font-medium whitespace-nowrap hidden 2xl:inline text-white">
                   Search
                 </span>
               </button>
@@ -510,14 +426,12 @@ export const Header: React.FC = () => {
                     setIsAuthOpen(true);
                   }
                 }}
-                className={`flex items-center gap-1.5 px-2 xl:px-2.5 py-1.5 rounded-full transition-colors cursor-pointer text-xs uppercase tracking-wider font-medium shrink-0 ${
-                  isDarkHero ? 'text-[#FAF7F0] hover:text-[#C8A96B]' : 'text-[#1C1A19] hover:text-[#651C32]'
-                }`}
+                className="flex items-center gap-1.5 px-2 xl:px-2.5 py-1.5 rounded-full transition-colors cursor-pointer text-xs uppercase tracking-wider font-medium shrink-0 text-white hover:text-[#C8A96B]"
                 aria-label={user ? 'Patron Orders' : 'Sign In'}
                 title={user ? `Signed in as ${user.name}` : 'Patron Account & Orders'}
               >
-                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                <span className="text-[10px] xl:text-[11px] font-medium whitespace-nowrap shrink-0 hidden sm:inline-block">
+                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 text-[#C8A96B]" />
+                <span className="text-[10px] xl:text-[11px] font-medium whitespace-nowrap shrink-0 hidden sm:inline-block text-white">
                   {user ? user.name.split(' ')[0] : 'Sign In'}
                 </span>
               </button>
@@ -525,9 +439,7 @@ export const Header: React.FC = () => {
               {/* Wishlist Button */}
               <button
                 onClick={() => setIsWishlistOpen(true)}
-                className={`relative p-1.5 sm:p-2 rounded-full transition-colors cursor-pointer shrink-0 ${
-                  isDarkHero ? 'text-[#FAF7F0] hover:text-[#C8A96B]' : 'text-[#1C1A19] hover:text-[#651C32]'
-                }`}
+                className="relative p-1.5 sm:p-2 rounded-full transition-colors cursor-pointer shrink-0 text-white hover:text-[#C8A96B]"
                 aria-label={`Wishlist with ${wishlist.length} items`}
               >
                 <Heart className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
@@ -541,11 +453,11 @@ export const Header: React.FC = () => {
               {/* Shopping Bag Button */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-full bg-[#651C32] text-[#FAF7F0] hover:bg-[#8B1E3F] transition-all duration-300 shadow-md border border-[#C8A96B]/30 hover:border-[#C8A96B] shrink-0 cursor-pointer"
+                className="relative flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-full bg-[#651C32] text-white hover:bg-[#8B1E3F] transition-all duration-300 shadow-md border border-[#C8A96B]/40 hover:border-[#C8A96B] shrink-0 cursor-pointer"
                 aria-label={`Shopping bag with ${cartTotalCount} items`}
               >
                 <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C8A96B] shrink-0" />
-                <span className="text-xs font-semibold tracking-wide">
+                <span className="text-xs font-semibold tracking-wide text-white">
                   {cartTotalCount}
                 </span>
               </button>

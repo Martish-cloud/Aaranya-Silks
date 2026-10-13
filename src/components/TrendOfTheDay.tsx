@@ -10,6 +10,7 @@ import mayurakshiImg from '../assets/Need to Update/Trend of the Day/Mayurakshi 
 import varanasiImg from '../assets/Need to Update/Trend of the Day/Varanasi Noor Kadhwa Banarasi Brocade (Rani Rose) (1).webp';
 import swarnaImg from '../assets/Need to Update/Trend of the Day/SWARNA HANSA (Liquid Gold).webp';
 import chandrikaImg from '../assets/Need to Update/Trend of the Day/Chandrika Midnight Flora Pure Organza Saree  (Charcoal Black) 1.webp';
+import ananyaImg from '../assets/Shop All Sarees/Ananya Ivory & Gold Shalu Heritage Saree/Ananya Ivory & Gold Shalu Heritage Saree (Warm Ivory).webp';
 
 // Deterministic mapping by full product name to matching image and variant color
 const TREND_PRODUCT_MAP: Record<string, { image: string; variantColor: string }> = {
@@ -20,6 +21,10 @@ const TREND_PRODUCT_MAP: Record<string, { image: string; variantColor: string }>
   'Varanasi Noor Kadhwa Banarasi Brocade': {
     image: varanasiImg,
     variantColor: 'Rani Rose',
+  },
+  'Ananya Ivory & Gold Shalu Heritage Saree': {
+    image: ananyaImg,
+    variantColor: 'Warm Ivory',
   },
   'Swarna Hansa Pure Tissue Silk Saree': {
     image: swarnaImg,
@@ -39,8 +44,8 @@ export const TrendOfTheDay: React.FC = () => {
   const [selectedSizes, setSelectedSizes] = useState<{ [key: string]: string }>({
     'aaranya-01': 'M',
     'aaranya-02': 'S',
-    'aaranya-05': 'M',
-    'aaranya-07': 'L'
+    'aaranya-06': 'M',
+    'aaranya-04': 'L'
   });
 
   const trendProducts = SAREES_DATA.slice(0, 4);

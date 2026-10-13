@@ -54,6 +54,7 @@ export interface AmbassadorOffer {
   highlight: string;
   imageWebp: string;
   imageOrig: string;
+  objectPosition?: string;
   perks: string[];
 }
 
@@ -71,6 +72,7 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Tanchoi satin smooth weave with high-luster champagne chevron ripples',
     imageWebp: ba4Webp,
     imageOrig: ba4Orig,
+    objectPosition: 'center 4%',
     perks: ['Priority Insured Transit', 'Velvet Protective Sleeve', 'Matching Heavy Blouse Fabric']
   },
   {
@@ -85,6 +87,7 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Zero floating reverse threads, handwoven on sacred Varanasi riverfront looms',
     imageWebp: ba2Webp,
     imageOrig: ba2Orig,
+    objectPosition: 'center 8%',
     perks: ['Zero Reverse Floats', 'Pure 3-Ply Katan Silk', 'Bespoke Custom Blouse Fit']
   },
   {
@@ -99,6 +102,7 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Featherweight silk organza hand-finished with delicate badla and moti border scallops',
     imageWebp: ba3Webp,
     imageOrig: ba3Orig,
+    objectPosition: 'center 6%',
     perks: ['Handcrafted Badla Scallops', 'Pastel Blossom Palette', 'Featherweight Breathable Drape']
   },
   {
@@ -113,6 +117,7 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Woven with tested 24k gold zari by heritage Korvai guild masters',
     imageWebp: ba1Webp,
     imageOrig: ba1Orig,
+    objectPosition: 'center 5%',
     perks: ['Certified 24k Gold Zari', 'Authentic Pit Loom Weave', 'Cedar Keepsake Archival Box']
   },
   {
@@ -127,6 +132,7 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Iridescent metallic tissue silk accented with jewel-toned meenakari motifs',
     imageWebp: ba5Webp,
     imageOrig: ba5Orig,
+    objectPosition: 'center 6%',
     perks: ['Liquid Metallic Glow', 'Jeweled Meenakari Accents', 'Complimentary Fall & Pico']
   },
   {
@@ -141,6 +147,7 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Authentic Kanchipuram temple gopuram motifs linked with ancient petni techniques',
     imageWebp: ba6Webp,
     imageOrig: ba6Orig,
+    objectPosition: 'center 6%',
     perks: ['Silk Mark Board Certified', 'Dual-Artisan Pit Loom', 'Sacred Temple Border Motifs']
   },
   {
@@ -155,6 +162,7 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Antiqued bronze zari with deep jewel-toned resham highlights for regal brides',
     imageWebp: ba7Webp,
     imageOrig: ba7Orig,
+    objectPosition: 'center 6%',
     perks: ['1-on-1 Virtual Drape Session', 'Blouse Pairing Advisory', 'Jewelry Styling Guidance']
   },
   {
@@ -169,6 +177,7 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Three-ply Mulberry silk with sacred chakram and peacock medallions along the border',
     imageWebp: ba9Webp,
     imageOrig: ba9Orig,
+    objectPosition: 'center 5%',
     perks: ['Woven Custom Initials', 'Pure Vermillion Natural Dye', 'Lifetime Authenticity Guarantee']
   }
 ];
@@ -586,7 +595,7 @@ export const WorthYourAttention: React.FC = () => {
           {/* Right Column: Large Featured Card (6 cols on Desktop) */}
           <div className="lg:col-span-6 flex flex-col">
             <div
-              className="relative flex-1 min-h-[480px] sm:min-h-[520px] rounded-3xl overflow-hidden shadow-2xl border flex flex-col justify-between p-6 sm:p-8 text-left text-white"
+              className="relative flex-1 min-h-[540px] sm:min-h-[580px] lg:min-h-[640px] xl:min-h-[670px] rounded-3xl overflow-hidden shadow-2xl border flex flex-col justify-between p-5 sm:p-6 lg:p-7 text-left text-white"
               style={{
                 backgroundColor: THEME.burgundy,
                 borderColor: `${THEME.champagne}40`,
@@ -608,7 +617,10 @@ export const WorthYourAttention: React.FC = () => {
                     <img
                       src={activeOffer.imageOrig}
                       alt={`Featured Ambassador ${activeOffer.number} - ${activeOffer.title}`}
-                      className="w-full h-full object-cover object-top filter brightness-100 contrast-[1.05]"
+                      className="w-full h-full object-cover filter brightness-100 contrast-[1.03] transition-all duration-500"
+                      style={{
+                        objectPosition: activeOffer.objectPosition || 'center 6%'
+                      }}
                       // @ts-expect-error fetchpriority
                       fetchpriority="high"
                     />
@@ -616,9 +628,9 @@ export const WorthYourAttention: React.FC = () => {
 
                   {/* Gradient Scrim - Minimal bottom gradient keeping photo fully visible */}
                   <div
-                    className="absolute inset-0"
+                    className="absolute inset-0 pointer-events-none"
                     style={{
-                      background: `linear-gradient(to top, ${THEME.burgundy}F0 0%, ${THEME.burgundy}99 35%, transparent 62%)`
+                      background: `linear-gradient(to top, ${THEME.burgundy}FA 0%, ${THEME.burgundy}CC 20%, ${THEME.burgundy}66 32%, transparent 48%)`
                     }}
                   />
                 </motion.div>
@@ -654,14 +666,14 @@ export const WorthYourAttention: React.FC = () => {
                 <div className="flex items-center gap-1 bg-black/40 backdrop-blur-md rounded-full p-1 border border-white/10">
                   <button
                     onClick={handlePrev}
-                    className="p-1.5 rounded-full hover:bg-white/20 text-white transition-colors"
+                    className="p-1.5 rounded-full hover:bg-white/20 text-white transition-colors cursor-pointer"
                     aria-label="Previous Ambassador Card"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
                   <button
                     onClick={handleNext}
-                    className="p-1.5 rounded-full hover:bg-white/20 text-white transition-colors"
+                    className="p-1.5 rounded-full hover:bg-white/20 text-white transition-colors cursor-pointer"
                     aria-label="Next Ambassador Card"
                   >
                     <ChevronRight className="w-4 h-4" />
@@ -673,16 +685,16 @@ export const WorthYourAttention: React.FC = () => {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`content-${activeOffer.id}`}
-                  initial={{ opacity: 0, y: 15 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.4 }}
-                  className="relative z-10 space-y-4 pt-12"
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.35 }}
+                  className="relative z-10 space-y-2.5 pt-4"
                 >
                   {/* Tagline */}
                   <div className="flex items-center gap-2">
                     <span
-                      className="text-xs uppercase tracking-[0.24em] font-bold"
+                      className="text-[10px] sm:text-xs uppercase tracking-[0.22em] font-bold"
                       style={{ color: THEME.orange }}
                     >
                       {activeOffer.tagline}
@@ -691,7 +703,7 @@ export const WorthYourAttention: React.FC = () => {
 
                   {/* Title */}
                   <h3
-                    className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal leading-tight"
+                    className="font-serif text-xl sm:text-2xl lg:text-[26px] font-normal leading-snug tracking-tight"
                     style={{ color: THEME.champagne }}
                   >
                     {activeOffer.title}
@@ -699,42 +711,42 @@ export const WorthYourAttention: React.FC = () => {
 
                   {/* Offer Description Banner */}
                   <div
-                    className="p-3.5 sm:p-4 rounded-2xl border backdrop-blur-md flex items-start gap-3"
+                    className="p-2.5 sm:p-3 rounded-xl border backdrop-blur-md flex items-start gap-2.5"
                     style={{
-                      backgroundColor: `${THEME.maroon}75`,
-                      borderColor: `${THEME.orange}60`
+                      backgroundColor: `${THEME.maroon}80`,
+                      borderColor: `${THEME.orange}50`
                     }}
                   >
-                    <Gift className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: THEME.orange }} />
-                    <div>
-                      <p className="text-xs sm:text-sm font-medium leading-relaxed" style={{ color: THEME.ivory }}>
+                    <Gift className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: THEME.orange }} />
+                    <div className="min-w-0">
+                      <p className="text-xs sm:text-[13px] font-medium leading-snug" style={{ color: THEME.ivory }}>
                         {activeOffer.offer}
                       </p>
-                      <p className="text-[11px] font-light mt-1 text-[#F3D9B5]/80">
+                      <p className="text-[10px] sm:text-[11px] font-light mt-0.5 text-[#F3D9B5]/85 leading-tight">
                         {activeOffer.highlight}
                       </p>
                     </div>
                   </div>
 
                   {/* Perks Checklist */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+                  <div className="flex flex-wrap gap-1.5 pt-0.5">
                     {activeOffer.perks.map((perk, pIdx) => (
                       <div
                         key={pIdx}
-                        className="flex items-center gap-1.5 text-[11px] text-white/90 bg-black/30 backdrop-blur-sm px-2.5 py-1.5 rounded-lg border border-white/5"
+                        className="inline-flex items-center gap-1 text-[10px] text-white/90 bg-black/35 backdrop-blur-sm px-2 py-0.5 rounded-md border border-white/10"
                       >
-                        <Check className="w-3.5 h-3.5 flex-shrink-0" style={{ color: THEME.orange }} />
+                        <Check className="w-3 h-3 flex-shrink-0" style={{ color: THEME.orange }} />
                         <span className="truncate">{perk}</span>
                       </div>
                     ))}
                   </div>
 
                   {/* Coupon Code Pill & Action Buttons */}
-                  <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <div className="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                     {/* Copy Coupon Code Button */}
                     <button
                       onClick={() => handleCopyCode(activeOffer.couponCode)}
-                      className="inline-flex items-center justify-between gap-2 px-4 py-2.5 rounded-xl border border-dashed text-xs font-mono font-semibold transition-all hover:scale-102"
+                      className="inline-flex items-center justify-between sm:justify-start gap-2 px-3 py-2 rounded-xl border border-dashed text-[11px] font-mono font-semibold transition-all hover:scale-102 cursor-pointer"
                       style={{
                         backgroundColor: `${THEME.burgundy}A0`,
                         borderColor: THEME.orange,
@@ -742,21 +754,21 @@ export const WorthYourAttention: React.FC = () => {
                       }}
                       title="Click to copy coupon code"
                     >
-                      <div className="flex items-center gap-2">
-                        <Tag className="w-3.5 h-3.5" style={{ color: THEME.orange }} />
+                      <div className="flex items-center gap-1.5">
+                        <Tag className="w-3 h-3" style={{ color: THEME.orange }} />
                         <span>CODE: {activeOffer.couponCode}</span>
                       </div>
                       {copiedCode === activeOffer.couponCode ? (
                         <span className="text-[10px] uppercase font-bold text-emerald-400">Copied!</span>
                       ) : (
-                        <Copy className="w-3 h-3 opacity-70" />
+                        <Copy className="w-2.5 h-2.5 opacity-70" />
                       )}
                     </button>
 
                     {/* Primary Claim Privilege CTA Button */}
                     <button
                       onClick={() => handleClaimOffer(activeOffer)}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider shadow-xl transition-all duration-300 hover:scale-105"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider shadow-lg transition-all duration-300 hover:scale-102 cursor-pointer"
                       style={{
                         backgroundColor: THEME.red,
                         color: '#FFFFFF',
@@ -764,7 +776,7 @@ export const WorthYourAttention: React.FC = () => {
                       }}
                     >
                       <span>Claim Privilege & Shop</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </motion.div>
