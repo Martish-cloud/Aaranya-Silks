@@ -267,7 +267,7 @@ export const WorthYourAttention: React.FC = () => {
   const handleScrollRail = (direction: 'left' | 'right') => {
     markUserInteraction();
     if (cardStripRef.current) {
-      const scrollAmount = direction === 'left' ? -225 : 225;
+      const scrollAmount = direction === 'left' ? -165 : 165;
       cardStripRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
@@ -289,7 +289,7 @@ export const WorthYourAttention: React.FC = () => {
   return (
     <section
       id="brand-ambassador-offers"
-      className="py-20 md:py-32 relative overflow-hidden transition-colors"
+      className="py-4 sm:py-6 lg:py-5 xl:py-6 relative overflow-hidden transition-colors scroll-mt-16 sm:scroll-mt-20"
       style={{ backgroundColor: THEME.ivory }}
     >
       {/* Ambient background glows using the Maroon + Red + Orange theme */}
@@ -306,42 +306,46 @@ export const WorthYourAttention: React.FC = () => {
         style={{ backgroundColor: THEME.maroon }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* 1. Section Header matching Editorial Style */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 text-left">
+      <div className="max-w-7xl xl:max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-7 relative z-10">
+        {/* 1. Section Header matching Editorial Style - Compact arrangement */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-3 sm:mb-4 lg:mb-4 text-left">
           <div>
-            <div
-              className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-[0.28em] mb-3 border shadow-sm"
-              style={{
-                backgroundColor: `${THEME.maroon}14`,
-                borderColor: `${THEME.red}40`,
-                color: THEME.red
-              }}
-            >
-              <Sparkles className="w-3.5 h-3.5" style={{ color: THEME.orange }} />
-              <span>CURRENT OFFERS • BRAND AMBASSADOR ARCHIVE</span>
+            <div>
+              <div
+                className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.22em] mb-1 border shadow-sm"
+                style={{
+                  backgroundColor: `${THEME.maroon}14`,
+                  borderColor: `${THEME.red}40`,
+                  color: THEME.red
+                }}
+              >
+                <Sparkles className="w-3 h-3" style={{ color: THEME.orange }} />
+                <span>CURRENT OFFERS • BRAND AMBASSADOR ARCHIVE</span>
+              </div>
             </div>
 
-            <WipeText
-              as="h2"
-              direction="left-to-right"
-              duration={0.85}
-              className="font-serif text-3xl sm:text-5xl md:text-6xl font-light tracking-tight"
-            >
-              <span style={{ color: THEME.burgundy }}>Worth your attention</span>
-            </WipeText>
+            <div className="block">
+              <WipeText
+                as="h2"
+                direction="left-to-right"
+                duration={0.85}
+                className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-[32px] xl:text-[36px] font-light tracking-tight leading-tight"
+              >
+                <span style={{ color: THEME.burgundy }}>Worth your attention</span>
+              </WipeText>
+            </div>
 
-            <p className="text-xs sm:text-sm md:text-base font-light mt-2 max-w-xl text-[#1C1A19]/75">
+            <p className="text-xs sm:text-[13px] font-light mt-1 max-w-xl text-[#1C1A19]/75 leading-relaxed">
               Explore 8 bespoke ambassador privileges — royal drapes, artisan embroideries, and complimentary trousseau tailoring.
             </p>
           </div>
 
           {/* Quick Controls & Link */}
-          <div className="flex items-center gap-4 mt-6 md:mt-0">
-            <div className="hidden sm:flex items-center gap-2">
+          <div className="flex items-center gap-3 mt-3 md:mt-0">
+            <div className="hidden sm:flex items-center gap-1.5">
               <button
                 onClick={() => handleScrollRail('left')}
-                className="p-2.5 rounded-full border transition-all hover:scale-105 shadow-sm"
+                className="p-2 rounded-full border transition-all hover:scale-105 shadow-sm cursor-pointer"
                 style={{
                   borderColor: `${THEME.maroon}30`,
                   backgroundColor: '#FFFFFF',
@@ -349,11 +353,11 @@ export const WorthYourAttention: React.FC = () => {
                 }}
                 aria-label="Scroll cards left"
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => handleScrollRail('right')}
-                className="p-2.5 rounded-full border transition-all hover:scale-105 shadow-sm"
+                className="p-2 rounded-full border transition-all hover:scale-105 shadow-sm cursor-pointer"
                 style={{
                   borderColor: `${THEME.maroon}30`,
                   backgroundColor: '#FFFFFF',
@@ -361,13 +365,13 @@ export const WorthYourAttention: React.FC = () => {
                 }}
                 aria-label="Scroll cards right"
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
             <button
               onClick={() => navigateTo('catalog')}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider transition-colors py-2 px-4 rounded-full border shadow-sm hover:scale-105"
+              className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold uppercase tracking-wider transition-colors py-1.5 px-3.5 rounded-full border shadow-sm hover:scale-105 cursor-pointer"
               style={{
                 backgroundColor: THEME.maroon,
                 borderColor: THEME.orange,
@@ -375,17 +379,17 @@ export const WorthYourAttention: React.FC = () => {
               }}
             >
               <span>View All 8 Offers</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3 h-3" />
             </button>
           </div>
         </div>
 
-        {/* 2. Main Composite Card Layout: Narrow Vertical Cards (Left) + Large Featured Card (Right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
-          {/* Left Column: Narrow Vertical Cards Rail (6 cols on Desktop) */}
-          <div className="lg:col-span-6 flex flex-col justify-between">
+        {/* 2. Main Composite Card Layout: Narrow Vertical Cards (Left, 7 cols) + Featured Card (Right, 5 cols) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 xl:gap-6 items-stretch">
+          {/* Left Column: Narrow Vertical Cards Rail (7 cols on Desktop for at least 4 visible cards) */}
+          <div className="lg:col-span-7 flex flex-col justify-between h-full min-w-0">
             {/* Rail Header Indicator */}
-            <div className="flex items-center justify-between mb-3 px-1">
+            <div className="flex items-center justify-between mb-1.5 px-1">
               <div className="flex items-center gap-2">
                 <span className="text-xs uppercase tracking-widest font-semibold" style={{ color: THEME.maroon }}>
                   Select Ambassador Look
@@ -400,167 +404,169 @@ export const WorthYourAttention: React.FC = () => {
             </div>
 
             {/* Horizontal Scroll Rail of 9:16 Portrait Cards - Floating Auto-Sliding Loop */}
-            <div
-              ref={cardStripRef}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              onTouchStart={() => markUserInteraction()}
-              onScroll={() => {
-                const strip = cardStripRef.current;
-                if (strip) {
-                  const halfWidth = strip.scrollWidth / 2;
-                  if (strip.scrollLeft >= halfWidth * 1.9) {
-                    strip.scrollLeft -= halfWidth;
+            <div className="my-auto py-1 w-full overflow-hidden">
+              <div
+                ref={cardStripRef}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                onTouchStart={() => markUserInteraction()}
+                onScroll={() => {
+                  const strip = cardStripRef.current;
+                  if (strip) {
+                    const halfWidth = strip.scrollWidth / 2;
+                    if (strip.scrollLeft >= halfWidth * 1.9) {
+                      strip.scrollLeft -= halfWidth;
+                    }
                   }
-                }
-              }}
-              className="flex items-center gap-4 overflow-x-auto no-scrollbar py-4 px-1 -mx-2 sm:mx-0 sm:px-0 select-none"
-            >
-              {[...BRAND_AMBASSADOR_OFFERS, ...BRAND_AMBASSADOR_OFFERS].map((item, idx) => {
-                const isActive = item.id === activeId;
+                }}
+                className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto no-scrollbar py-2 px-1 select-none"
+              >
+                {[...BRAND_AMBASSADOR_OFFERS, ...BRAND_AMBASSADOR_OFFERS].map((item, idx) => {
+                  const isActive = item.id === activeId;
 
-                return (
-                  <motion.div
-                    key={`${item.id}-${idx}`}
-                    ref={(el) => {
-                      if (idx < BRAND_AMBASSADOR_OFFERS.length) {
-                        cardItemRefs.current[idx] = el;
-                      }
-                    }}
-                    onClick={() => {
-                      markUserInteraction();
-                      setActiveId(item.id);
-                    }}
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.25 }}
-                    className={`relative flex-shrink-0 w-[165px] sm:w-[185px] md:w-[205px] aspect-[9/16] rounded-2xl overflow-hidden cursor-pointer transition-shadow duration-500 select-none group border ${
-                      isActive
-                        ? 'ring-2 shadow-2xl scale-[1.02] z-20'
-                        : 'shadow-md opacity-85 hover:opacity-100 z-10'
-                    }`}
-                    style={{
-                      aspectRatio: '9 / 16',
-                      backgroundColor: THEME.burgundy,
-                      borderColor: isActive ? THEME.orange : `${THEME.champagne}35`,
-                      // @ts-expect-error custom ring color
-                      '--tw-ring-color': THEME.orange,
-                      boxShadow: isActive
-                        ? `0 20px 35px -10px ${THEME.maroon}80, 0 0 20px ${THEME.orange}50`
-                        : undefined
-                    }}
-                  >
-                    {/* 9:16 Portrait Image Container */}
-                    <div
-                      className="absolute inset-0 w-full h-full overflow-hidden flex items-center justify-center"
-                      style={{ aspectRatio: '9 / 16', backgroundColor: THEME.burgundy }}
-                    >
-                      <picture className="w-full h-full block">
-                        <source type="image/webp" srcSet={item.imageWebp} />
-                        <img
-                          src={item.imageOrig}
-                          alt={`Aaranya Silks Brand Ambassador ${item.number} - ${item.title}`}
-                          loading="lazy"
-                          className={`w-full h-full object-contain object-center transition-all duration-700 ${
-                            isActive
-                              ? 'scale-105 filter brightness-100 contrast-105'
-                              : 'filter grayscale-[25%] contrast-105 brightness-85 group-hover:scale-105 group-hover:grayscale-0 group-hover:brightness-95'
-                          }`}
-                          style={{ aspectRatio: '9 / 16' }}
-                        />
-                      </picture>
-                    </div>
-
-                    {/* Gradient scrim with Maroon & Burgundy depth */}
-                    <div
-                      className="absolute inset-0 transition-opacity duration-500 pointer-events-none"
-                      style={{
-                        background: isActive
-                          ? `linear-gradient(to top, ${THEME.burgundy}F8 0%, ${THEME.burgundy}A0 24%, transparent 58%, ${THEME.burgundy}60 100%)`
-                          : `linear-gradient(to top, ${THEME.burgundy}F8 0%, ${THEME.burgundy}85 28%, transparent 62%, rgba(0,0,0,0.35) 100%)`
+                  return (
+                    <motion.div
+                      key={`${item.id}-${idx}`}
+                      ref={(el) => {
+                        if (idx < BRAND_AMBASSADOR_OFFERS.length) {
+                          cardItemRefs.current[idx] = el;
+                        }
                       }}
-                    />
-
-                    {/* Card Content Overlay */}
-                    <div className="absolute inset-0 flex flex-col justify-between p-3.5 z-10 pointer-events-none">
-                      {/* Top: Card Number & Active Indicator */}
-                      <div className="flex items-center justify-between w-full">
-                        <span
-                          className="font-mono text-xs font-bold px-2 py-0.5 rounded-md shadow-sm"
-                          style={{
-                            backgroundColor: isActive ? THEME.orange : 'rgba(0,0,0,0.6)',
-                            color: isActive ? '#FFFFFF' : THEME.champagne
-                          }}
-                        >
-                          {item.number}
-                        </span>
-
-                        {isActive ? (
-                          <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#E87532]/20 border border-[#E87532]/60">
-                            <span
-                              className="w-2 h-2 rounded-full animate-ping"
-                              style={{ backgroundColor: THEME.orange }}
-                            />
-                            <span className="text-[10px] uppercase font-bold tracking-wider" style={{ color: THEME.orange }}>
-                              Selected
-                            </span>
-                          </span>
-                        ) : (
-                          <span
-                            className="w-1.5 h-1.5 rounded-full opacity-60 group-hover:opacity-100"
-                            style={{ backgroundColor: THEME.champagne }}
+                      onClick={() => {
+                        markUserInteraction();
+                        setActiveId(item.id);
+                      }}
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.25 }}
+                      className={`relative flex-shrink-0 w-[140px] sm:w-[148px] md:w-[152px] lg:w-[148px] xl:w-[158px] aspect-[9/16] rounded-2xl overflow-hidden cursor-pointer transition-shadow duration-500 select-none group border ${
+                        isActive
+                          ? 'ring-2 shadow-2xl scale-[1.02] z-20'
+                          : 'shadow-md opacity-85 hover:opacity-100 z-10'
+                      }`}
+                      style={{
+                        aspectRatio: '9 / 16',
+                        backgroundColor: THEME.burgundy,
+                        borderColor: isActive ? THEME.orange : `${THEME.champagne}35`,
+                        // @ts-expect-error custom ring color
+                        '--tw-ring-color': THEME.orange,
+                        boxShadow: isActive
+                          ? `0 20px 35px -10px ${THEME.maroon}80, 0 0 20px ${THEME.orange}50`
+                          : undefined
+                      }}
+                    >
+                      {/* 9:16 Portrait Image Container */}
+                      <div
+                        className="absolute inset-0 w-full h-full overflow-hidden flex items-center justify-center"
+                        style={{ aspectRatio: '9 / 16', backgroundColor: THEME.burgundy }}
+                      >
+                        <picture className="w-full h-full block">
+                          <source type="image/webp" srcSet={item.imageWebp} />
+                          <img
+                            src={item.imageOrig}
+                            alt={`Aaranya Silks Brand Ambassador ${item.number} - ${item.title}`}
+                            loading="lazy"
+                            className={`w-full h-full object-contain object-center transition-all duration-700 ${
+                              isActive
+                                ? 'scale-105 filter brightness-100 contrast-105'
+                                : 'filter grayscale-[25%] contrast-105 brightness-85 group-hover:scale-105 group-hover:grayscale-0 group-hover:brightness-95'
+                            }`}
+                            style={{ aspectRatio: '9 / 16' }}
                           />
-                        )}
+                        </picture>
                       </div>
 
-                      {/* Middle: Subtle Vertical Badge pinned along the right edge */}
-                      <div className="my-auto self-end pr-1 opacity-70 group-hover:opacity-100 transition-opacity">
-                        <span
-                          className="writing-vertical-rl rotate-180 text-[9px] tracking-[0.22em] uppercase font-semibold block"
-                          style={{
-                            color: isActive ? THEME.champagne : 'rgba(243, 217, 181, 0.65)',
-                            textShadow: '0 2px 6px rgba(0,0,0,0.9)'
-                          }}
-                        >
-                          AMBASSADOR • {item.number}
-                        </span>
-                      </div>
+                      {/* Gradient scrim with Maroon & Burgundy depth */}
+                      <div
+                        className="absolute inset-0 transition-opacity duration-500 pointer-events-none"
+                        style={{
+                          background: isActive
+                            ? `linear-gradient(to top, ${THEME.burgundy}F8 0%, ${THEME.burgundy}A0 24%, transparent 58%, ${THEME.burgundy}60 100%)`
+                            : `linear-gradient(to top, ${THEME.burgundy}F8 0%, ${THEME.burgundy}85 28%, transparent 62%, rgba(0,0,0,0.35) 100%)`
+                        }}
+                      />
 
-                      {/* Bottom: Title & Highlight Bar */}
-                      <div className="text-left space-y-1.5">
-                        <span className="text-[10px] uppercase font-bold tracking-wider block" style={{ color: THEME.orange }}>
-                          {item.categoryTarget}
-                        </span>
-                        <p
-                          className="font-serif text-xs sm:text-sm font-semibold leading-tight line-clamp-2"
-                          style={{ color: THEME.champagne }}
-                        >
-                          {item.title}
-                        </p>
-                        <div
-                          className="h-1 rounded-full transition-all duration-500"
-                          style={{
-                            width: isActive ? '100%' : '35%',
-                            backgroundColor: isActive ? THEME.orange : `${THEME.champagne}50`
-                          }}
-                        />
+                      {/* Card Content Overlay */}
+                      <div className="absolute inset-0 flex flex-col justify-between p-2.5 sm:p-3 z-10 pointer-events-none">
+                        {/* Top: Card Number & Active Indicator */}
+                        <div className="flex items-center justify-between w-full">
+                          <span
+                            className="font-mono text-xs font-bold px-2 py-0.5 rounded-md shadow-sm"
+                            style={{
+                              backgroundColor: isActive ? THEME.orange : 'rgba(0,0,0,0.6)',
+                              color: isActive ? '#FFFFFF' : THEME.champagne
+                            }}
+                          >
+                            {item.number}
+                          </span>
+
+                          {isActive ? (
+                            <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#E87532]/20 border border-[#E87532]/60">
+                              <span
+                                className="w-1.5 h-1.5 rounded-full animate-ping"
+                                style={{ backgroundColor: THEME.orange }}
+                              />
+                              <span className="text-[9.5px] uppercase font-bold tracking-wider" style={{ color: THEME.orange }}>
+                                Selected
+                              </span>
+                            </span>
+                          ) : (
+                            <span
+                              className="w-1.5 h-1.5 rounded-full opacity-60 group-hover:opacity-100"
+                              style={{ backgroundColor: THEME.champagne }}
+                            />
+                          )}
+                        </div>
+
+                        {/* Middle: Subtle Vertical Badge pinned along the right edge */}
+                        <div className="my-auto self-end pr-0.5 opacity-70 group-hover:opacity-100 transition-opacity">
+                          <span
+                            className="writing-vertical-rl rotate-180 text-[8.5px] tracking-[0.2em] uppercase font-semibold block"
+                            style={{
+                              color: isActive ? THEME.champagne : 'rgba(243, 217, 181, 0.65)',
+                              textShadow: '0 2px 6px rgba(0,0,0,0.9)'
+                            }}
+                          >
+                            AMBASSADOR • {item.number}
+                          </span>
+                        </div>
+
+                        {/* Bottom: Title & Highlight Bar */}
+                        <div className="text-left space-y-1">
+                          <span className="text-[9.5px] uppercase font-bold tracking-wider block" style={{ color: THEME.orange }}>
+                            {item.categoryTarget}
+                          </span>
+                          <p
+                            className="font-serif text-xs font-semibold leading-tight line-clamp-2"
+                            style={{ color: THEME.champagne }}
+                          >
+                            {item.title}
+                          </p>
+                          <div
+                            className="h-1 rounded-full transition-all duration-500"
+                            style={{
+                              width: isActive ? '100%' : '35%',
+                              backgroundColor: isActive ? THEME.orange : `${THEME.champagne}50`
+                            }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
+                    </motion.div>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Bottom Dots & Controls for Carousel */}
-            <div className="flex items-center justify-between pt-3 px-1">
+            <div className="flex items-center justify-between pt-1.5 px-1">
               {/* Pagination Dots */}
               <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
                 {BRAND_AMBASSADOR_OFFERS.map((dot) => (
                   <button
                     key={dot.id}
                     onClick={() => setActiveId(dot.id)}
-                    className="h-2 rounded-full transition-all duration-300"
+                    className="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
                     style={{
-                      width: dot.id === activeId ? '28px' : '8px',
+                      width: dot.id === activeId ? '24px' : '7px',
                       backgroundColor: dot.id === activeId ? THEME.orange : `${THEME.maroon}35`
                     }}
                     aria-label={`Jump to Ambassador ${dot.number}`}
@@ -569,33 +575,33 @@ export const WorthYourAttention: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-xs text-[#1C1A19]/70 font-mono">
+                <span className="text-[11px] sm:text-xs text-[#1C1A19]/70 font-mono">
                   {activeOffer.number} / {BRAND_AMBASSADOR_OFFERS.length}
                 </span>
                 <div className="flex items-center gap-1">
                   <button
                     onClick={handlePrev}
-                    className="p-1.5 rounded-full hover:bg-black/5 text-[#5B1024] transition-colors"
+                    className="p-1 rounded-full hover:bg-black/5 text-[#5B1024] transition-colors cursor-pointer"
                     aria-label="Previous Ambassador"
                   >
-                    <ChevronLeft className="w-4 h-4" />
+                    <ChevronLeft className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={handleNext}
-                    className="p-1.5 rounded-full hover:bg-black/5 text-[#5B1024] transition-colors"
+                    className="p-1 rounded-full hover:bg-black/5 text-[#5B1024] transition-colors cursor-pointer"
                     aria-label="Next Ambassador"
                   >
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Large Featured Card (6 cols on Desktop) */}
-          <div className="lg:col-span-6 flex flex-col">
+          {/* Right Column: Featured Card (5 cols on Desktop, scaled to fit laptop viewport) */}
+          <div className="lg:col-span-5 flex flex-col min-w-0">
             <div
-              className="relative flex-1 min-h-[540px] sm:min-h-[580px] lg:min-h-[640px] xl:min-h-[670px] rounded-3xl overflow-hidden shadow-2xl border flex flex-col justify-between p-5 sm:p-6 lg:p-7 text-left text-white"
+              className="relative flex-1 min-h-[420px] sm:min-h-[435px] lg:min-h-[430px] xl:min-h-[445px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border flex flex-col justify-between p-3.5 sm:p-4.5 lg:p-4 xl:p-4.5 text-left text-white"
               style={{
                 backgroundColor: THEME.burgundy,
                 borderColor: `${THEME.champagne}40`,
@@ -621,8 +627,7 @@ export const WorthYourAttention: React.FC = () => {
                       style={{
                         objectPosition: activeOffer.objectPosition || 'center 6%'
                       }}
-                      // @ts-expect-error fetchpriority
-                      fetchpriority="high"
+                      fetchPriority="high"
                     />
                   </picture>
 
@@ -630,17 +635,17 @@ export const WorthYourAttention: React.FC = () => {
                   <div
                     className="absolute inset-0 pointer-events-none"
                     style={{
-                      background: `linear-gradient(to top, ${THEME.burgundy}FA 0%, ${THEME.burgundy}CC 20%, ${THEME.burgundy}66 32%, transparent 48%)`
+                      background: `linear-gradient(to top, ${THEME.burgundy}FA 0%, ${THEME.burgundy}D9 22%, ${THEME.burgundy}66 38%, transparent 54%)`
                     }}
                   />
                 </motion.div>
               </AnimatePresence>
 
               {/* Top Row: Badges & Next/Prev Controls */}
-              <div className="relative z-10 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
+              <div className="relative z-10 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2">
                   <span
-                    className="font-mono text-xs sm:text-sm font-bold px-3 py-1 rounded-full backdrop-blur-md border shadow"
+                    className="font-mono text-[11px] sm:text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur-md border shadow"
                     style={{
                       backgroundColor: `${THEME.burgundy}D0`,
                       borderColor: THEME.orange,
@@ -651,7 +656,7 @@ export const WorthYourAttention: React.FC = () => {
                   </span>
 
                   <span
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-wider shadow"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider shadow"
                     style={{
                       backgroundColor: THEME.red,
                       color: THEME.champagne
@@ -663,20 +668,20 @@ export const WorthYourAttention: React.FC = () => {
                 </div>
 
                 {/* Quick Arrow Nav inside Featured Card */}
-                <div className="flex items-center gap-1 bg-black/40 backdrop-blur-md rounded-full p-1 border border-white/10">
+                <div className="flex items-center gap-1 bg-black/40 backdrop-blur-md rounded-full p-0.5 border border-white/10">
                   <button
                     onClick={handlePrev}
-                    className="p-1.5 rounded-full hover:bg-white/20 text-white transition-colors cursor-pointer"
+                    className="p-1 sm:p-1.5 rounded-full hover:bg-white/20 text-white transition-colors cursor-pointer"
                     aria-label="Previous Ambassador Card"
                   >
-                    <ChevronLeft className="w-4 h-4" />
+                    <ChevronLeft className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={handleNext}
-                    className="p-1.5 rounded-full hover:bg-white/20 text-white transition-colors cursor-pointer"
+                    className="p-1 sm:p-1.5 rounded-full hover:bg-white/20 text-white transition-colors cursor-pointer"
                     aria-label="Next Ambassador Card"
                   >
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
@@ -685,16 +690,16 @@ export const WorthYourAttention: React.FC = () => {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`content-${activeOffer.id}`}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
+                  exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.35 }}
-                  className="relative z-10 space-y-2.5 pt-4"
+                  className="relative z-10 space-y-1.5 sm:space-y-2 pt-2"
                 >
                   {/* Tagline */}
                   <div className="flex items-center gap-2">
                     <span
-                      className="text-[10px] sm:text-xs uppercase tracking-[0.22em] font-bold"
+                      className="text-[9.5px] sm:text-[10.5px] uppercase tracking-[0.2em] font-bold"
                       style={{ color: THEME.orange }}
                     >
                       {activeOffer.tagline}
@@ -703,7 +708,7 @@ export const WorthYourAttention: React.FC = () => {
 
                   {/* Title */}
                   <h3
-                    className="font-serif text-xl sm:text-2xl lg:text-[26px] font-normal leading-snug tracking-tight"
+                    className="font-serif text-base sm:text-lg lg:text-[20px] xl:text-[21px] font-normal leading-snug tracking-tight"
                     style={{ color: THEME.champagne }}
                   >
                     {activeOffer.title}
@@ -711,42 +716,42 @@ export const WorthYourAttention: React.FC = () => {
 
                   {/* Offer Description Banner */}
                   <div
-                    className="p-2.5 sm:p-3 rounded-xl border backdrop-blur-md flex items-start gap-2.5"
+                    className="p-2 sm:p-2.5 rounded-xl border backdrop-blur-md flex items-start gap-2"
                     style={{
                       backgroundColor: `${THEME.maroon}80`,
                       borderColor: `${THEME.orange}50`
                     }}
                   >
-                    <Gift className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: THEME.orange }} />
+                    <Gift className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: THEME.orange }} />
                     <div className="min-w-0">
-                      <p className="text-xs sm:text-[13px] font-medium leading-snug" style={{ color: THEME.ivory }}>
+                      <p className="text-[11px] sm:text-xs font-semibold leading-snug" style={{ color: THEME.ivory }}>
                         {activeOffer.offer}
                       </p>
-                      <p className="text-[10px] sm:text-[11px] font-light mt-0.5 text-[#F3D9B5]/85 leading-tight">
+                      <p className="text-[9.5px] sm:text-[10px] font-light mt-0.5 text-[#F3D9B5]/85 leading-tight">
                         {activeOffer.highlight}
                       </p>
                     </div>
                   </div>
 
                   {/* Perks Checklist */}
-                  <div className="flex flex-wrap gap-1.5 pt-0.5">
+                  <div className="flex flex-wrap gap-1 pt-0.5">
                     {activeOffer.perks.map((perk, pIdx) => (
                       <div
                         key={pIdx}
-                        className="inline-flex items-center gap-1 text-[10px] text-white/90 bg-black/35 backdrop-blur-sm px-2 py-0.5 rounded-md border border-white/10"
+                        className="inline-flex items-center gap-1 text-[9px] sm:text-[9.5px] text-white/90 bg-black/35 backdrop-blur-sm px-2 py-0.5 rounded-md border border-white/10"
                       >
-                        <Check className="w-3 h-3 flex-shrink-0" style={{ color: THEME.orange }} />
+                        <Check className="w-2.5 h-2.5 flex-shrink-0" style={{ color: THEME.orange }} />
                         <span className="truncate">{perk}</span>
                       </div>
                     ))}
                   </div>
 
                   {/* Coupon Code Pill & Action Buttons */}
-                  <div className="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                  <div className="pt-0.5 flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 sm:gap-2">
                     {/* Copy Coupon Code Button */}
                     <button
                       onClick={() => handleCopyCode(activeOffer.couponCode)}
-                      className="inline-flex items-center justify-between sm:justify-start gap-2 px-3 py-2 rounded-xl border border-dashed text-[11px] font-mono font-semibold transition-all hover:scale-102 cursor-pointer"
+                      className="inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl border border-dashed text-[10.5px] font-mono font-semibold transition-all hover:scale-102 cursor-pointer"
                       style={{
                         backgroundColor: `${THEME.burgundy}A0`,
                         borderColor: THEME.orange,
@@ -759,7 +764,7 @@ export const WorthYourAttention: React.FC = () => {
                         <span>CODE: {activeOffer.couponCode}</span>
                       </div>
                       {copiedCode === activeOffer.couponCode ? (
-                        <span className="text-[10px] uppercase font-bold text-emerald-400">Copied!</span>
+                        <span className="text-[9.5px] uppercase font-bold text-emerald-400">Copied!</span>
                       ) : (
                         <Copy className="w-2.5 h-2.5 opacity-70" />
                       )}
@@ -768,7 +773,7 @@ export const WorthYourAttention: React.FC = () => {
                     {/* Primary Claim Privilege CTA Button */}
                     <button
                       onClick={() => handleClaimOffer(activeOffer)}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider shadow-lg transition-all duration-300 hover:scale-102 cursor-pointer"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow-lg transition-all duration-300 hover:scale-102 cursor-pointer"
                       style={{
                         backgroundColor: THEME.red,
                         color: '#FFFFFF',
