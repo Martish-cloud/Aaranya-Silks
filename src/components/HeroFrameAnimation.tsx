@@ -25,6 +25,7 @@ export const HeroFrameAnimation: React.FC = () => {
   const loadingMapRef = useRef<Map<number, Promise<HTMLImageElement>>>(new Map());
   const rafIdRef = useRef<number | null>(null);
   const lastDrawnFrameRef = useRef<number>(-1);
+  const lastActualFrameDrawnRef = useRef<number>(-1);
   const targetFrameRef = useRef<number>(0);
   const currentFrameRef = useRef<number>(0);
   const canvasSizeRef = useRef({ width: 0, height: 0, dpr: 1 });
@@ -59,12 +60,16 @@ export const HeroFrameAnimation: React.FC = () => {
     }
   }, []);
 
-  // Draw image on canvas preserving aspect ratio (object-fit: cover)
+  // Draw image on canvas preserving aspect ratio (object-fit: cover) with high-quality smoothing
   const drawFrame = useCallback((img: HTMLImageElement) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) return;
+
+    // Enable high-quality image smoothing for pristine 4K rendering
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
 
     let { width: displayWidth, height: displayHeight, dpr } = canvasSizeRef.current;
     if (displayWidth === 0 || displayHeight === 0) {
@@ -103,7 +108,7 @@ export const HeroFrameAnimation: React.FC = () => {
     ctx.restore();
   }, [updateCanvasDimensions]);
 
-  // Preload frame helper with asynchronous off-thread decoding
+  // Preload frame helper with asynchronous off-thread decoding & instant frame replacement
   const preloadImage = useCallback(
     (index: number): Promise<HTMLImageElement> => {
       if (imagesRef.current.has(index)) {
@@ -124,11 +129,34 @@ export const HeroFrameAnimation: React.FC = () => {
               .finally(() => {
                 imagesRef.current.set(index, img);
                 loadingMapRef.current.delete(index);
+
+                // If currently visible target frame was waiting for this exact image, immediately redraw sharp version!
+                const activeIndex = Math.min(
+                  TOTAL_FRAMES - 1,
+                  Math.max(0, Math.round(currentFrameRef.current))
+                );
+                if (activeIndex === index && lastActualFrameDrawnRef.current !== index) {
+                  drawFrame(img);
+                  lastActualFrameDrawnRef.current = index;
+                  lastDrawnFrameRef.current = index;
+                }
+
                 resolve(img);
               });
           } else {
             imagesRef.current.set(index, img);
             loadingMapRef.current.delete(index);
+
+            const activeIndex = Math.min(
+              TOTAL_FRAMES - 1,
+              Math.max(0, Math.round(currentFrameRef.current))
+            );
+            if (activeIndex === index && lastActualFrameDrawnRef.current !== index) {
+              drawFrame(img);
+              lastActualFrameDrawnRef.current = index;
+              lastDrawnFrameRef.current = index;
+            }
+
             resolve(img);
           }
         };
@@ -142,7 +170,7 @@ export const HeroFrameAnimation: React.FC = () => {
       loadingMapRef.current.set(index, promise);
       return promise;
     },
-    []
+    [drawFrame]
   );
 
   // Priority preloading around current target frame
@@ -169,17 +197,18 @@ export const HeroFrameAnimation: React.FC = () => {
         updateCanvasDimensions();
         drawFrame(firstImg);
         lastDrawnFrameRef.current = 0;
+        lastActualFrameDrawnRef.current = 0;
       }
     });
 
-    // 2. Preload initial batch (1-30) right away
-    for (let i = 1; i <= Math.min(30, TOTAL_FRAMES - 1); i++) {
+    // 2. Preload initial batch (1-35) right away
+    for (let i = 1; i <= Math.min(35, TOTAL_FRAMES - 1); i++) {
       preloadImage(i);
     }
 
     // 3. Staged background preloader for remaining frames in fast idle chunks
-    let currentChunk = 31;
-    const chunkSize = 15;
+    let currentChunk = 36;
+    const chunkSize = 20;
 
     const loadNextChunk = () => {
       if (isCancelled || currentChunk >= TOTAL_FRAMES) return;
@@ -189,11 +218,11 @@ export const HeroFrameAnimation: React.FC = () => {
       }
       currentChunk = end;
       if (currentChunk < TOTAL_FRAMES) {
-        setTimeout(loadNextChunk, 60);
+        setTimeout(loadNextChunk, 50);
       }
     };
 
-    const timer = setTimeout(loadNextChunk, 120);
+    const timer = setTimeout(loadNextChunk, 100);
 
     return () => {
       isCancelled = true;
@@ -242,9 +271,15 @@ export const HeroFrameAnimation: React.FC = () => {
           Math.max(0, Math.round(currentFrameRef.current))
         );
 
-        if (frameIndex !== lastDrawnFrameRef.current) {
+        if (
+          frameIndex !== lastDrawnFrameRef.current ||
+          (imagesRef.current.has(frameIndex) && lastActualFrameDrawnRef.current !== frameIndex)
+        ) {
           let imgToDraw = imagesRef.current.get(frameIndex);
+          let isExactMatch = true;
+
           if (!imgToDraw) {
+            isExactMatch = false;
             for (let offset = 1; offset < 25; offset++) {
               if (imagesRef.current.has(frameIndex - offset)) {
                 imgToDraw = imagesRef.current.get(frameIndex - offset);
@@ -260,6 +295,9 @@ export const HeroFrameAnimation: React.FC = () => {
           if (imgToDraw) {
             drawFrame(imgToDraw);
             lastDrawnFrameRef.current = frameIndex;
+            if (isExactMatch) {
+              lastActualFrameDrawnRef.current = frameIndex;
+            }
           }
         }
       }
@@ -314,21 +352,22 @@ export const HeroFrameAnimation: React.FC = () => {
         {/* Background Canvas: 160 Cinematic Frame Sequence */}
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 w-full h-full object-cover filter brightness-[0.96] contrast-[1.04] z-0 pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
         />
 
         {/* Fallback initial poster image positioned behind canvas */}
         <img
           src={HERO_FRAMES[0]}
           alt="Aaranya Silks Luxury Saree Boutique"
-          className="absolute inset-0 w-full h-full object-cover filter brightness-[0.96] contrast-[1.04] -z-1 pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover -z-1 pointer-events-none"
           loading="eager"
           fetchPriority="high"
         />
 
-        {/* Ambient Boutique Showroom Overlays - Optimized for Store Clarity & Warm Luxury */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/25 to-black/35 pointer-events-none z-1" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1C1A19]/80 via-transparent to-black/35 pointer-events-none z-1" />
+        {/* Ambient Boutique Showroom Overlays - Tailored for 4K Luxury Clarity & Text Legibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 via-45% to-transparent pointer-events-none z-1" />
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#1C1A19]/90 via-[#1C1A19]/35 to-transparent pointer-events-none z-1" />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/50 to-transparent pointer-events-none z-1" />
         <div className="absolute top-1/4 left-1/3 w-96 h-96 rounded-full bg-[#E5B842]/10 blur-[140px] pointer-events-none z-1" />
 
         {/* Decorative Gold Frame Border */}
