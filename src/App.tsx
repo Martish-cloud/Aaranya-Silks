@@ -56,7 +56,7 @@ const AppContent: React.FC = () => {
   const isHome = activePage === 'home';
 
   return (
-    <div className={`min-h-screen ${isHome ? 'bg-[#1C1A19]' : 'bg-[#FAF7F0]'} text-[#1C1A19] flex flex-col font-sans relative selection:bg-[#651C32] selection:text-[#FAF7F0] overflow-x-clip w-full`}>
+    <div className={`min-h-screen ${isHome ? 'bg-[#1C1A19]' : 'bg-[#FAF7F0]'} text-[#1C1A19] flex flex-col font-sans relative selection:bg-[#651C32] selection:text-[#FAF7F0] w-full`}>
       {/* 1. Announcement Bar */}
       <AnnouncementBar />
 

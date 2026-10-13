@@ -31,7 +31,6 @@
     font-family: var(--font-sans);
     background-color: #FAF7F0;
     color: #1C1A19;
-    overflow-x: hidden;
   }
 
   body {
@@ -40,7 +39,6 @@
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

@@ -19,7 +19,6 @@ export const HeroFrameAnimation: React.FC = () => {
     }
     return false;
   });
-  const [initialFrameLoaded, setInitialFrameLoaded] = useState(false);
 
   // In-memory cache of HTMLImageElements & in-flight promises
   const imagesRef = useRef<Map<number, HTMLImageElement>>(new Map());
@@ -46,14 +45,17 @@ export const HeroFrameAnimation: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const displayWidth = canvas.clientWidth;
-    const displayHeight = canvas.clientHeight;
+    const displayWidth = canvas.clientWidth || window.innerWidth;
+    const displayHeight = canvas.clientHeight || window.innerHeight;
 
     canvasSizeRef.current = { width: displayWidth, height: displayHeight, dpr };
 
-    if (canvas.width !== displayWidth * dpr || canvas.height !== displayHeight * dpr) {
-      canvas.width = displayWidth * dpr;
-      canvas.height = displayHeight * dpr;
+    const targetWidth = Math.round(displayWidth * dpr);
+    const targetHeight = Math.round(displayHeight * dpr);
+
+    if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
     }
   }, []);
 
@@ -64,14 +66,24 @@ export const HeroFrameAnimation: React.FC = () => {
     const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) return;
 
-    const { width: displayWidth, height: displayHeight, dpr } = canvasSizeRef.current;
-    if (displayWidth === 0 || displayHeight === 0) return;
+    let { width: displayWidth, height: displayHeight, dpr } = canvasSizeRef.current;
+    if (displayWidth === 0 || displayHeight === 0) {
+      updateCanvasDimensions();
+      displayWidth = canvasSizeRef.current.width;
+      displayHeight = canvasSizeRef.current.height;
+      dpr = canvasSizeRef.current.dpr;
+      if (displayWidth === 0 || displayHeight === 0) return;
+    }
+
+    const imgW = img.naturalWidth || img.width;
+    const imgH = img.naturalHeight || img.height;
+    if (!imgW || !imgH) return;
 
     ctx.save();
     ctx.scale(dpr, dpr);
 
     // Calculate aspect ratio cover fit
-    const imgAspect = img.width / img.height;
+    const imgAspect = imgW / imgH;
     const canvasAspect = displayWidth / displayHeight;
 
     let drawWidth = displayWidth;
@@ -89,7 +101,7 @@ export const HeroFrameAnimation: React.FC = () => {
 
     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
     ctx.restore();
-  }, []);
+  }, [updateCanvasDimensions]);
 
   // Preload frame helper with asynchronous off-thread decoding
   const preloadImage = useCallback(
@@ -154,7 +166,7 @@ export const HeroFrameAnimation: React.FC = () => {
     // 1. Immediately load frame 0 and display it
     preloadImage(0).then((firstImg) => {
       if (!isCancelled) {
-        setInitialFrameLoaded(true);
+        updateCanvasDimensions();
         drawFrame(firstImg);
         lastDrawnFrameRef.current = 0;
       }
@@ -265,7 +277,7 @@ export const HeroFrameAnimation: React.FC = () => {
       const progress = Math.max(0, Math.min(1, (scrollY - top) / scrollable));
       const targetFrame = Math.min(
         TOTAL_FRAMES - 1,
-        Math.floor(progress * TOTAL_FRAMES)
+        Math.round(progress * (TOTAL_FRAMES - 1))
       );
 
       if (targetFrame !== targetFrameRef.current) {
@@ -302,24 +314,21 @@ export const HeroFrameAnimation: React.FC = () => {
         {/* Background Canvas: 160 Cinematic Frame Sequence */}
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 w-full h-full object-cover filter brightness-[0.93] contrast-[1.04] z-0 pointer-events-none"
-          style={{ display: initialFrameLoaded ? 'block' : 'none' }}
+          className="absolute inset-0 w-full h-full object-cover filter brightness-[0.96] contrast-[1.04] z-0 pointer-events-none"
         />
 
-        {/* Fallback initial poster image before first canvas render */}
-        {!initialFrameLoaded && (
-          <img
-            src={HERO_FRAMES[0]}
-            alt="Aaranya Silks Luxury Saree Boutique"
-            className="absolute inset-0 w-full h-full object-cover filter brightness-[0.93] contrast-[1.04] z-0 pointer-events-none"
-            loading="eager"
-            fetchPriority="high"
-          />
-        )}
+        {/* Fallback initial poster image positioned behind canvas */}
+        <img
+          src={HERO_FRAMES[0]}
+          alt="Aaranya Silks Luxury Saree Boutique"
+          className="absolute inset-0 w-full h-full object-cover filter brightness-[0.96] contrast-[1.04] -z-1 pointer-events-none"
+          loading="eager"
+          fetchPriority="high"
+        />
 
         {/* Ambient Boutique Showroom Overlays - Optimized for Store Clarity & Warm Luxury */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-black/45 pointer-events-none z-1" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1C1A19]/90 via-transparent to-black/40 pointer-events-none z-1" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/25 to-black/35 pointer-events-none z-1" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1C1A19]/80 via-transparent to-black/35 pointer-events-none z-1" />
         <div className="absolute top-1/4 left-1/3 w-96 h-96 rounded-full bg-[#E5B842]/10 blur-[140px] pointer-events-none z-1" />
 
         {/* Decorative Gold Frame Border */}
