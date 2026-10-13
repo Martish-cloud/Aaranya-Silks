@@ -1,5 +1,7 @@
 import { Sparkles, Heart, ArrowRight, Award, Compass, Feather } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import generationalMasteryImg from '../assets/The Soul of Indian Silk/Honoring Generational Mastery.png';
+import sareePortraitImg from '../assets/The Soul of Indian Silk/Glamorous South Asian Saree Portrait.png';
 
 export const StoryPage: React.FC = () => {
   const { navigateTo } = useShop();
@@ -37,8 +39,8 @@ export const StoryPage: React.FC = () => {
           <div className="lg:col-span-6 relative">
             <div className="rounded-3xl overflow-hidden aspect-[4/5] shadow-2xl border border-[#C8A96B]/30 bg-[#F2EBDD]">
               <img
-                src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=85"
-                alt="Master Weavers of Varanasi"
+                src={generationalMasteryImg}
+                alt="Honoring Generational Mastery - Aaranya Silks"
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
@@ -77,8 +79,8 @@ export const StoryPage: React.FC = () => {
           <div className="lg:col-span-6 lg:order-2 relative">
             <div className="rounded-3xl overflow-hidden aspect-[4/5] shadow-2xl border border-[#C8A96B]/30 bg-[#F2EBDD]">
               <img
-                src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85"
-                alt="Pure Gold Zari Testing"
+                src={sareePortraitImg}
+                alt="Gold Woven to Endure Generations - Pure Zari Saree"
                 loading="lazy"
                 decoding="async"
                 className="w-full h-full object-cover object-top"

@@ -16,80 +16,87 @@ const BRIDAL_IMAGES_LIST = [bridalImg1, bridalImg2, bridalImg3, bridalImg4];
 const BRIDAL_SLUG_MAP: Record<string, string> = {
   'mayurakshi-kanjivaram-bridal-silk-saree': bridalImg1,
   'padmavati-scarlet-red-katan-bridal-saree': bridalImg2,
+  'suhani-crimson-zari-trousseau-heirloom': bridalImg3,
+  'rajkumari-emerald-temple-kanjivaram': bridalImg4,
 };
 
 export const BridalDarkSection: React.FC = () => {
   const { addToCart, openQuickView, navigateTo, isInWishlist, toggleWishlist } = useShop();
 
-  const bridalSarees = SAREES_DATA.filter((s) => s.category === 'Bridal Sarees').slice(0, 4);
+  const bridalSarees = [
+    SAREES_DATA.find((s) => s.slug === 'mayurakshi-kanjivaram-bridal-silk-saree'),
+    SAREES_DATA.find((s) => s.slug === 'padmavati-scarlet-red-katan-bridal-saree'),
+    SAREES_DATA.find((s) => s.slug === 'suhani-crimson-zari-trousseau-heirloom'),
+    SAREES_DATA.find((s) => s.slug === 'rajkumari-emerald-temple-kanjivaram'),
+  ].filter((s): s is NonNullable<typeof s> => Boolean(s));
 
   return (
-    <section className="bg-[#1C1A19] text-[#FAF7F0] py-16 md:py-24 relative overflow-hidden">
+    <section id="bridal-collection" className="bg-[#1C1A19] text-[#FAF7F0] py-4 sm:py-6 lg:py-2.5 xl:py-3.5 relative overflow-hidden flex flex-col justify-center lg:min-h-0">
       {/* Background Ambient Glow */}
       <div className="absolute top-1/3 left-10 w-96 h-96 rounded-full bg-[#8B1E3F]/25 blur-[130px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         {/* Layered Double Header with WipeText */}
-        <div className="relative text-left mb-12 sm:mb-16">
+        <div className="relative text-left mb-2 sm:mb-3 lg:mb-2 xl:mb-2.5 shrink-0">
           {/* Ghost / Shadow duplicate text */}
-          <div className="text-3xl sm:text-5xl md:text-6xl font-serif font-light text-white/5 select-none absolute -top-4 left-0 pointer-events-none whitespace-nowrap">
+          <div className="text-2xl sm:text-3xl lg:text-2xl xl:text-3xl font-serif font-light text-white/5 select-none absolute -top-1.5 lg:-top-2 left-0 pointer-events-none whitespace-nowrap">
             The Bridal Collection
           </div>
-          <WipeText as="h2" direction="left-to-right" duration={0.9} className="relative z-10 font-serif text-3xl sm:text-5xl md:text-6xl font-light text-[#FAF7F0] tracking-tight">
+          <WipeText as="h2" direction="left-to-right" duration={0.9} className="relative z-10 font-serif text-2xl sm:text-3xl lg:text-2xl xl:text-3xl font-light text-[#FAF7F0] tracking-tight leading-none">
             The Bridal Collection
           </WipeText>
-          <p className="text-xs sm:text-sm text-[#FAF7F0]/70 font-light mt-2 max-w-lg">
+          <p className="text-[11px] sm:text-xs text-[#FAF7F0]/70 font-light mt-0.5 max-w-lg">
             Certified real gold zari, Kanchipuram Korvai pit looms, and heirloom red brocades.
           </p>
         </div>
 
         {/* Grid: Big Scarlet Campaign Banner + 4 Framed Saree Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2.5 lg:gap-3 xl:gap-3.5 items-stretch lg:min-h-0">
           {/* Left Column: Big Glowing Red Bridal Campaign (5 cols) */}
           <motion.div
             initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.1 }}
             transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 relative rounded-3xl overflow-hidden bg-gradient-to-t from-[#651C32] to-[#8B1E3F] p-8 flex flex-col justify-between shadow-2xl border border-[#C8A96B]/30 group min-h-[460px] will-change-transform"
+            className="lg:col-span-5 relative rounded-2xl xl:rounded-3xl overflow-hidden bg-gradient-to-t from-[#651C32] to-[#8B1E3F] p-3.5 sm:p-5 lg:p-3.5 xl:p-4 flex flex-col justify-between shadow-2xl border border-[#C8A96B]/30 group min-h-[320px] sm:min-h-[360px] lg:min-h-0 lg:h-full will-change-transform"
           >
             <img
               src={suhaniBridalImg}
               alt="Suhani Crimson & Zari Trousseau Heirloom"
               loading="lazy"
               decoding="async"
-              className="absolute inset-0 w-full h-full object-cover object-top filter brightness-[0.75] contrast-[1.1] group-hover:scale-105 transition-transform duration-700"
+              className="absolute inset-0 w-full h-full object-cover object-[center_top] filter brightness-[0.78] contrast-[1.08] group-hover:scale-105 transition-transform duration-700"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 via-45% to-transparent" />
 
             {/* Top Tag */}
             <div className="relative z-10">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-[#C8A96B]/40 text-[#E5B842] text-xs font-semibold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5" />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-md border border-[#C8A96B]/40 text-[#E5B842] text-[10px] xl:text-[11px] font-semibold uppercase tracking-wider">
+                <Sparkles className="w-3 h-3 xl:w-3.5 xl:h-3.5" />
                 <span>Wedding Trousseau 2026</span>
               </span>
             </div>
 
             {/* Bottom Action Area */}
-            <div className="relative z-10 text-left space-y-3">
-              <h3 className="font-serif text-3xl sm:text-4xl font-light text-white leading-tight">
+            <div className="relative z-10 text-left space-y-1 sm:space-y-1.5 xl:space-y-2">
+              <h3 className="font-serif text-lg sm:text-xl lg:text-lg xl:text-xl 2xl:text-2xl font-light text-white leading-tight">
                 View the Collection
               </h3>
-              <p className="text-xs sm:text-sm text-white/80 font-light leading-relaxed">
+              <p className="text-[10px] sm:text-[11px] xl:text-xs text-white/80 font-light leading-snug line-clamp-2">
                 Handcrafted for the bride who demands eternal sanctity and royal majesty.
               </p>
               <button
                 onClick={() => navigateTo('catalog', undefined, 'Bridal Sarees')}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#E5B842] hover:bg-[#F3CA58] text-[#1C1A19] text-xs font-bold uppercase tracking-wider shadow-lg transition-transform hover:scale-105"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-[#E5B842] hover:bg-[#F3CA58] text-[#1C1A19] text-[10px] sm:text-[11px] font-bold uppercase tracking-wider shadow-lg transition-transform hover:scale-105 cursor-pointer"
               >
                 <span>Explore Bridal Sarees</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3 h-3 xl:w-3.5 xl:h-3.5" />
               </button>
             </div>
           </motion.div>
 
           {/* Right Column: 4 Framed Cards with Golden Buttons (7 cols) */}
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 lg:gap-2 xl:gap-2.5">
             {bridalSarees.map((saree, idx) => {
               const cardImage = BRIDAL_SLUG_MAP[saree.slug] || BRIDAL_IMAGES_LIST[idx] || saree.images[0];
 
@@ -101,85 +108,85 @@ export const BridalDarkSection: React.FC = () => {
                   viewport={{ once: false, amount: 0.1 }}
                   transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: (idx % 2) * 0.08 }}
                   whileHover={{ y: -4 }}
-                  className="flex flex-col justify-between bg-white/[0.06] backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 hover:border-[#C8A96B] transition-all shadow-xl group text-left will-change-transform"
+                  className="flex flex-col justify-between bg-white/[0.06] backdrop-blur-md rounded-xl xl:rounded-2xl overflow-hidden border border-white/20 hover:border-[#C8A96B] transition-all shadow-xl group text-left will-change-transform"
                 >
                   {/* Image */}
                   <div
                     onClick={() => navigateTo('product', saree.slug)}
-                    className="relative aspect-[3/4] bg-black/40 overflow-hidden cursor-pointer"
+                    className="relative w-full h-[170px] sm:h-[185px] lg:h-[115px] xl:h-[128px] 2xl:h-[148px] bg-black/40 overflow-hidden cursor-pointer shrink-0"
                   >
                     <img
                       src={cardImage}
                       alt={saree.name}
                       loading="lazy"
                       decoding="async"
-                      className="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-500"
+                      className="w-full h-full object-cover object-[center_top] group-hover:scale-105 transition-transform duration-500"
                     />
-                  <div className="absolute top-2.5 left-2.5">
-                    <span className="px-2.5 py-0.5 rounded-full bg-[#8B1E3F] text-white text-[10px] uppercase font-bold tracking-wider">
-                      {saree.fabric}
-                    </span>
-                  </div>
+                    <div className="absolute top-2 left-2">
+                      <span className="px-2 py-0.5 rounded-full bg-[#8B1E3F] text-white text-[9px] sm:text-[10px] uppercase font-bold tracking-wider">
+                        {saree.fabric}
+                      </span>
+                    </div>
 
-                  {/* Wishlist Button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleWishlist(saree.id);
-                    }}
-                    className={`absolute top-2.5 right-2.5 p-2 rounded-full backdrop-blur-md transition-all duration-300 shadow-md cursor-pointer ${
-                      isInWishlist(saree.id)
-                        ? 'bg-[#8B1E3F] text-white scale-110'
-                        : 'bg-black/40 text-white hover:bg-black/70 hover:text-[#E5B842]'
-                    }`}
-                    aria-label={isInWishlist(saree.id) ? 'Remove from Wishlist' : 'Add to Wishlist'}
-                  >
-                    <Heart className={`w-3.5 h-3.5 ${isInWishlist(saree.id) ? 'fill-current' : ''}`} />
-                  </button>
-                </div>
-
-                {/* Info & Golden Add to Cart Button */}
-                <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                  <div>
-                    <h4
-                      onClick={() => navigateTo('product', saree.slug)}
-                      className="font-serif text-base font-semibold text-white group-hover:text-[#E5B842] transition-colors line-clamp-1 cursor-pointer"
+                    {/* Wishlist Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleWishlist(saree.id);
+                      }}
+                      className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md transition-all duration-300 shadow-md cursor-pointer ${
+                        isInWishlist(saree.id)
+                          ? 'bg-[#8B1E3F] text-white scale-110'
+                          : 'bg-black/40 text-white hover:bg-black/70 hover:text-[#E5B842]'
+                      }`}
+                      aria-label={isInWishlist(saree.id) ? 'Remove from Wishlist' : 'Add to Wishlist'}
                     >
-                      {saree.name}
-                    </h4>
-                    <p className="text-[11px] text-white/60 line-clamp-1 mt-0.5">
-                      {saree.zariType}
-                    </p>
+                      <Heart className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${isInWishlist(saree.id) ? 'fill-current' : ''}`} />
+                    </button>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                    <span className="font-serif text-lg font-bold text-[#E5B842]">
-                      {formatINR(saree.price)}
-                    </span>
-
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => openQuickView(saree, saree.color)}
-                        className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
-                        aria-label="Quick View"
+                  {/* Info & Golden Add to Cart Button */}
+                  <div className="p-2 xl:p-2.5 flex-1 flex flex-col justify-between space-y-1 xl:space-y-1.5">
+                    <div>
+                      <h4
+                        onClick={() => navigateTo('product', saree.slug)}
+                        className="font-serif text-xs xl:text-[13px] font-semibold text-white group-hover:text-[#E5B842] transition-colors line-clamp-1 cursor-pointer"
                       >
-                        <Eye className="w-3.5 h-3.5" />
-                      </button>
+                        {saree.name}
+                      </h4>
+                      <p className="text-[10px] xl:text-[11px] text-white/60 line-clamp-1 mt-0.5">
+                        {saree.zariType}
+                      </p>
+                    </div>
 
-                      {/* Golden Add to Cart Button */}
-                      <button
-                        onClick={() => addToCart(saree, saree.color, 1)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#E5B842] hover:bg-[#F3CA58] text-[#1C1A19] text-[11px] font-bold uppercase tracking-wider transition-colors shadow"
-                      >
-                        <ShoppingBag className="w-3 h-3 text-[#1C1A19]" />
-                        <span>Add to Cart</span>
-                      </button>
+                    <div className="flex items-center justify-between pt-1 border-t border-white/10">
+                      <span className="font-serif text-xs xl:text-sm font-bold text-[#E5B842]">
+                        {formatINR(saree.price)}
+                      </span>
+
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => openQuickView(saree, saree.color)}
+                          className="p-1 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+                          aria-label="Quick View"
+                        >
+                          <Eye className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                        </button>
+
+                        {/* Golden Add to Cart Button */}
+                        <button
+                          onClick={() => addToCart(saree, saree.color, 1)}
+                          className="flex items-center gap-1 px-2 py-1 xl:px-2.5 xl:py-1 rounded-lg bg-[#E5B842] hover:bg-[#F3CA58] text-[#1C1A19] text-[10px] xl:text-[11px] font-bold uppercase tracking-wider transition-colors shadow cursor-pointer"
+                        >
+                          <ShoppingBag className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#1C1A19]" />
+                          <span>Add to Cart</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            );
-          })}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>
