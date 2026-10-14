@@ -374,9 +374,15 @@ export const HeroFrameAnimation: React.FC = () => {
         <div className="absolute left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-5xl lg:max-w-6xl top-24 bottom-12 border border-[#C8A96B]/20 pointer-events-none rounded-3xl hidden md:block z-2" />
 
         {/* Main Hero Foreground Content */}
-        <div className="relative z-10 max-w-5xl lg:max-w-6xl mx-auto px-6 sm:px-10 lg:px-12 w-full py-16 md:py-24 flex flex-col justify-between h-full max-h-[88vh]">
-          {/* Upper Center / Left Section */}
-          <div className="max-w-2xl text-left pt-6 sm:pt-10">
+        <div className="relative z-10 max-w-5xl lg:max-w-6xl mx-auto px-5 sm:pl-7 sm:pr-8 lg:pl-8 lg:pr-10 w-full py-16 md:py-24 flex flex-col justify-between h-full max-h-[88vh]">
+          {/* Upper Left Text Block with Localized Dark Gradient Overlay */}
+          <div className="relative max-w-2xl text-left pt-6 sm:pt-10">
+            {/* Localized subtle dark gradient overlay behind text area for enhanced legibility */}
+            <div
+              className="absolute -inset-y-6 sm:-inset-y-8 -left-5 sm:-left-7 lg:-left-8 -right-8 sm:-right-14 md:-right-20 pointer-events-none -z-10 bg-[radial-gradient(ellipse_120%_100%_at_20%_45%,_rgba(10,8,7,0.78)_0%,_rgba(10,8,7,0.5)_50%,_rgba(10,8,7,0.15)_75%,_transparent_100%)]"
+              aria-hidden="true"
+            />
+
             {/* Brand Tag Pill */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
