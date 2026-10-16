@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Star,
   Heart,
@@ -19,6 +20,62 @@ import userProductImage from '../assets/user-product-image.webp';
 import { preloadImages } from '../utils/imagePreloader';
 import { checkDeliveryAvailability } from '../data/deliveryCoverage';
 
+const TARGET_OUTFIT_SLUGS = new Set([
+  'mayurakshi-kanjivaram-bridal-silk-saree',
+  'padmavati-scarlet-red-katan-bridal-saree',
+  'suhani-crimson-zari-trousseau-heirloom'
+]);
+
+const transparentImages = import.meta.glob<{ default: string }>(
+  '../assets/product_detail_transparent/**/*.{webp,png}',
+  { eager: true }
+);
+
+function getTargetOutfitTransparent(outfitSlug: string, colorOrIdx: string | number): string | null {
+  let targetFolder = '';
+  let matchKey = '';
+
+  if (outfitSlug === 'mayurakshi-kanjivaram-bridal-silk-saree') {
+    targetFolder = 'Mayurakshi Kanjivaram Bridal Silk Saree';
+    if (typeof colorOrIdx === 'number') {
+      const names = ['Crimson Red', 'Royal Plum', 'Auspicious Emerald'];
+      matchKey = names[colorOrIdx] || names[0];
+    } else {
+      matchKey = colorOrIdx;
+    }
+  } else if (outfitSlug === 'padmavati-scarlet-red-katan-bridal-saree') {
+    targetFolder = 'Padmavati Scarlet Red Katan Bridal Saree';
+    if (typeof colorOrIdx === 'number') {
+      const names = ['Crimson Red', 'Deep Burgundy', 'Deep Burgundy (2)'];
+      matchKey = names[colorOrIdx] || names[0];
+    } else {
+      matchKey = colorOrIdx;
+    }
+  } else if (outfitSlug === 'suhani-crimson-zari-trousseau-heirloom') {
+    targetFolder = 'Suhani Crimson & Zari Trousseau Heirloom';
+    if (typeof colorOrIdx === 'number') {
+      const names = ['Crimson Red', 'Deep Burgendy (1)', 'Deep Burgendy (2)'];
+      matchKey = names[colorOrIdx] || names[0];
+    } else {
+      matchKey = colorOrIdx;
+    }
+  }
+
+  if (!targetFolder) return null;
+
+  const normMatch = matchKey.toLowerCase().replace(/[^a-z0-9]/g, '');
+  for (const path in transparentImages) {
+    if (path.includes(targetFolder)) {
+      const filename = path.split('/').pop() || '';
+      const normFilename = filename.toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (normFilename.includes(normMatch)) {
+        return transparentImages[path].default;
+      }
+    }
+  }
+  return null;
+}
+
 interface ProductDetailPageProps {
   slug: string;
 }
@@ -37,6 +94,23 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
   } = useShop();
 
   const product: Saree = SAREES_DATA.find((s) => s.slug === slug) || SAREES_DATA[0];
+  const isTargetOutfit = TARGET_OUTFIT_SLUGS.has(product.slug);
+
+  const [isReducedMotion, setIsReducedMotion] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const handler = (e: MediaQueryListEvent) => setIsReducedMotion(e.matches);
+      mq.addEventListener('change', handler);
+      return () => mq.removeEventListener('change', handler);
+    }
+  }, []);
 
   const [selectedColorIdx, setSelectedColorIdx] = useState(() => {
     if (selectedVariantColor) {
@@ -48,14 +122,23 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
     return 0;
   });
 
+  const getVariantImageForColor = (colorName: string, colorIdx: number): string => {
+    if (isTargetOutfit) {
+      const transparent = getTargetOutfitTransparent(product.slug, colorName);
+      if (transparent) return transparent;
+    }
+    return product.colors[colorIdx]?.image || product.images[colorIdx] || product.images[0];
+  };
+
   const [activeImg, setActiveImg] = useState<string | null>(() => {
     if (selectedVariantColor) {
-      const col = product.colors.find(
+      const idx = product.colors.findIndex(
         (c) => c.name.toLowerCase() === selectedVariantColor.toLowerCase()
       );
-      if (col?.image) return col.image;
+      if (idx >= 0) return getVariantImageForColor(selectedVariantColor, idx);
     }
-    return product.colors[0]?.image || product.images[0];
+    const firstColor = product.colors[0]?.name || product.color;
+    return getVariantImageForColor(firstColor, 0);
   });
 
   const [activeImgIdx, setActiveImgIdx] = useState(0);
@@ -69,14 +152,26 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
       if (idx >= 0) colIdx = idx;
     }
     setSelectedColorIdx(colIdx);
-    const chosenColor = product.colors[colIdx];
-    setActiveImg(chosenColor?.image || product.images[0]);
-    setActiveImgIdx(0);
-    if (product.images && product.images.length > 0) {
-      preloadImages(product.images);
-    }
-    if (product.colors && product.colors.length > 0) {
-      preloadImages(product.colors.map((c) => c.image).filter(Boolean));
+    const chosenColor = product.colors[colIdx]?.name || product.color;
+    const initialImg = getVariantImageForColor(chosenColor, colIdx);
+    setActiveImg(initialImg);
+    setActiveImgIdx(colIdx);
+
+    // Preload transparent and standard variants
+    if (isTargetOutfit) {
+      const transparentList: string[] = [];
+      product.colors.forEach((c) => {
+        const trans = getTargetOutfitTransparent(product.slug, c.name);
+        if (trans) transparentList.push(trans);
+      });
+      if (transparentList.length > 0) preloadImages(transparentList);
+    } else {
+      if (product.images && product.images.length > 0) {
+        preloadImages(product.images);
+      }
+      if (product.colors && product.colors.length > 0) {
+        preloadImages(product.colors.map((c) => c.image).filter(Boolean));
+      }
     }
   }, [slug, selectedVariantColor, product]);
 
@@ -98,21 +193,27 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
   const handleColorSelect = (index: number) => {
     setSelectedColorIdx(index);
     const colorObj = product.colors[index];
-    if (colorObj?.image) {
-      setActiveImg(colorObj.image);
-      const imgIdx = product.images.indexOf(colorObj.image);
-      if (imgIdx >= 0) {
-        setActiveImgIdx(imgIdx);
-      }
+    if (colorObj) {
+      const resolved = getVariantImageForColor(colorObj.name, index);
+      setActiveImg(resolved);
+      setActiveImgIdx(index);
     }
   };
 
   const handleThumbnailSelect = (img: string, idx: number) => {
     setActiveImgIdx(idx);
-    setActiveImg(img);
-    const colorIdx = product.colors.findIndex((c) => c.image === img);
-    if (colorIdx >= 0) {
-      setSelectedColorIdx(colorIdx);
+    if (isTargetOutfit) {
+      const transparent = getTargetOutfitTransparent(product.slug, idx);
+      setActiveImg(transparent || img);
+      if (idx < product.colors.length) {
+        setSelectedColorIdx(idx);
+      }
+    } else {
+      setActiveImg(img);
+      const colorIdx = product.colors.findIndex((c) => c.image === img);
+      if (colorIdx >= 0) {
+        setSelectedColorIdx(colorIdx);
+      }
     }
   };
 
@@ -144,7 +245,14 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
     (s) => s.id !== product.id && (s.category === product.category || s.fabric === product.fabric)
   ).slice(0, 4);
 
-  const displayedImage = activeImg || activeColor.image || product.images[activeImgIdx] || product.images[0];
+  const displayedImage =
+    activeImg ||
+    (isTargetOutfit
+      ? getTargetOutfitTransparent(product.slug, selectedColorIdx)
+      : null) ||
+    activeColor.image ||
+    product.images[activeImgIdx] ||
+    product.images[0];
 
   return (
     <div className="bg-[#FAF7F0] min-h-screen py-4 lg:py-6 pb-24 lg:pb-12">
@@ -178,19 +286,43 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
             
             {/* Left Column: Compact Viewport-Friendly Image Gallery (5 cols) */}
             <div className="lg:col-span-5 flex flex-col space-y-3">
-              {/* Main Image Stage - Compact Sizing with Face Fully Visible */}
-              <div className="relative w-full max-h-[440px] sm:max-h-[480px] aspect-[9/10] sm:aspect-[3/4] rounded-2xl overflow-hidden bg-[#F2EBDD] border border-[#C8A96B]/30 shadow-md group mx-auto">
-                <img
-                  src={displayedImage}
-                  alt={product.name}
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = userProductImage;
-                  }}
-                  className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                />
+              {/* Main Image Stage - Compact Sizing with Face Fully Visible & Horizontal Slide Animation */}
+              <div className="relative w-full max-h-[440px] sm:max-h-[480px] aspect-[9/10] sm:aspect-[3/4] rounded-2xl overflow-hidden bg-gradient-to-b from-[#F7F3EA] to-[#EDE4D2] border border-[#C8A96B]/30 shadow-md group mx-auto flex items-center justify-center">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.img
+                    key={displayedImage}
+                    src={displayedImage}
+                    alt={product.name}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = userProductImage;
+                    }}
+                    initial={
+                      isReducedMotion
+                        ? { opacity: 0 }
+                        : { x: '-100%', opacity: 0 }
+                    }
+                    animate={
+                      isReducedMotion
+                        ? { opacity: 1 }
+                        : { x: 0, opacity: 1 }
+                    }
+                    exit={
+                      isReducedMotion
+                        ? { opacity: 0 }
+                        : { x: '100%', opacity: 0 }
+                    }
+                    transition={{
+                      duration: isReducedMotion ? 0.15 : 0.35,
+                      ease: [0.25, 1, 0.5, 1]
+                    }}
+                    className={`w-full h-full ${
+                      isTargetOutfit ? 'object-contain object-bottom p-1 sm:p-2' : 'object-cover object-top'
+                    } transition-transform duration-500 ease-out group-hover:scale-102`}
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
+                  />
+                </AnimatePresence>
 
                 {/* Top Badges */}
                 <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 pointer-events-none z-10">
@@ -220,28 +352,35 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
 
               {/* Compact Thumbnail Strip */}
               <div className="flex items-center justify-center gap-2 overflow-x-auto no-scrollbar py-1">
-                {product.images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleThumbnailSelect(img, idx)}
-                    className={`w-14 h-16 sm:w-16 sm:h-18 rounded-lg overflow-hidden shrink-0 border-2 transition-all shadow-xs ${
-                      displayedImage === img || (activeImgIdx === idx && !activeImg)
-                        ? 'border-[#651C32] ring-2 ring-[#C8A96B] scale-105 opacity-100'
-                        : 'border-transparent opacity-70 hover:opacity-100'
-                    }`}
-                  >
-                    <img
-                      src={img}
-                      alt={`${product.name} thumbnail ${idx + 1}`}
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src = userProductImage;
-                      }}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover object-top"
-                    />
-                  </button>
-                ))}
+                {product.images.map((img, idx) => {
+                  const thumbSrc = isTargetOutfit
+                    ? getTargetOutfitTransparent(product.slug, idx) || img
+                    : img;
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => handleThumbnailSelect(img, idx)}
+                      className={`w-14 h-16 sm:w-16 sm:h-18 rounded-lg overflow-hidden shrink-0 border-2 transition-all shadow-xs bg-[#FAF7F0] ${
+                        displayedImage === thumbSrc || (activeImgIdx === idx && !activeImg)
+                          ? 'border-[#651C32] ring-2 ring-[#C8A96B] scale-105 opacity-100'
+                          : 'border-transparent opacity-70 hover:opacity-100'
+                      }`}
+                    >
+                      <img
+                        src={thumbSrc}
+                        alt={`${product.name} thumbnail ${idx + 1}`}
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src = userProductImage;
+                        }}
+                        loading="lazy"
+                        decoding="async"
+                        className={`w-full h-full ${
+                          isTargetOutfit ? 'object-contain p-0.5' : 'object-cover object-top'
+                        }`}
+                      />
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Authenticity Certificate Single-Line Strip */}

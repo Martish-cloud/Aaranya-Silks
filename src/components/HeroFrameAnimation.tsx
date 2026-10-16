@@ -364,25 +364,27 @@ export const HeroFrameAnimation: React.FC = () => {
           fetchPriority="high"
         />
 
-        {/* Ambient Boutique Showroom Overlays - Tailored for 4K Luxury Clarity & Text Legibility */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 via-45% to-transparent pointer-events-none z-1" />
+        {/* Seamless Ambient Dark Vignette & Text Readability Overlay */}
+        {/* Multi-stop linear gradient feathering smoothly from left (behind text) to complete transparency before right-side models */}
+        <div
+          className="absolute inset-0 pointer-events-none z-1"
+          style={{
+            background:
+              'linear-gradient(to right, rgba(12,10,9,0.86) 0%, rgba(12,10,9,0.76) 20%, rgba(12,10,9,0.50) 36%, rgba(12,10,9,0.22) 50%, rgba(12,10,9,0.05) 62%, transparent 72%)'
+          }}
+          aria-hidden="true"
+        />
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#1C1A19]/90 via-[#1C1A19]/35 to-transparent pointer-events-none z-1" />
         <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/50 to-transparent pointer-events-none z-1" />
         <div className="absolute top-1/4 left-1/3 w-96 h-96 rounded-full bg-[#E5B842]/10 blur-[140px] pointer-events-none z-1" />
 
         {/* Decorative Gold Frame Border */}
-        <div className="absolute left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-5xl lg:max-w-6xl top-24 bottom-12 border border-[#C8A96B]/20 pointer-events-none rounded-3xl hidden md:block z-2" />
+        <div className="absolute left-1/2 -translate-x-1/2 w-[calc(100%-2.5rem)] sm:w-[calc(100%-3rem)] max-w-6xl lg:max-w-7xl top-24 bottom-12 border border-[#C8A96B]/20 pointer-events-none rounded-3xl hidden md:block z-2" />
 
-        {/* Main Hero Foreground Content */}
-        <div className="relative z-10 max-w-5xl lg:max-w-6xl mx-auto px-5 sm:pl-7 sm:pr-8 lg:pl-8 lg:pr-10 w-full py-16 md:py-24 flex flex-col justify-between h-full max-h-[88vh]">
-          {/* Upper Left Text Block with Localized Dark Gradient Overlay */}
-          <div className="relative max-w-2xl text-left pt-6 sm:pt-10">
-            {/* Localized subtle dark gradient overlay behind text area for enhanced legibility */}
-            <div
-              className="absolute -inset-y-6 sm:-inset-y-8 -left-5 sm:-left-7 lg:-left-8 -right-8 sm:-right-14 md:-right-20 pointer-events-none -z-10 bg-[radial-gradient(ellipse_120%_100%_at_20%_45%,_rgba(10,8,7,0.78)_0%,_rgba(10,8,7,0.5)_50%,_rgba(10,8,7,0.15)_75%,_transparent_100%)]"
-              aria-hidden="true"
-            />
-
+        {/* Main Hero Foreground Content - Shifted modestly to the left inside the frame */}
+        <div className="relative z-10 max-w-6xl lg:max-w-7xl mx-auto px-4 sm:px-8 lg:px-10 w-full py-16 md:py-24 flex flex-col justify-between h-full max-h-[88vh]">
+          {/* Upper Left Text Block - positioned in left space with seamless background integration */}
+          <div className="relative max-w-2xl lg:max-w-[42rem] text-left pt-6 sm:pt-10 -ml-0.5 sm:-ml-1.5 md:-ml-2.5">
             {/* Brand Tag Pill */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}

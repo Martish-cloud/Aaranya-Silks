@@ -33,6 +33,7 @@ import { CatalogPage } from './components/CatalogPage';
 import { ProductDetailPage } from './components/ProductDetailPage';
 import { StoryPage } from './components/StoryPage';
 import { GlobalWatermark } from './components/GlobalWatermark';
+import { CurtainIntro } from './components/CurtainIntro';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle, Info } from 'lucide-react';
 
@@ -57,6 +58,9 @@ const AppContent: React.FC = () => {
 
   return (
     <div className={`min-h-screen ${isHome ? 'bg-[#1C1A19]' : 'bg-[#FAF7F0]'} text-[#1C1A19] flex flex-col font-sans relative selection:bg-[#651C32] selection:text-[#FAF7F0] w-full`}>
+      {/* 0. Full-Screen 3D Bridal Saree Curtain Reveal (First Visit) */}
+      <CurtainIntro />
+
       {/* 1. Announcement Bar */}
       <AnnouncementBar />
 
