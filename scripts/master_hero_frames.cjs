@@ -94,47 +94,24 @@ async function main() {
       sourceBuf = fs.readFileSync(path.join(publicDir, filename));
     }
 
-    // Apply high-fidelity luxury 4K enhancement:
-    // 1. Contrast expansion & dehazing (.linear(1.06, -6)) to remove the hazy film and deepen luxury blacks
-    // 2. Multi-scale fine unsharp mask for facial contours, eyes, nose ridge, jewelry, and gold zari embroidery
-    // 3. Tonal brilliance (.modulate({ brightness: 1.01, saturation: 1.05 }))
-    // 4. Ultra-high quality WebP 98 output with smart subsampling
-    const enhancedPipeline = sharp(sourceBuf)
-      .linear(1.06, -6)
-      .sharpen({
-        sigma: 1.25,
-        m1: 1.45,
-        m2: 0.65,
-        x1: 2,
-        y2: 12,
-        y3: 24
-      })
-      .modulate({
-        brightness: 1.01,
-        saturation: 1.05
-      });
-
-    // Save mastered high-definition WebP (Quality 98 for pristine 4K rendering)
+    // Output mastered high-definition WebP (Quality 98, lossless effort 5 for pristine 4K rendering)
     const webpOutPath = path.join(publicDir, `frame_${padded}.webp`);
-    await enhancedPipeline
-      .clone()
+    await sharp(sourceBuf)
       .webp({ quality: 98, effort: 5, smartSubsample: true })
       .toFile(webpOutPath);
 
     // Also update JPG for reveal frames (79 to 88)
     if (frameNum >= 79 && frameNum <= 88) {
       const jpgOutPath = path.join(publicDir, filename);
-      await enhancedPipeline
-        .clone()
-        .jpeg({ quality: 96 })
+      await sharp(sourceBuf)
+        .jpeg({ quality: 98 })
         .toFile(jpgOutPath);
     }
 
     // Generate 4K presentation masters for milestone frames
     if ([1, 40, 85, 120, 160].includes(frameNum)) {
       const master4kPath = path.join(mastersDir, `aaranya_hero_4k_frame_${padded}.webp`);
-      await enhancedPipeline
-        .clone()
+      await sharp(sourceBuf)
         .resize(3840, 2160, {
           kernel: sharp.kernel.lanczos3,
           fit: 'cover'

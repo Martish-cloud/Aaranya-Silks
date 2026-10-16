@@ -363,18 +363,8 @@ export const HeroFrameAnimation: React.FC = () => {
           fetchPriority="high"
         />
 
-        {/* Seamless Ambient Dark Vignette & Text Readability Overlay - Softened to reveal more of the 4K animation */}
-        <div
-          className="absolute inset-0 pointer-events-none z-1"
-          style={{
-            background:
-              'linear-gradient(to right, rgba(12,10,9,0.72) 0%, rgba(12,10,9,0.52) 18%, rgba(12,10,9,0.25) 34%, rgba(12,10,9,0.06) 48%, transparent 62%)'
-          }}
-          aria-hidden="true"
-        />
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#1C1A19]/90 via-[#1C1A19]/35 to-transparent pointer-events-none z-1" />
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/50 to-transparent pointer-events-none z-1" />
-        <div className="absolute top-1/4 left-1/3 w-96 h-96 rounded-full bg-[#E5B842]/10 blur-[140px] pointer-events-none z-1" />
+        {/* Clean Subtle Bottom Transition Fade - Completely removes muddying dark vignettes & blur haze to reveal full 4K showroom clarity */}
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#1C1A19]/80 via-[#1C1A19]/25 to-transparent pointer-events-none z-1" />
 
         {/* Decorative Gold Frame Border */}
         {/* Decorative Gold Frame Border */}
@@ -481,10 +471,10 @@ export const HeroFrameAnimation: React.FC = () => {
             transition={{ duration: 1, delay: 0.5 }}
             className="w-full pt-2 sm:pt-2.5 border-t border-[#C8A96B]/20 text-left"
           >
-            <p className="font-serif italic text-sm sm:text-base lg:text-lg text-[#E5B842] tracking-wide leading-tight drop-shadow-md">
+            <p className="font-serif italic text-sm sm:text-base lg:text-lg text-[#E5B842] tracking-wide leading-tight drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
               &ldquo;Six weavers, one thread &mdash; months of patient hands&rdquo;
             </p>
-            <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#FAF7F0]/70 font-sans mt-0.5">
+            <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#FAF7F0]/85 font-sans mt-0.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
               Handcrafted in Varanasi &amp; Kanchipuram
             </p>
           </motion.div>
