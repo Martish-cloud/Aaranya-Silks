@@ -227,13 +227,13 @@ export const SignatureCollections: React.FC = () => {
       id="photo-gallery"
       className="py-8 sm:py-10 lg:py-14 bg-[#0F0A09] text-[#FAF7F0] relative overflow-hidden select-none"
     >
-      {/* Full Section Background - Same Selected Image with Model's Face Positioned Naturally, Soft Blur & Subdued Transparency */}
+      {/* Full Section Background - Same Selected Image with Enhanced Clarity, Gentle Depth-of-Field & Rich Saree Colors */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <AnimatePresence mode="popLayout">
           <motion.div
             key={`section-bg-${activePhoto.id}`}
             initial={{ opacity: 0, scale: 1.01 }}
-            animate={{ opacity: 0.55, scale: 1.02 }}
+            animate={{ opacity: 0.70, scale: 1.02 }}
             exit={{ opacity: 0, scale: 1.04 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 w-full h-full"
@@ -242,12 +242,12 @@ export const SignatureCollections: React.FC = () => {
               src={activePhoto.src}
               alt=""
               aria-hidden="true"
-              className="w-full h-full object-cover object-[center_15%] filter blur-[6px] brightness-[0.88] contrast-[1.05] transform-gpu"
+              className="w-full h-full object-cover object-[center_15%] filter blur-[2.5px] brightness-[1.04] contrast-[1.08] saturate-[1.10] transform-gpu"
             />
           </motion.div>
         </AnimatePresence>
-        {/* Soft luxury dark vignette overlay keeping the photo background softly visible & subdued */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F0A09]/55 via-[#0F0A09]/30 to-[#0F0A09]/65 pointer-events-none" />
+        {/* Soft luxury dark vignette overlay keeping saree patterns recognizably clear while maintaining foreground contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F0A09]/45 via-[#0F0A09]/20 to-[#0F0A09]/50 pointer-events-none" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

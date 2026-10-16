@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, ShieldCheck, Award } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
-import { WipeText } from './WipeText';
 import { HERO_FRAMES } from '../data/heroFrames';
 
 const TOTAL_FRAMES = 160;
@@ -364,13 +363,12 @@ export const HeroFrameAnimation: React.FC = () => {
           fetchPriority="high"
         />
 
-        {/* Seamless Ambient Dark Vignette & Text Readability Overlay */}
-        {/* Multi-stop linear gradient feathering smoothly from left (behind text) to complete transparency before right-side models */}
+        {/* Seamless Ambient Dark Vignette & Text Readability Overlay - Softened to reveal more of the 4K animation */}
         <div
           className="absolute inset-0 pointer-events-none z-1"
           style={{
             background:
-              'linear-gradient(to right, rgba(12,10,9,0.86) 0%, rgba(12,10,9,0.76) 20%, rgba(12,10,9,0.50) 36%, rgba(12,10,9,0.22) 50%, rgba(12,10,9,0.05) 62%, transparent 72%)'
+              'linear-gradient(to right, rgba(12,10,9,0.72) 0%, rgba(12,10,9,0.52) 18%, rgba(12,10,9,0.25) 34%, rgba(12,10,9,0.06) 48%, transparent 62%)'
           }}
           aria-hidden="true"
         />
@@ -383,14 +381,14 @@ export const HeroFrameAnimation: React.FC = () => {
 
         {/* Main Hero Foreground Content - Shifted modestly to the left inside the frame */}
         <div className="relative z-10 max-w-6xl lg:max-w-7xl mx-auto px-4 sm:px-8 lg:px-10 w-full py-16 md:py-24 flex flex-col justify-between h-full max-h-[88vh]">
-          {/* Upper Left Text Block - positioned in left space with seamless background integration */}
-          <div className="relative max-w-2xl lg:max-w-[42rem] text-left pt-6 sm:pt-10 -ml-0.5 sm:-ml-1.5 md:-ml-2.5">
+          {/* Upper Left Block - Clean, cinematic luxury presentation highlighting the animation */}
+          <div className="relative max-w-xl text-left pt-6 sm:pt-10 -ml-0.5 sm:-ml-1.5 md:-ml-2.5">
             {/* Brand Tag Pill */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#651C32]/85 backdrop-blur-md border border-[#C8A96B]/50 text-[#C8A96B] mb-5 shadow-xl"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#651C32]/85 backdrop-blur-md border border-[#C8A96B]/50 text-[#C8A96B] mb-6 shadow-xl"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#E5B842]" />
               <span className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-[#FAF7F0]">
@@ -398,38 +396,16 @@ export const HeroFrameAnimation: React.FC = () => {
               </span>
             </motion.div>
 
-            {/* Main Editorial Headline with Cinematic Wipe-In Animation */}
-            <div className="mb-4 sm:mb-5">
-              <WipeText
-                as="h1"
-                direction="left-to-right"
-                duration={0.95}
-                className="font-serif text-3xl sm:text-5xl lg:text-7xl font-light text-[#FAF7F0] leading-[1.08] tracking-tight drop-shadow-lg"
-              >
-                Elegance Woven in Every Thread
-              </WipeText>
-            </div>
-
-            {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-xs sm:text-sm md:text-base lg:text-lg text-[#FAF7F0]/90 font-sans font-light leading-relaxed max-w-xl mb-6 sm:mb-8 drop-shadow-md"
-            >
-              Discover timeless sarees crafted for unforgettable moments. Handspun pure Mulberry silk graced with certified real gold zari.
-            </motion.p>
-
-            {/* CTAs */}
+            {/* Rebalanced CTAs - Prominent, elegant and accessible */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex flex-wrap items-center gap-3 sm:gap-4"
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="flex flex-wrap items-center gap-3 sm:gap-4 mb-6"
             >
               <button
                 onClick={() => navigateTo('catalog')}
-                className="group flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-3.5 rounded-full bg-[#8B1E3F] hover:bg-[#651C32] text-[#FAF7F0] font-sans font-semibold text-xs sm:text-sm tracking-[0.16em] uppercase transition-all duration-300 shadow-xl border border-[#C8A96B]/50 hover:border-[#E5B842] hover:scale-105 cursor-pointer"
+                className="group flex items-center gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-[#8B1E3F] hover:bg-[#651C32] text-[#FAF7F0] font-sans font-semibold text-xs sm:text-sm tracking-[0.16em] uppercase transition-all duration-300 shadow-2xl border border-[#C8A96B]/50 hover:border-[#E5B842] hover:scale-105 cursor-pointer"
               >
                 <span>Explore The Collection</span>
                 <ArrowRight className="w-4 h-4 text-[#E5B842] group-hover:translate-x-1 transition-transform" />
@@ -437,10 +413,32 @@ export const HeroFrameAnimation: React.FC = () => {
 
               <button
                 onClick={() => navigateTo('story')}
-                className="px-5 sm:px-7 py-3 sm:py-3.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-[#FAF7F0] font-sans font-medium text-xs sm:text-sm tracking-[0.16em] uppercase transition-all duration-300 border border-white/25 hover:border-white/50 cursor-pointer shadow-lg"
+                className="px-5 sm:px-7 py-3.5 sm:py-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-[#FAF7F0] font-sans font-medium text-xs sm:text-sm tracking-[0.16em] uppercase transition-all duration-300 border border-white/25 hover:border-white/50 cursor-pointer shadow-lg"
               >
                 Discover Our Story
               </button>
+            </motion.div>
+
+            {/* Supporting Trust & Certification Badges arranged neatly beneath CTA area */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.35 }}
+              className="inline-flex items-center gap-3.5 sm:gap-5 text-xs text-[#FAF7F0]/90 bg-black/30 backdrop-blur-md px-4 sm:px-5 py-2.5 rounded-full border border-[#C8A96B]/35 shadow-lg"
+            >
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E5B842]" />
+                <span className="font-semibold uppercase tracking-wider text-[10px] sm:text-[11px]">
+                  Silk Mark Certified
+                </span>
+              </div>
+              <div className="w-px h-3.5 bg-[#C8A96B]/40" />
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E5B842]" />
+                <span className="font-semibold uppercase tracking-wider text-[10px] sm:text-[11px]">
+                  Tested Real Zari
+                </span>
+              </div>
             </motion.div>
           </div>
 
@@ -448,7 +446,7 @@ export const HeroFrameAnimation: React.FC = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.6 }}
+            transition={{ duration: 1, delay: 0.5 }}
             className="pt-6 sm:pt-8 flex flex-col md:flex-row items-start md:items-end justify-between gap-4 sm:gap-6 border-t border-[#C8A96B]/20"
           >
             {/* Poetic quote from reference */}
@@ -459,22 +457,6 @@ export const HeroFrameAnimation: React.FC = () => {
               <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#FAF7F0]/70 font-sans mt-1">
                 Handcrafted in Varanasi &amp; Kanchipuram
               </p>
-            </div>
-
-            {/* Quick Badges: Silk Mark Certified & Tested Real Zari (Frame counter removed) */}
-            <div className="flex items-center gap-4 sm:gap-6 text-xs text-[#FAF7F0]/90">
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E5B842]" />
-                <span className="font-semibold uppercase tracking-wider text-[10px] sm:text-[11px]">
-                  Silk Mark Certified
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E5B842]" />
-                <span className="font-semibold uppercase tracking-wider text-[10px] sm:text-[11px]">
-                  Tested Real Zari
-                </span>
-              </div>
             </div>
           </motion.div>
         </div>

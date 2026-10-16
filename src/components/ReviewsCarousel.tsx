@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Sparkles, Star, CheckCircle, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { CUSTOMER_REVIEWS } from '../data/sarees';
 import { WipeText } from './WipeText';
@@ -36,6 +36,53 @@ export const ReviewsCarousel: React.FC = () => {
     }
   };
 
+  // Center-focused dynamic scale and fade calculation
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    let rafId: number;
+    let isRunning = true;
+
+    const updateFocalEffects = () => {
+      if (!isRunning || !rail) return;
+      const rect = rail.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const halfWidth = rect.width / 2;
+
+      if (halfWidth > 0) {
+        const children = rail.children;
+        const count = children.length;
+        for (let i = 0; i < count; i++) {
+          const item = children[i] as HTMLElement;
+          const cardRect = item.getBoundingClientRect();
+          const cardCenterX = cardRect.left + cardRect.width / 2;
+          const dist = Math.abs(cardCenterX - centerX);
+          const norm = Math.min(1, dist / halfWidth);
+
+          // Center card scale: ~1.0. Near center: ~0.95. Outer: ~0.90
+          const scale = 1.0 - 0.10 * Math.pow(norm, 1.2);
+          // Center card opacity: 1.0. Near center: ~0.88. Outer: ~0.68
+          const opacity = 1.0 - 0.32 * Math.pow(norm, 1.3);
+
+          item.style.setProperty('--focal-scale', scale.toFixed(3));
+          item.style.setProperty('--focal-opacity', opacity.toFixed(3));
+        }
+      }
+
+      rafId = requestAnimationFrame(updateFocalEffects);
+    };
+
+    rafId = requestAnimationFrame(updateFocalEffects);
+    return () => {
+      isRunning = false;
+      cancelAnimationFrame(rafId);
+    };
+  }, [railRef]);
+
   const DISPLAY_REVIEWS = [
     ...CUSTOMER_REVIEWS,
     ...CUSTOMER_REVIEWS,
@@ -46,11 +93,11 @@ export const ReviewsCarousel: React.FC = () => {
   return (
     <section
       id="words-of-adornment"
-      className="py-16 md:py-24 bg-[#FAF7F0] relative overflow-hidden border-t border-[#C8A96B]/20"
+      className="py-14 sm:py-16 md:py-24 bg-[#FAF7F0] relative overflow-hidden border-t border-[#C8A96B]/20"
     >
+      {/* Header Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 text-left">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-10 text-left">
           <div>
             <div className="flex items-center gap-2 text-[#8B1E3F] text-xs font-semibold uppercase tracking-[0.25em] mb-2">
               <Sparkles className="w-3.5 h-3.5 text-[#C8A96B]" />
@@ -85,76 +132,96 @@ export const ReviewsCarousel: React.FC = () => {
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Continuous Left-to-Right Auto-Moving Carousel Strip (Continuous, Independent of Hover) */}
+      {/* Expanded Usable Viewport: Widen boundaries to eliminate excessive empty space */}
+      <div className="w-full max-w-[1480px] 2xl:max-w-[1620px] mx-auto px-2 sm:px-4 lg:px-6 relative">
+        {/* Subtle Edge Vignettes to feather card entry and exit smoothly */}
+        <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-r from-[#FAF7F0] to-transparent pointer-events-none z-10" />
+        <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-l from-[#FAF7F0] to-transparent pointer-events-none z-10" />
+
+        {/* Continuous Left-to-Right Auto-Moving Carousel Strip with Center-Focused Zoom & Fade */}
         <div
           ref={railRef}
           onTouchStart={markUserInteraction}
           onTouchMove={markUserInteraction}
           onWheel={markUserInteraction}
-          className="flex items-stretch gap-4 sm:gap-5 overflow-x-auto no-scrollbar pb-4 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0 select-none"
+          className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto no-scrollbar py-3 px-2 select-none"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {DISPLAY_REVIEWS.map((rev, idx) => {
             const authorPhoto = AUTHOR_PHOTOS[rev.author];
 
             return (
+              /* Outer wrapper receiving center-focused focal scale & opacity */
               <div
                 key={`${rev.id}-${idx}`}
-                className="flex-shrink-0 w-[250px] sm:w-[285px] md:w-[300px] lg:w-[310px] xl:w-[315px] p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-[#F2EBDD] border border-[#C8A96B]/30 flex flex-col justify-between text-left shadow-sm hover:shadow-xl transition-all duration-300 relative"
+                className="flex-shrink-0 transition-transform duration-200 transform-gpu py-2"
+                style={{
+                  transform: 'scale(var(--focal-scale, 1))',
+                  opacity: 'var(--focal-opacity, 1)',
+                }}
               >
-                <div>
-                  <div className="flex items-center justify-between mb-2 sm:mb-2.5">
-                    <Quote className="w-6 h-6 sm:w-7 sm:h-7 text-[#C8A96B]/40" />
-                    {/* Star rating */}
-                    <div className="flex items-center gap-1">
-                      {[...Array(rev.rating)].map((_, i) => (
-                        <Star key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C8A96B] fill-current" />
-                      ))}
-                    </div>
-                  </div>
-
-                  <h4 className="font-serif text-[15px] sm:text-base font-semibold text-[#651C32] mb-1.5 sm:mb-2 leading-snug">
-                    "{rev.title}"
-                  </h4>
-
-                  <p className="text-xs sm:text-[13px] text-[#1C1A19]/80 font-sans font-light leading-relaxed mb-3.5 sm:mb-4">
-                    {rev.comment}
-                  </p>
-                </div>
-
-                <div className="pt-3 sm:pt-3.5 border-t border-[#C8A96B]/25">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2.5 sm:gap-3">
-                      {authorPhoto && (
-                        <img
-                          src={authorPhoto}
-                          alt={rev.author}
-                          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover object-top border-2 border-[#C8A96B]/60 shadow-sm shrink-0"
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      )}
-                      <div>
-                        <span className="font-serif font-bold text-[13px] sm:text-sm text-[#1C1A19] block leading-tight">
-                          {rev.author}
-                        </span>
-                        <p className="text-[11px] text-[#1C1A19]/60 font-light mt-0.5">
-                          {rev.location} • <span className="italic text-[#651C32]">{rev.occasion}</span>
-                        </p>
+                {/* Inner card with refined subtle flowing hover animation & 3D luxury elevation */}
+                <div
+                  className="w-[260px] sm:w-[290px] md:w-[310px] lg:w-[325px] xl:w-[335px] h-full p-4.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-[#F2EBDD] border border-[#C8A96B]/30 flex flex-col justify-between text-left shadow-sm hover:shadow-2xl transition-all duration-300 ease-out transform-gpu hover:-translate-y-1.5 hover:scale-[1.015] hover:border-[#C8A96B]/60 relative cursor-pointer"
+                  style={{
+                    boxShadow: '0 4px 15px -3px rgba(101,28,50,0.06), 0 2px 6px -2px rgba(101,28,50,0.04)',
+                  }}
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-2 sm:mb-2.5">
+                      <Quote className="w-6 h-6 sm:w-7 sm:h-7 text-[#C8A96B]/40" />
+                      {/* Star rating */}
+                      <div className="flex items-center gap-1">
+                        {[...Array(rev.rating)].map((_, i) => (
+                          <Star key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C8A96B] fill-current" />
+                        ))}
                       </div>
                     </div>
 
-                    {rev.verified && (
-                      <span className="inline-flex items-center gap-1 text-[10px] text-[#8B1E3F] font-semibold uppercase tracking-wider shrink-0">
-                        <CheckCircle className="w-3 h-3 text-[#C8A96B]" />
-                        <span className="hidden sm:inline">Verified</span>
-                      </span>
-                    )}
+                    <h4 className="font-serif text-[15px] sm:text-base font-semibold text-[#651C32] mb-1.5 sm:mb-2 leading-snug">
+                      "{rev.title}"
+                    </h4>
+
+                    <p className="text-xs sm:text-[13px] text-[#1C1A19]/80 font-sans font-light leading-relaxed mb-3.5 sm:mb-4">
+                      {rev.comment}
+                    </p>
                   </div>
-                  <p className="text-[10px] text-[#8B1E3F] tracking-wide mt-1.5 sm:mt-2 truncate">
-                    Purchased: {rev.sareePurchased}
-                  </p>
+
+                  <div className="pt-3 sm:pt-3.5 border-t border-[#C8A96B]/25">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2.5 sm:gap-3">
+                        {authorPhoto && (
+                          <img
+                            src={authorPhoto}
+                            alt={rev.author}
+                            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover object-top border-2 border-[#C8A96B]/60 shadow-sm shrink-0"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        )}
+                        <div>
+                          <span className="font-serif font-bold text-[13px] sm:text-sm text-[#1C1A19] block leading-tight">
+                            {rev.author}
+                          </span>
+                          <p className="text-[11px] text-[#1C1A19]/60 font-light mt-0.5">
+                            {rev.location} • <span className="italic text-[#651C32]">{rev.occasion}</span>
+                          </p>
+                        </div>
+                      </div>
+
+                      {rev.verified && (
+                        <span className="inline-flex items-center gap-1 text-[10px] text-[#8B1E3F] font-semibold uppercase tracking-wider shrink-0">
+                          <CheckCircle className="w-3 h-3 text-[#C8A96B]" />
+                          <span className="hidden sm:inline">Verified</span>
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-[#8B1E3F] tracking-wide mt-1.5 sm:mt-2 truncate">
+                      Purchased: {rev.sareePurchased}
+                    </p>
+                  </div>
                 </div>
               </div>
             );
@@ -164,3 +231,5 @@ export const ReviewsCarousel: React.FC = () => {
     </section>
   );
 };
+
+export default ReviewsCarousel;

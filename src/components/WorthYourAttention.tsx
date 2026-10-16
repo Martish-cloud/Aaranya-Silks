@@ -13,13 +13,12 @@ import {
 import { useShop } from '../context/ShopContext';
 import { WipeText } from './WipeText';
 
-// Import all 8 Brand Ambassador images in optimized WebP (with original fallback references)
+// Import all 7 Brand Ambassador images in optimized WebP (with original fallback references)
 import ba1Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (1).webp';
 import ba2Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (2).webp';
 import ba3Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (3).webp';
 import ba4Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (4).webp';
 import ba5Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (5).webp';
-import ba6Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (6).webp';
 import ba7Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (7).webp';
 import ba9Webp from '../assets/outfits_optimized/Brand Ambassador/Brand Ambassador (9).webp';
 
@@ -28,7 +27,6 @@ const ba2Orig = ba2Webp;
 const ba3Orig = ba3Webp;
 const ba4Orig = ba4Webp;
 const ba5Orig = ba5Webp;
-const ba6Orig = ba6Webp;
 const ba7Orig = ba7Webp;
 const ba9Orig = ba9Webp;
 
@@ -58,7 +56,7 @@ export interface AmbassadorOffer {
   perks: string[];
 }
 
-// 8 Brand Ambassador sequential offer mappings (reindexed 01 to 08)
+// 7 Brand Ambassador sequential offer mappings (reindexed 01 to 07)
 export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
   {
     id: 1,
@@ -72,7 +70,7 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Tanchoi satin smooth weave with high-luster champagne chevron ripples',
     imageWebp: ba4Webp,
     imageOrig: ba4Orig,
-    objectPosition: 'center 4%',
+    objectPosition: 'center 26%',
     perks: ['Priority Insured Transit', 'Velvet Protective Sleeve', 'Matching Heavy Blouse Fabric']
   },
   {
@@ -87,7 +85,7 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Zero floating reverse threads, handwoven on sacred Varanasi riverfront looms',
     imageWebp: ba2Webp,
     imageOrig: ba2Orig,
-    objectPosition: 'center 8%',
+    objectPosition: 'center 34%',
     perks: ['Zero Reverse Floats', 'Pure 3-Ply Katan Silk', 'Bespoke Custom Blouse Fit']
   },
   {
@@ -102,7 +100,7 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Featherweight silk organza hand-finished with delicate badla and moti border scallops',
     imageWebp: ba3Webp,
     imageOrig: ba3Orig,
-    objectPosition: 'center 6%',
+    objectPosition: 'center 22%',
     perks: ['Handcrafted Badla Scallops', 'Pastel Blossom Palette', 'Featherweight Breathable Drape']
   },
   {
@@ -117,7 +115,7 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Woven with tested 24k gold zari by heritage Korvai guild masters',
     imageWebp: ba1Webp,
     imageOrig: ba1Orig,
-    objectPosition: 'center 5%',
+    objectPosition: 'center 22%',
     perks: ['Certified 24k Gold Zari', 'Authentic Pit Loom Weave', 'Cedar Keepsake Archival Box']
   },
   {
@@ -132,28 +130,13 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Iridescent metallic tissue silk accented with jewel-toned meenakari motifs',
     imageWebp: ba5Webp,
     imageOrig: ba5Orig,
-    objectPosition: 'center 6%',
+    objectPosition: 'center 24%',
     perks: ['Liquid Metallic Glow', 'Jeweled Meenakari Accents', 'Complimentary Fall & Pico']
   },
   {
-    id: 6,
+    id: 7,
     number: '06',
     ambassadorName: 'Ambassador 06',
-    title: 'Temple Border Heritage',
-    tagline: 'Centuries-Old Korvai Interlock Artistry',
-    offer: 'Direct Artisan Guild Certified Handlooms with 15% Privilege',
-    couponCode: 'TEMPLE15',
-    categoryTarget: 'Silk Sarees',
-    highlight: 'Authentic Kanchipuram temple gopuram motifs linked with ancient petni techniques',
-    imageWebp: ba6Webp,
-    imageOrig: ba6Orig,
-    objectPosition: 'center 6%',
-    perks: ['Silk Mark Board Certified', 'Dual-Artisan Pit Loom', 'Sacred Temple Border Motifs']
-  },
-  {
-    id: 7,
-    number: '07',
-    ambassadorName: 'Ambassador 07',
     title: 'Sultana Bronze Brocade',
     tagline: 'Royal Mughal Courtroom Tapestries',
     offer: 'Complimentary Styling Consultation with Senior Saree Drape Artist',
@@ -162,13 +145,13 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Antiqued bronze zari with deep jewel-toned resham highlights for regal brides',
     imageWebp: ba7Webp,
     imageOrig: ba7Orig,
-    objectPosition: 'center 6%',
+    objectPosition: 'center 20%',
     perks: ['1-on-1 Virtual Drape Session', 'Blouse Pairing Advisory', 'Jewelry Styling Guidance']
   },
   {
     id: 8,
-    number: '08',
-    ambassadorName: 'Ambassador 08',
+    number: '07',
+    ambassadorName: 'Ambassador 07',
     title: 'Mayurakshi Crimson Bridal',
     tagline: 'Imperial Trousseau Signature Masterpiece',
     offer: 'Personalized Calligraphy Monogram Woven into Pallu Edge',
@@ -177,7 +160,7 @@ export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
     highlight: 'Three-ply Mulberry silk with sacred chakram and peacock medallions along the border',
     imageWebp: ba9Webp,
     imageOrig: ba9Orig,
-    objectPosition: 'center 5%',
+    objectPosition: 'center 20%',
     perks: ['Woven Custom Initials', 'Pure Vermillion Natural Dye', 'Lifetime Authenticity Guarantee']
   }
 ];
@@ -336,7 +319,7 @@ export const WorthYourAttention: React.FC = () => {
             </div>
 
             <p className="text-xs sm:text-[13px] font-light mt-1 max-w-xl text-[#1C1A19]/75 leading-relaxed">
-              Explore 8 bespoke ambassador privileges — royal drapes, artisan embroideries, and complimentary trousseau tailoring.
+              Explore 7 bespoke ambassador privileges — royal drapes, artisan embroideries, and complimentary trousseau tailoring.
             </p>
           </div>
 
@@ -378,7 +361,7 @@ export const WorthYourAttention: React.FC = () => {
                 color: THEME.champagne
               }}
             >
-              <span>View All 8 Offers</span>
+              <span>View All 7 Offers</span>
               <ArrowRight className="w-3 h-3" />
             </button>
           </div>
@@ -598,14 +581,14 @@ export const WorthYourAttention: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Featured Card (5 cols on Desktop, scaled to fit laptop viewport) */}
+          {/* Right Column: Featured Card (5 cols on Desktop, scaled to showcase half-body drapes) */}
           <div className="lg:col-span-5 flex flex-col min-w-0">
             <div
-              className="relative flex-1 min-h-[420px] sm:min-h-[435px] lg:min-h-[430px] xl:min-h-[445px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border flex flex-col justify-between p-3.5 sm:p-4.5 lg:p-4 xl:p-4.5 text-left text-white"
+              className="relative flex-1 min-h-[580px] sm:min-h-[620px] lg:min-h-[640px] xl:min-h-[670px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border flex flex-col justify-between p-3.5 sm:p-4 lg:p-4.5 xl:p-5 text-left text-white transform-gpu transition-all duration-300"
               style={{
                 backgroundColor: THEME.burgundy,
                 borderColor: `${THEME.champagne}40`,
-                boxShadow: `0 25px 50px -12px ${THEME.burgundy}90, 0 0 30px ${THEME.red}30`
+                boxShadow: `0 25px 60px -15px ${THEME.burgundy}95, 0 0 35px ${THEME.red}35, inset 0 1px 0 rgba(243,217,181,0.2)`
               }}
             >
               {/* Animated Background Featured Image with Crossfade */}
@@ -625,17 +608,17 @@ export const WorthYourAttention: React.FC = () => {
                       alt={`Featured Ambassador ${activeOffer.number} - ${activeOffer.title}`}
                       className="w-full h-full object-cover filter brightness-100 contrast-[1.03] transition-all duration-500"
                       style={{
-                        objectPosition: activeOffer.objectPosition || 'center 6%'
+                        objectPosition: activeOffer.objectPosition || 'center 20%'
                       }}
                       fetchPriority="high"
                     />
                   </picture>
 
-                  {/* Gradient Scrim - Minimal bottom gradient keeping photo fully visible */}
+                  {/* Gradient Scrim - Feathered bottom gradient keeping half-body saree drape clearly visible */}
                   <div
                     className="absolute inset-0 pointer-events-none"
                     style={{
-                      background: `linear-gradient(to top, ${THEME.burgundy}FA 0%, ${THEME.burgundy}D9 22%, ${THEME.burgundy}66 38%, transparent 54%)`
+                      background: `linear-gradient(to top, ${THEME.burgundy}F5 0%, ${THEME.burgundy}B0 16%, ${THEME.burgundy}40 28%, transparent 40%)`
                     }}
                   />
                 </motion.div>
