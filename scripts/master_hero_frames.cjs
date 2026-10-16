@@ -94,29 +94,31 @@ async function main() {
       sourceBuf = fs.readFileSync(path.join(publicDir, filename));
     }
 
-    // Apply high-fidelity luxury enhancement:
-    // 1. Fine unsharp mask tailored for eye sharpness, facial contours, silk weave, and real gold zari luster
-    // 2. Subtle tone mapping (brightness: 1.02, saturation: 1.03) to prevent highlight blowing and enhance warmth
-    // 3. Ultra-high quality WebP 95 output with smart subsampling
+    // Apply high-fidelity luxury 4K enhancement:
+    // 1. Contrast expansion & dehazing (.linear(1.06, -6)) to remove the hazy film and deepen luxury blacks
+    // 2. Multi-scale fine unsharp mask for facial contours, eyes, nose ridge, jewelry, and gold zari embroidery
+    // 3. Tonal brilliance (.modulate({ brightness: 1.01, saturation: 1.05 }))
+    // 4. Ultra-high quality WebP 98 output with smart subsampling
     const enhancedPipeline = sharp(sourceBuf)
+      .linear(1.06, -6)
       .sharpen({
-        sigma: 1.15,
-        m1: 1.25,
-        m2: 0.55,
+        sigma: 1.25,
+        m1: 1.45,
+        m2: 0.65,
         x1: 2,
         y2: 12,
         y3: 24
       })
       .modulate({
-        brightness: 1.02,
-        saturation: 1.03
+        brightness: 1.01,
+        saturation: 1.05
       });
 
-    // Save mastered high-definition WebP
+    // Save mastered high-definition WebP (Quality 98 for pristine 4K rendering)
     const webpOutPath = path.join(publicDir, `frame_${padded}.webp`);
     await enhancedPipeline
       .clone()
-      .webp({ quality: 95, effort: 4, smartSubsample: true })
+      .webp({ quality: 98, effort: 5, smartSubsample: true })
       .toFile(webpOutPath);
 
     // Also update JPG for reveal frames (79 to 88)
@@ -124,7 +126,7 @@ async function main() {
       const jpgOutPath = path.join(publicDir, filename);
       await enhancedPipeline
         .clone()
-        .jpeg({ quality: 94 })
+        .jpeg({ quality: 96 })
         .toFile(jpgOutPath);
     }
 
@@ -137,8 +139,8 @@ async function main() {
           kernel: sharp.kernel.lanczos3,
           fit: 'cover'
         })
-        .sharpen({ sigma: 1.0, m1: 0.9, m2: 0.45 })
-        .webp({ quality: 95, effort: 4 })
+        .sharpen({ sigma: 1.1, m1: 1.2, m2: 0.5 })
+        .webp({ quality: 98, effort: 5 })
         .toFile(master4kPath);
       console.log(`[4K MASTER GENERATED] Frame ${padded}: ${master4kPath}`);
     }

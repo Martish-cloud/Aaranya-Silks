@@ -44,7 +44,7 @@ export const HeroFrameAnimation: React.FC = () => {
   const updateCanvasDimensions = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
     const displayWidth = canvas.clientWidth || window.innerWidth;
     const displayHeight = canvas.clientHeight || window.innerHeight;
 
