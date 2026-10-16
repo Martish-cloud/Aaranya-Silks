@@ -263,13 +263,17 @@ export const HeroFrameAnimation: React.FC = () => {
       const current = currentFrameRef.current;
       const delta = target - current;
 
-      if (Math.abs(delta) > 0.02) {
-        // Dynamic damping: faster tracking during rapid scroll, ultra-smooth during gentle scroll
-        const lerpFactor = Math.abs(delta) > 12 ? 0.65 : Math.abs(delta) > 5 ? 0.52 : 0.42;
+      if (Math.abs(delta) > 0.01) {
+        // Dynamic damping: high responsiveness during rapid scroll, silky smooth during gentle scroll
+        const lerpFactor = Math.abs(delta) > 10 ? 0.95 : Math.abs(delta) > 4 ? 0.75 : 0.55;
         currentFrameRef.current += delta * lerpFactor;
 
-        // Snap when close or at bounds to prevent lag or stuck frames
-        if (Math.abs(target - currentFrameRef.current) < 0.15 || (target === TOTAL_FRAMES - 1 && delta < 1.5) || (target === 0 && delta > -1.5)) {
+        // Snap when close to target or at sequence bounds to prevent lag or stuck frames
+        if (
+          Math.abs(target - currentFrameRef.current) < 0.2 ||
+          (target === TOTAL_FRAMES - 1 && delta < 2.5) ||
+          (target === 0 && delta > -2.5)
+        ) {
           currentFrameRef.current = target;
         }
 
@@ -316,16 +320,20 @@ export const HeroFrameAnimation: React.FC = () => {
     rafIdRef.current = requestAnimationFrame(renderLoop);
 
     const handleScroll = () => {
-      const { top, scrollable } = containerMetricsRef.current;
-      if (scrollable <= 0) return;
-
+      const container = containerRef.current;
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
       const scrollY = window.scrollY;
+      const top = rect.top + scrollY;
+      const containerHeight = container.offsetHeight;
+      const scrollable = Math.max(1, containerHeight - window.innerHeight);
+
       const rawProgress = Math.max(0, Math.min(1, (scrollY - top) / scrollable));
 
-      // Map entire 160 frame progression from 0.0 to 0.88 (88% of pinned scroll distance).
-      // The remaining 12% (from 0.88 to 1.0) is a dedicated pinned dwell buffer on the final 160th frame.
+      // Map entire 160 frame progression from 0.0 to 0.80 (80% of pinned scroll distance).
+      // The remaining 20% (from 0.80 to 1.0) is a dedicated pinned dwell buffer on the final 160th frame.
       // This guarantees 100% that frame 160 is fully reached and viewed BEFORE the hero unpins into the next section.
-      const ANIMATION_END_THRESHOLD = 0.88;
+      const ANIMATION_END_THRESHOLD = 0.80;
       const animProgress = Math.min(1, rawProgress / ANIMATION_END_THRESHOLD);
       const targetFrame = Math.min(
         TOTAL_FRAMES - 1,

@@ -74,21 +74,16 @@ const OutfitCard = memo<OutfitCardProps>(({
         onClick={() => onCardClick(outfit)}
       >
         <div className="absolute inset-0 w-full h-full transition-transform duration-700 ease-out group-hover:scale-105 will-change-transform">
-          {(outfit.gallery.length > 0 ? outfit.gallery : [outfit.image]).map((img, idx) => (
-            <img
-              key={idx}
-              src={img}
-              alt={`${outfit.name} view ${idx + 1}`}
-              loading="lazy"
-              decoding="async"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).src = userProductImage;
-              }}
-              className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-500 ease-in-out will-change-transform ${
-                activeAngleIndex === idx ? 'opacity-100 z-1' : 'opacity-0 z-0 pointer-events-none'
-              }`}
-            />
-          ))}
+          <img
+            src={outfit.gallery[activeAngleIndex] || outfit.image || userProductImage}
+            alt={`${outfit.name} view ${activeAngleIndex + 1}`}
+            loading="eager"
+            decoding="async"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = userProductImage;
+            }}
+            className="absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-300 ease-in-out will-change-transform"
+          />
         </div>
 
         {/* Top Badges */}
@@ -253,7 +248,7 @@ const SlidingRow: React.FC<SlidingRowProps> = ({
 
   // Build repeated array so 50% shift creates a seamless, continuous infinite loop
   const displayItems = useMemo(() => {
-    // If fewer than 6 items, repeat items to reach at least 6 per half
+    if (!items || items.length === 0) return [];
     let base = [...items];
     while (base.length < 6) {
       base = [...base, ...items];
@@ -261,6 +256,10 @@ const SlidingRow: React.FC<SlidingRowProps> = ({
     // Duplicate once so second half is identical to first half
     return [...base, ...base];
   }, [items]);
+
+  if (!items || items.length === 0 || displayItems.length === 0) {
+    return null;
+  }
 
   return (
     <div
@@ -325,6 +324,10 @@ export const OutfitGallery: React.FC = () => {
     OUTFIT_CATEGORIES.forEach((cat) => {
       if (cat.id === 'all') {
         counts[cat.id] = OUTFITS_DATA.length;
+      } else if (cat.id === 'one-shoulder-tops') {
+        counts[cat.id] = OUTFITS_DATA.filter(
+          (o) => o.categorySlug === 'one-shoulder-tops' || (o.categorySlug as any) === 'off-shoulder-tops'
+        ).length;
       } else {
         counts[cat.id] = OUTFITS_DATA.filter((o) => o.categorySlug === cat.id).length;
       }
@@ -334,9 +337,16 @@ export const OutfitGallery: React.FC = () => {
 
   // Filter and sort items
   const filteredOutfits = useMemo(() => {
-    let items = activeCategory === 'all'
-      ? [...OUTFITS_DATA]
-      : OUTFITS_DATA.filter((o) => o.categorySlug === activeCategory);
+    let items: OutfitProduct[];
+    if (activeCategory === 'all') {
+      items = [...OUTFITS_DATA];
+    } else if (activeCategory === 'one-shoulder-tops' || activeCategory === 'off-shoulder-tops') {
+      items = OUTFITS_DATA.filter(
+        (o) => o.categorySlug === 'one-shoulder-tops' || (o.categorySlug as any) === 'off-shoulder-tops'
+      );
+    } else {
+      items = OUTFITS_DATA.filter((o) => o.categorySlug === activeCategory);
+    }
 
     if (sortBy === 'price-low') {
       items.sort((a, b) => a.price - b.price);
@@ -349,21 +359,32 @@ export const OutfitGallery: React.FC = () => {
     return items;
   }, [activeCategory, sortBy]);
 
-  // Distribute items evenly across strictly Rows 1–6 without creating an extra 7th row
+  // Distribute items evenly across rows (filling all active rows dynamically)
   const rows = useMemo(() => {
-    const numRows = 6;
+    if (filteredOutfits.length === 0) return [];
+    const numRows = Math.min(6, Math.max(1, filteredOutfits.length >= 6 ? 6 : Math.min(3, filteredOutfits.length)));
     const result: OutfitProduct[][] = Array.from({ length: numRows }, () => []);
+
     filteredOutfits.forEach((item, index) => {
       result[index % numRows].push(item);
     });
-    return result;
+
+    // If any row remains empty, share filtered outfits so all displayed rows are populated
+    result.forEach((rowArr) => {
+      if (rowArr.length === 0) {
+        rowArr.push(...filteredOutfits);
+      }
+    });
+
+    return result.filter((r) => r.length > 0);
   }, [filteredOutfits]);
 
-  // Structure 3 rows at a time in view (Set 1: Rows 1-3, Set 2: Rows 4-6, or All 6)
+  // Structure rows in view (Set 1: Rows 1-3, Set 2: Rows 4-6, or All)
   const visibleRows = useMemo(() => {
+    if (rows.length <= 3) return rows;
     if (activeRowSet === 'set1') return rows.slice(0, 3);
     if (activeRowSet === 'set2') return rows.slice(3, 6);
-    return rows.slice(0, 6);
+    return rows;
   }, [rows, activeRowSet]);
 
   const rowStartIndex = activeRowSet === 'set2' ? 3 : 0;
@@ -510,7 +531,10 @@ export const OutfitGallery: React.FC = () => {
                 <button
                   key={cat.id}
                   type="button"
-                  onClick={() => setActiveCategory(cat.id)}
+                  onClick={() => {
+                    setActiveCategory(cat.id);
+                    setActiveRowSet('set1');
+                  }}
                   className={`relative px-4 py-2 rounded-full text-xs font-semibold tracking-wider whitespace-nowrap transition-all duration-300 flex items-center gap-1.5 cursor-pointer ${
                     isActive
                       ? 'text-[#FAF7F0] shadow-md'

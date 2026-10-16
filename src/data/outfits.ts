@@ -41,30 +41,34 @@ export function resolveOptImage(relPath: string): string {
   if (origImages[origKey]) return origImages[origKey].default;
   const checkKey = `../assets/Outfits Check/${relPath}`;
   if (origImages[checkKey]) return origImages[checkKey].default;
+  const needKey = `../assets/Need to Add/${relPath}`;
+  if (origImages[needKey]) return origImages[needKey].default;
+  const shopKey = `../assets/Shop All Sarees/${relPath}`;
+  if (origImages[shopKey]) return origImages[shopKey].default;
 
-  // Extension-flexible lookup:
+  // Extension-flexible and case-insensitive lookup:
   const lastDot = relPath.lastIndexOf('.');
-  const baseNoExt = lastDot > 0 ? relPath.substring(0, lastDot) : relPath;
+  const baseNoExt = (lastDot > 0 ? relPath.substring(0, lastDot) : relPath).toLowerCase();
   for (const k in optImages) {
     const kDot = k.lastIndexOf('.');
-    const kBase = kDot > 0 ? k.substring(0, kDot) : k;
+    const kBase = (kDot > 0 ? k.substring(0, kDot) : k).toLowerCase();
     if (kBase.endsWith('/' + baseNoExt)) return optImages[k].default;
   }
   for (const k in origImages) {
     const kDot = k.lastIndexOf('.');
-    const kBase = kDot > 0 ? k.substring(0, kDot) : k;
+    const kBase = (kDot > 0 ? k.substring(0, kDot) : k).toLowerCase();
     if (kBase.endsWith('/' + baseNoExt)) return origImages[k].default;
   }
 
-  // Filename lookup:
+  // Filename lookup (case-insensitive):
   const filename = relPath.split('/').pop() || '';
   const fDot = filename.lastIndexOf('.');
-  const fBase = fDot > 0 ? filename.substring(0, fDot) : filename;
+  const fBase = (fDot > 0 ? filename.substring(0, fDot) : filename).toLowerCase();
   for (const k in optImages) {
-    if (k.includes(fBase)) return optImages[k].default;
+    if (k.toLowerCase().includes(fBase)) return optImages[k].default;
   }
   for (const k in origImages) {
-    if (k.includes(fBase)) return origImages[k].default;
+    if (k.toLowerCase().includes(fBase)) return origImages[k].default;
   }
 
   return userProductImage;
@@ -76,16 +80,20 @@ export function resolveOrigImage(relPath: string): string {
   if (origImages[key]) return origImages[key].default;
   const checkKey = `../assets/Outfits Check/${relPath}`;
   if (origImages[checkKey]) return origImages[checkKey].default;
+  const needKey = `../assets/Need to Add/${relPath}`;
+  if (origImages[needKey]) return origImages[needKey].default;
+  const shopKey = `../assets/Shop All Sarees/${relPath}`;
+  if (origImages[shopKey]) return origImages[shopKey].default;
   return resolveOptImage(relPath);
 }
 
 export const OUTFIT_CATEGORIES = [
-  { id: 'all', name: 'All Outfits', slug: 'all' },
+  { id: 'all', name: 'All Products', slug: 'all' },
   { id: 'sarees', name: 'Sarees', slug: 'sarees' },
   { id: 'babycon-dresses', name: 'Babycon Dresses', slug: 'babycon-dresses' },
   { id: 'blouses', name: 'Blouses', slug: 'blouses' },
   { id: 'crop-tops', name: 'Crop Tops', slug: 'crop-tops' },
-  { id: 'one-shoulder-tops', name: 'One Shoulder Tops', slug: 'one-shoulder-tops' }
+  { id: 'one-shoulder-tops', name: 'Off-Shoulder Tops', slug: 'one-shoulder-tops' }
 ] as const;
 
 // Duplicate handling audit log as requested

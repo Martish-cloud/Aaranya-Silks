@@ -67,7 +67,7 @@ export const CurtainIntro: React.FC = () => {
       {!isRemoved && (
         <div
           id="bridal-curtain-intro"
-          className="fixed inset-0 z-[100] overflow-hidden bg-[#0D0907] pointer-events-auto select-none"
+          className={`fixed inset-0 z-[100] overflow-hidden bg-[#0D0907] select-none ${isOpen ? 'pointer-events-none' : 'pointer-events-auto'}`}
           style={{ perspective: '1400px' }}
           onClick={handleManualOpen}
           role="dialog"
