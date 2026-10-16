@@ -377,87 +377,116 @@ export const HeroFrameAnimation: React.FC = () => {
         <div className="absolute top-1/4 left-1/3 w-96 h-96 rounded-full bg-[#E5B842]/10 blur-[140px] pointer-events-none z-1" />
 
         {/* Decorative Gold Frame Border */}
+        {/* Decorative Gold Frame Border */}
         <div className="absolute left-1/2 -translate-x-1/2 w-[calc(100%-2.5rem)] sm:w-[calc(100%-3rem)] max-w-6xl lg:max-w-7xl top-24 bottom-12 border border-[#C8A96B]/20 pointer-events-none rounded-3xl hidden md:block z-2" />
 
-        {/* Main Hero Foreground Content - Shifted modestly to the left inside the frame */}
-        <div className="relative z-10 max-w-6xl lg:max-w-7xl mx-auto px-4 sm:px-8 lg:px-10 w-full py-16 md:py-24 flex flex-col justify-between h-full max-h-[88vh]">
-          {/* Upper Left Block - Clean, cinematic luxury presentation highlighting the animation */}
-          <div className="relative max-w-xl text-left pt-6 sm:pt-10 -ml-0.5 sm:-ml-1.5 md:-ml-2.5">
-            {/* Brand Tag Pill */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#651C32]/85 backdrop-blur-md border border-[#C8A96B]/50 text-[#C8A96B] mb-6 shadow-xl"
+        {/* 1. Top-Left Hero Heading Label — Elevated slightly (~8px) with ample navbar clearance */}
+        <div className="absolute left-6 sm:left-10 lg:left-14 top-26 sm:top-28 z-20 pointer-events-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#651C32]/85 backdrop-blur-md border border-[#C8A96B]/50 text-[#C8A96B] shadow-xl"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-[#E5B842]" />
+            <span className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-[#FAF7F0]">
+              AARANYA SILKS • HAUTE COUTURE 2026
+            </span>
+          </motion.div>
+
+          {/* Mobile-Only CTA Layout (Narrow portrait screens) */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="flex flex-col sm:flex-row items-start gap-3 mt-4 mb-4 md:hidden"
+          >
+            <button
+              onClick={() => navigateTo('catalog')}
+              className="group flex items-center gap-3 px-6 py-3 rounded-full bg-[#8B1E3F] hover:bg-[#651C32] text-[#FAF7F0] font-sans font-semibold text-xs tracking-[0.16em] uppercase transition-all duration-300 shadow-2xl border border-[#C8A96B]/50 hover:border-[#E5B842] cursor-pointer"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#E5B842]" />
-              <span className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-[#FAF7F0]">
-                AARANYA SILKS • HAUTE COUTURE 2026
+              <span>Explore The Collection</span>
+              <ArrowRight className="w-4 h-4 text-[#E5B842] group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            <button
+              onClick={() => navigateTo('story')}
+              className="px-5 py-3 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md text-[#FAF7F0] font-sans font-medium text-xs tracking-[0.16em] uppercase transition-all duration-300 border border-[#C8A96B]/40 cursor-pointer shadow-lg"
+            >
+              Discover Our Story
+            </button>
+          </motion.div>
+        </div>
+
+        {/* 2. Desktop Independent CTA Overlays: Balanced Around Central Green-Saree Model */}
+        {/* CTA 1: Explore The Collection — Lower-left negative space of central green-saree model */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="hidden md:block absolute left-[37.5%] bottom-[12%] lg:bottom-[13%] -translate-x-1/2 z-20 pointer-events-auto"
+        >
+          <button
+            onClick={() => navigateTo('catalog')}
+            className="group flex items-center gap-2.5 px-5 lg:px-6 py-3 lg:py-3.5 rounded-full bg-[#8B1E3F] hover:bg-[#651C32] text-[#FAF7F0] font-sans font-semibold text-xs lg:text-[13px] tracking-[0.14em] uppercase transition-all duration-300 shadow-2xl border border-[#C8A96B]/50 hover:border-[#E5B842] hover:scale-105 cursor-pointer whitespace-nowrap"
+          >
+            <span>Explore The Collection</span>
+            <ArrowRight className="w-4 h-4 text-[#E5B842] group-hover:translate-x-1 transition-transform" />
+          </button>
+        </motion.div>
+
+        {/* CTA 2: Discover Our Story — Negative space to the right of central green-saree model */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.25 }}
+          className="hidden md:block absolute left-[69.5%] bottom-[12%] lg:bottom-[13%] -translate-x-1/2 z-20 pointer-events-auto"
+        >
+          <button
+            onClick={() => navigateTo('story')}
+            className="px-5 lg:px-6 py-3 lg:py-3.5 rounded-full bg-black/55 hover:bg-black/75 backdrop-blur-md text-[#FAF7F0] font-sans font-medium text-xs lg:text-[13px] tracking-[0.14em] uppercase transition-all duration-300 border border-[#C8A96B]/50 hover:border-[#E5B842] cursor-pointer shadow-xl whitespace-nowrap hover:scale-105"
+          >
+            Discover Our Story
+          </button>
+        </motion.div>
+
+        {/* 3. Bottom-Left Area: Certification Badges & Preserved Six Weavers Statement */}
+        <div className="absolute left-6 sm:left-10 lg:left-14 bottom-14 sm:bottom-16 z-20 pointer-events-auto flex flex-col items-start gap-2 sm:gap-2.5 max-w-sm sm:max-w-md lg:max-w-lg">
+          {/* Supporting Trust & Certification Badges in Bottom-Left Corner */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.35 }}
+            className="inline-flex items-center gap-3 sm:gap-4 text-xs text-[#FAF7F0]/90 bg-black/45 backdrop-blur-md px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-[#C8A96B]/35 shadow-lg"
+          >
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E5B842]" />
+              <span className="font-semibold uppercase tracking-wider text-[10px] sm:text-[11px]">
+                Silk Mark Certified
               </span>
-            </motion.div>
+            </div>
+            <div className="w-px h-3.5 bg-[#C8A96B]/40" />
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E5B842]" />
+              <span className="font-semibold uppercase tracking-wider text-[10px] sm:text-[11px]">
+                Tested Real Zari
+              </span>
+            </div>
+          </motion.div>
 
-            {/* Rebalanced CTAs - Prominent, elegant and accessible */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="flex flex-wrap items-center gap-3 sm:gap-4 mb-6"
-            >
-              <button
-                onClick={() => navigateTo('catalog')}
-                className="group flex items-center gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-[#8B1E3F] hover:bg-[#651C32] text-[#FAF7F0] font-sans font-semibold text-xs sm:text-sm tracking-[0.16em] uppercase transition-all duration-300 shadow-2xl border border-[#C8A96B]/50 hover:border-[#E5B842] hover:scale-105 cursor-pointer"
-              >
-                <span>Explore The Collection</span>
-                <ArrowRight className="w-4 h-4 text-[#E5B842] group-hover:translate-x-1 transition-transform" />
-              </button>
-
-              <button
-                onClick={() => navigateTo('story')}
-                className="px-5 sm:px-7 py-3.5 sm:py-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-[#FAF7F0] font-sans font-medium text-xs sm:text-sm tracking-[0.16em] uppercase transition-all duration-300 border border-white/25 hover:border-white/50 cursor-pointer shadow-lg"
-              >
-                Discover Our Story
-              </button>
-            </motion.div>
-
-            {/* Supporting Trust & Certification Badges arranged neatly beneath CTA area */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.35 }}
-              className="inline-flex items-center gap-3.5 sm:gap-5 text-xs text-[#FAF7F0]/90 bg-black/30 backdrop-blur-md px-4 sm:px-5 py-2.5 rounded-full border border-[#C8A96B]/35 shadow-lg"
-            >
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E5B842]" />
-                <span className="font-semibold uppercase tracking-wider text-[10px] sm:text-[11px]">
-                  Silk Mark Certified
-                </span>
-              </div>
-              <div className="w-px h-3.5 bg-[#C8A96B]/40" />
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E5B842]" />
-                <span className="font-semibold uppercase tracking-wider text-[10px] sm:text-[11px]">
-                  Tested Real Zari
-                </span>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Bottom Floating Bar */}
+          {/* Preserved "Six Weavers" Statement */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="pt-6 sm:pt-8 flex flex-col md:flex-row items-start md:items-end justify-between gap-4 sm:gap-6 border-t border-[#C8A96B]/20"
+            className="w-full pt-2 sm:pt-2.5 border-t border-[#C8A96B]/20 text-left"
           >
-            {/* Poetic quote from reference */}
-            <div className="text-left">
-              <p className="font-serif italic text-base sm:text-xl lg:text-2xl text-[#E5B842] tracking-wide leading-tight drop-shadow-md">
-                &ldquo;Six weavers, one thread &mdash; months of patient hands&rdquo;
-              </p>
-              <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#FAF7F0]/70 font-sans mt-1">
-                Handcrafted in Varanasi &amp; Kanchipuram
-              </p>
-            </div>
+            <p className="font-serif italic text-sm sm:text-base lg:text-lg text-[#E5B842] tracking-wide leading-tight drop-shadow-md">
+              &ldquo;Six weavers, one thread &mdash; months of patient hands&rdquo;
+            </p>
+            <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#FAF7F0]/70 font-sans mt-0.5">
+              Handcrafted in Varanasi &amp; Kanchipuram
+            </p>
           </motion.div>
         </div>
       </div>
