@@ -167,9 +167,9 @@ export const NewArrivalsGrid: React.FC = () => {
           {filteredProducts.map((product, idx) => (
             <div
               key={product.id}
-              className="shrink-0 w-[calc((100%-12px)/2)] sm:w-[calc((100%-32px)/3)] lg:w-[calc((100%-60px)/4)] transform-gpu"
+              className="shrink-0 w-[calc((100%-12px)/2)] sm:w-[calc((100%-32px)/3)] lg:w-[calc((100%-60px)/4)]"
             >
-              <ProductCard product={product} aspectRatio="4/5" index={idx} />
+              <ProductCard product={product} aspectRatio="4/5" index={idx} shadowOnly={true} />
             </div>
           ))}
         </div>

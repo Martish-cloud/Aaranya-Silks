@@ -229,7 +229,7 @@ export const HeroFrameAnimation: React.FC = () => {
     };
   }, [preloadImage, drawFrame, updateCanvasDimensions]);
 
-  // Section metrics calculation on resize
+  // Section metrics calculation on resize & scroll
   const updateMetrics = useCallback(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -255,7 +255,7 @@ export const HeroFrameAnimation: React.FC = () => {
 
     let isLoopRunning = true;
 
-    // Fluid RAF render loop with cinematic damping
+    // Fluid RAF render loop with cinematic damping and snap convergence
     const renderLoop = () => {
       if (!isLoopRunning) return;
 
@@ -263,8 +263,16 @@ export const HeroFrameAnimation: React.FC = () => {
       const current = currentFrameRef.current;
       const delta = target - current;
 
-      if (Math.abs(delta) > 0.04) {
-        currentFrameRef.current += delta * 0.45;
+      if (Math.abs(delta) > 0.02) {
+        // Dynamic damping: faster tracking during rapid scroll, ultra-smooth during gentle scroll
+        const lerpFactor = Math.abs(delta) > 12 ? 0.65 : Math.abs(delta) > 5 ? 0.52 : 0.42;
+        currentFrameRef.current += delta * lerpFactor;
+
+        // Snap when close or at bounds to prevent lag or stuck frames
+        if (Math.abs(target - currentFrameRef.current) < 0.15 || (target === TOTAL_FRAMES - 1 && delta < 1.5) || (target === 0 && delta > -1.5)) {
+          currentFrameRef.current = target;
+        }
+
         const frameIndex = Math.min(
           TOTAL_FRAMES - 1,
           Math.max(0, Math.round(currentFrameRef.current))
@@ -279,7 +287,8 @@ export const HeroFrameAnimation: React.FC = () => {
 
           if (!imgToDraw) {
             isExactMatch = false;
-            for (let offset = 1; offset < 25; offset++) {
+            // Search nearest available decoded frame in bidirectional window
+            for (let offset = 1; offset < 35; offset++) {
               if (imagesRef.current.has(frameIndex - offset)) {
                 imgToDraw = imagesRef.current.get(frameIndex - offset);
                 break;
@@ -311,10 +320,16 @@ export const HeroFrameAnimation: React.FC = () => {
       if (scrollable <= 0) return;
 
       const scrollY = window.scrollY;
-      const progress = Math.max(0, Math.min(1, (scrollY - top) / scrollable));
+      const rawProgress = Math.max(0, Math.min(1, (scrollY - top) / scrollable));
+
+      // Map entire 160 frame progression from 0.0 to 0.88 (88% of pinned scroll distance).
+      // The remaining 12% (from 0.88 to 1.0) is a dedicated pinned dwell buffer on the final 160th frame.
+      // This guarantees 100% that frame 160 is fully reached and viewed BEFORE the hero unpins into the next section.
+      const ANIMATION_END_THRESHOLD = 0.88;
+      const animProgress = Math.min(1, rawProgress / ANIMATION_END_THRESHOLD);
       const targetFrame = Math.min(
         TOTAL_FRAMES - 1,
-        Math.round(progress * (TOTAL_FRAMES - 1))
+        Math.floor(animProgress * (TOTAL_FRAMES - 1) + 0.5)
       );
 
       if (targetFrame !== targetFrameRef.current) {
@@ -339,7 +354,7 @@ export const HeroFrameAnimation: React.FC = () => {
       id="hero-section"
       ref={containerRef}
       className={`relative w-full ${
-        isReducedMotion ? 'min-h-[85vh]' : 'h-[320vh]'
+        isReducedMotion ? 'min-h-[85vh]' : 'h-[350vh]'
       } bg-[#1C1A19]`}
     >
       {/* Sticky 100vh Viewport: Pins during the 320vh scroll then releases naturally */}

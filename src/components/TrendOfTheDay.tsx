@@ -89,7 +89,7 @@ export const TrendOfTheDay: React.FC = () => {
                   ease: [0.16, 1, 0.3, 1],
                   delay: (idx % 4) * 0.08
                 }}
-                className="group flex flex-col justify-between bg-[#F2EBDD] rounded-2xl p-4 border border-[#C8A96B]/25 hover:border-[#651C32] transition-all shadow-sm hover:shadow-md text-left will-change-transform"
+                className="group flex flex-col justify-between bg-[#F2EBDD] rounded-2xl p-4 border border-[#C8A96B]/25 hover:border-[#651C32]/60 text-left transform-gpu transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[0_4px_20px_-2px_rgba(28,26,25,0.06),0_2px_6px_-1px_rgba(101,28,50,0.04)] hover:-translate-y-1 hover:scale-[1.015] hover:shadow-[0_14px_30px_-4px_rgba(28,26,25,0.11),0_6px_12px_-2px_rgba(101,28,50,0.07)] will-change-transform cursor-pointer"
               >
                 {/* Image Stage */}
                 <div

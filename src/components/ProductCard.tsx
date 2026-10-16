@@ -14,13 +14,15 @@ interface ProductCardProps {
   priority?: boolean;
   aspectRatio?: '9/5' | '3/4' | '4/5';
   index?: number;
+  shadowOnly?: boolean;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   aspectRatio = '3/4',
   priority = false,
-  index
+  index,
+  shadowOnly = false,
 }) => {
   const {
     isInWishlist,
@@ -58,7 +60,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       viewport={{ once: false, amount: 0.08 }}
       transition={{ duration: 0.6, ease: LUXURY_EASE, delay: staggerDelay }}
       onClick={handleCardClick}
-      className="group cursor-pointer flex flex-col h-full bg-[#FAF7F0] rounded-2xl overflow-hidden border border-[#C8A96B]/20 hover:border-[#C8A96B]/60 transition-all duration-500 hover:shadow-xl hover:-translate-y-1 will-change-transform"
+      className={
+        shadowOnly
+          ? "group cursor-pointer flex flex-col h-full bg-[#FAF7F0] rounded-2xl overflow-hidden border border-[#C8A96B]/25 transition-colors duration-300 shadow-[0_4px_20px_-2px_rgba(28,26,25,0.06),0_2px_8px_-1px_rgba(101,28,50,0.04)]"
+          : "group cursor-pointer flex flex-col h-full bg-[#FAF7F0] rounded-2xl overflow-hidden border border-[#C8A96B]/20 hover:border-[#C8A96B]/60 transition-all duration-500 hover:shadow-xl hover:-translate-y-1 will-change-transform"
+      }
     >
       {/* Product Image Stage */}
       <div
@@ -85,7 +91,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).src = userProductImage;
           }}
-          className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105 will-change-transform"
+          className={`w-full h-full object-cover object-top transition-transform duration-700 ease-out ${
+            shadowOnly ? '' : 'group-hover:scale-105'
+          } will-change-transform`}
           loading={priority ? 'eager' : 'lazy'}
           decoding="async"
           fetchPriority={priority ? 'high' : 'auto'}

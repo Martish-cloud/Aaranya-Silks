@@ -1,21 +1,34 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Heart, ArrowRight, Box } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
 import { preloadImages } from '../utils/imagePreloader';
+
+import roseBackground from '../assets/studio/rose-background.webp';
 import roseWarmCream from '../assets/studio/rose-warm-cream.webp';
 import roseRosePink from '../assets/studio/rose-pink.webp';
 import roseDeepWine from '../assets/studio/rose-deep-wine.webp';
+import roseWarmCreamModel from '../assets/studio/rose-warm-cream-model.webp';
+import roseRosePinkModel from '../assets/studio/rose-pink-model.webp';
+import roseDeepWineModel from '../assets/studio/rose-deep-wine-model.webp';
 
+import suhaniBackground from '../assets/studio/suhani-background.webp';
 import suhaniCrimsonRed from '../assets/studio/suhani-crimson-red.webp';
 import suhaniPlumBurgundy from '../assets/studio/suhani-plum-burgundy.webp';
 import suhaniChampagneGold from '../assets/studio/suhani-champagne-gold.webp';
+import suhaniCrimsonRedModel from '../assets/studio/suhani-crimson-red-model.webp';
+import suhaniPlumBurgundyModel from '../assets/studio/suhani-plum-burgundy-model.webp';
+import suhaniChampagneGoldModel from '../assets/studio/suhani-champagne-gold-model.webp';
 
+import swarnaBackground from '../assets/studio/swarna-background.webp';
 import swarnaLiquidGold from '../assets/studio/swarna-liquid-gold.webp';
 import swarnaWarmIvory from '../assets/studio/swarna-warm-ivory.webp';
 import swarnaEmerald from '../assets/studio/swarna-emerald.webp';
+import swarnaLiquidGoldModel from '../assets/studio/swarna-liquid-gold-model.webp';
+import swarnaWarmIvoryModel from '../assets/studio/swarna-warm-ivory-model.webp';
+import swarnaEmeraldModel from '../assets/studio/swarna-emerald-model.webp';
 
 const STUDIO_LOOKS = [
   {
@@ -27,11 +40,12 @@ const STUDIO_LOOKS = [
     rating: 4.8,
     reviews: 128,
     thumbnail: roseRosePink,
+    background: roseBackground,
     defaultColorIdx: 1,
     colors: [
-      { name: 'Warm Cream', hex: '#FAF7F0', image: roseWarmCream },
-      { name: 'Rose Pink', hex: '#E8987E', image: roseRosePink },
-      { name: 'Deep Wine', hex: '#651C32', image: roseDeepWine }
+      { name: 'Warm Cream', hex: '#FAF7F0', image: roseWarmCream, modelImage: roseWarmCreamModel },
+      { name: 'Rose Pink', hex: '#E8987E', image: roseRosePink, modelImage: roseRosePinkModel },
+      { name: 'Deep Wine', hex: '#651C32', image: roseDeepWine, modelImage: roseDeepWineModel }
     ]
   },
   {
@@ -43,11 +57,12 @@ const STUDIO_LOOKS = [
     rating: 4.9,
     reviews: 184,
     thumbnail: suhaniCrimsonRed,
+    background: suhaniBackground,
     defaultColorIdx: 0,
     colors: [
-      { name: 'Crimson Red', hex: '#8B1E3F', image: suhaniCrimsonRed },
-      { name: 'Plum Burgundy', hex: '#651C32', image: suhaniPlumBurgundy },
-      { name: 'Champagne Gold', hex: '#C8A96B', image: suhaniChampagneGold }
+      { name: 'Crimson Red', hex: '#8B1E3F', image: suhaniCrimsonRed, modelImage: suhaniCrimsonRedModel },
+      { name: 'Plum Burgundy', hex: '#651C32', image: suhaniPlumBurgundy, modelImage: suhaniPlumBurgundyModel },
+      { name: 'Champagne Gold', hex: '#C8A96B', image: suhaniChampagneGold, modelImage: suhaniChampagneGoldModel }
     ]
   },
   {
@@ -59,11 +74,12 @@ const STUDIO_LOOKS = [
     rating: 4.95,
     reviews: 96,
     thumbnail: swarnaLiquidGold,
+    background: swarnaBackground,
     defaultColorIdx: 0,
     colors: [
-      { name: 'Liquid Gold', hex: '#C8A96B', image: swarnaLiquidGold },
-      { name: 'Warm Ivory', hex: '#FAF7F0', image: swarnaWarmIvory },
-      { name: 'Emerald', hex: '#1B4D3E', image: swarnaEmerald }
+      { name: 'Liquid Gold', hex: '#C8A96B', image: swarnaLiquidGold, modelImage: swarnaLiquidGoldModel },
+      { name: 'Warm Ivory', hex: '#FAF7F0', image: swarnaWarmIvory, modelImage: swarnaWarmIvoryModel },
+      { name: 'Emerald', hex: '#1B4D3E', image: swarnaEmerald, modelImage: swarnaEmeraldModel }
     ]
   }
 ];
@@ -81,12 +97,13 @@ export const ChangeLookStudio: React.FC = () => {
 
   const look = STUDIO_LOOKS[activeLookIdx];
   const activeColor = look.colors[selectedColorIdx] || look.colors[0];
-  const currentImage = activeColor.image;
 
   React.useEffect(() => {
-    // Eagerly preload all studio looks and all color variants upfront
+    // Eagerly preload all studio looks, models, and backgrounds upfront
     STUDIO_LOOKS.forEach((item) => {
       preloadImages(item.colors.map((c) => c.image));
+      preloadImages(item.colors.map((c) => c.modelImage));
+      if (item.background) preloadImages([item.background]);
       if (item.thumbnail) preloadImages([item.thumbnail]);
     });
   }, []);
@@ -161,23 +178,39 @@ export const ChangeLookStudio: React.FC = () => {
           {/* Center Column: Full-Length Model in Saree (5 cols on lg) */}
           <div className="lg:col-span-5 relative flex justify-center">
             <div className="relative w-full max-w-md aspect-[3/4] sm:aspect-[4/5] rounded-3xl overflow-hidden bg-[#F2EBDD] border border-[#C8A96B]/30 shadow-2xl">
-              <motion.img
-                key={`${look.id}-${selectedColorIdx}`}
-                initial={{ scale: 1.01 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.18, ease: 'easeOut' }}
-                src={currentImage}
-                alt={`${look.name} - ${activeColor.name}`}
+              {/* Stationary photographic background layer - stays fixed in image frame */}
+              <img
+                src={look.background}
+                alt={`${look.headline} background`}
+                className="absolute inset-0 w-full h-full object-cover object-top select-none pointer-events-none"
                 loading="eager"
                 decoding="async"
-                className="w-full h-full object-cover object-top"
               />
 
+              {/* Model-only sliding layer: outgoing model slides right & fades out, incoming model enters from left & fades in */}
+              <AnimatePresence initial={false} mode="sync">
+                <motion.img
+                  key={`${look.id}-${selectedColorIdx}`}
+                  src={activeColor.modelImage}
+                  alt={`${look.name} - ${activeColor.name}`}
+                  initial={{ x: '-45%', opacity: 0 }}
+                  animate={{ x: '0%', opacity: 1 }}
+                  exit={{ x: '45%', opacity: 0 }}
+                  transition={{
+                    duration: 0.38,
+                    ease: [0.22, 1, 0.36, 1]
+                  }}
+                  className="absolute inset-0 w-full h-full object-cover object-top select-none pointer-events-none z-10"
+                  loading="eager"
+                  decoding="async"
+                />
+              </AnimatePresence>
+
               {/* Ambient bottom gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40 pointer-events-none z-20" />
 
               {/* Handwritten script badge at bottom matching Frame 14: New Drop 2026 */}
-              <div className="absolute bottom-5 left-5">
+              <div className="absolute bottom-5 left-5 z-30 pointer-events-none">
                 <span className="font-script text-2xl sm:text-3xl text-[#E5B842] drop-shadow-md">
                   New Drop 2026
                 </span>

@@ -162,65 +162,81 @@ export const ReviewsCarousel: React.FC = () => {
                   opacity: 'var(--focal-opacity, 1)',
                 }}
               >
-                {/* Inner card with refined subtle flowing hover animation & 3D luxury elevation */}
+                {/* Card Container with Independent Traveling Maroon Light Border */}
                 <div
-                  className="w-[260px] sm:w-[290px] md:w-[310px] lg:w-[325px] xl:w-[335px] h-full p-4.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-[#F2EBDD] border border-[#C8A96B]/30 flex flex-col justify-between text-left shadow-sm hover:shadow-2xl transition-all duration-300 ease-out transform-gpu hover:-translate-y-1.5 hover:scale-[1.015] hover:border-[#C8A96B]/60 relative cursor-pointer"
+                  className="w-[260px] sm:w-[290px] md:w-[310px] lg:w-[325px] xl:w-[335px] h-full rounded-2xl sm:rounded-3xl p-[1.5px] relative overflow-hidden flex flex-col justify-between text-left shadow-sm hover:shadow-xl transition-shadow duration-300 transform-gpu cursor-pointer"
                   style={{
-                    boxShadow: '0 4px 15px -3px rgba(101,28,50,0.06), 0 2px 6px -2px rgba(101,28,50,0.04)',
+                    boxShadow: '0 4px 18px -3px rgba(101,28,50,0.08), 0 2px 6px -2px rgba(101,28,50,0.05)',
                   }}
                 >
-                  <div>
-                    <div className="flex items-center justify-between mb-2 sm:mb-2.5">
-                      <Quote className="w-6 h-6 sm:w-7 sm:h-7 text-[#C8A96B]/40" />
-                      {/* Star rating */}
-                      <div className="flex items-center gap-1">
-                        {[...Array(rev.rating)].map((_, i) => (
-                          <Star key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C8A96B] fill-current" />
-                        ))}
-                      </div>
-                    </div>
+                  {/* Base subtle border ring */}
+                  <div className="absolute inset-0 rounded-2xl sm:rounded-3xl border border-[#C8A96B]/25 pointer-events-none z-0" />
 
-                    <h4 className="font-serif text-[15px] sm:text-base font-semibold text-[#651C32] mb-1.5 sm:mb-2 leading-snug">
-                      "{rev.title}"
-                    </h4>
+                  {/* Independent Traveling Maroon & Gold Light Beam around outer perimeter */}
+                  <div
+                    className="absolute -inset-[130%] pointer-events-none motion-safe:animate-[spin_6.5s_linear_infinite] z-0"
+                    style={{
+                      animationDelay: `${(idx % 4) * -1.6}s`,
+                      background:
+                        'conic-gradient(from 0deg, transparent 0deg, transparent 310deg, rgba(101,28,50,0.2) 325deg, rgba(139,30,63,0.9) 346deg, rgba(200,169,107,0.8) 355deg, rgba(139,30,63,0.9) 358deg, transparent 360deg)',
+                    }}
+                  />
 
-                    <p className="text-xs sm:text-[13px] text-[#1C1A19]/80 font-sans font-light leading-relaxed mb-3.5 sm:mb-4">
-                      {rev.comment}
-                    </p>
-                  </div>
-
-                  <div className="pt-3 sm:pt-3.5 border-t border-[#C8A96B]/25">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-2.5 sm:gap-3">
-                        {authorPhoto && (
-                          <img
-                            src={authorPhoto}
-                            alt={rev.author}
-                            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover object-top border-2 border-[#C8A96B]/60 shadow-sm shrink-0"
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        )}
-                        <div>
-                          <span className="font-serif font-bold text-[13px] sm:text-sm text-[#1C1A19] block leading-tight">
-                            {rev.author}
-                          </span>
-                          <p className="text-[11px] text-[#1C1A19]/60 font-light mt-0.5">
-                            {rev.location} • <span className="italic text-[#651C32]">{rev.occasion}</span>
-                          </p>
+                  {/* Inner stationary card: completely stationary content layer */}
+                  <div className="relative z-10 w-full h-full p-4.5 sm:p-5 rounded-[calc(1rem-1.5px)] sm:rounded-[calc(1.5rem-1.5px)] bg-[#F2EBDD] flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-2 sm:mb-2.5">
+                        <Quote className="w-6 h-6 sm:w-7 sm:h-7 text-[#C8A96B]/40" />
+                        {/* Star rating */}
+                        <div className="flex items-center gap-1">
+                          {[...Array(rev.rating)].map((_, i) => (
+                            <Star key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C8A96B] fill-current" />
+                          ))}
                         </div>
                       </div>
 
-                      {rev.verified && (
-                        <span className="inline-flex items-center gap-1 text-[10px] text-[#8B1E3F] font-semibold uppercase tracking-wider shrink-0">
-                          <CheckCircle className="w-3 h-3 text-[#C8A96B]" />
-                          <span className="hidden sm:inline">Verified</span>
-                        </span>
-                      )}
+                      <h4 className="font-serif text-[15px] sm:text-base font-semibold text-[#651C32] mb-1.5 sm:mb-2 leading-snug">
+                        "{rev.title}"
+                      </h4>
+
+                      <p className="text-xs sm:text-[13px] text-[#1C1A19]/80 font-sans font-light leading-relaxed mb-3.5 sm:mb-4">
+                        {rev.comment}
+                      </p>
                     </div>
-                    <p className="text-[10px] text-[#8B1E3F] tracking-wide mt-1.5 sm:mt-2 truncate">
-                      Purchased: {rev.sareePurchased}
-                    </p>
+
+                    <div className="pt-3 sm:pt-3.5 border-t border-[#C8A96B]/25">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2.5 sm:gap-3">
+                          {authorPhoto && (
+                            <img
+                              src={authorPhoto}
+                              alt={rev.author}
+                              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover object-top border-2 border-[#C8A96B]/60 shadow-sm shrink-0"
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          )}
+                          <div>
+                            <span className="font-serif font-bold text-[13px] sm:text-sm text-[#1C1A19] block leading-tight">
+                              {rev.author}
+                            </span>
+                            <p className="text-[11px] text-[#1C1A19]/60 font-light mt-0.5">
+                              {rev.location} • <span className="italic text-[#651C32]">{rev.occasion}</span>
+                            </p>
+                          </div>
+                        </div>
+
+                        {rev.verified && (
+                          <span className="inline-flex items-center gap-1 text-[10px] text-[#8B1E3F] font-semibold uppercase tracking-wider shrink-0">
+                            <CheckCircle className="w-3 h-3 text-[#C8A96B]" />
+                            <span className="hidden sm:inline">Verified</span>
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[10px] text-[#8B1E3F] tracking-wide mt-1.5 sm:mt-2 truncate">
+                        Purchased: {rev.sareePurchased}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
