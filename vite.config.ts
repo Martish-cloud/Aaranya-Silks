@@ -18,6 +18,17 @@ function webpFallbackPlugin(): Plugin {
             return webpPath
           }
         }
+      } else if (importer && /\.webp$/i.test(source)) {
+        const fullDir = path.dirname(importer)
+        const targetPath = path.resolve(fullDir, source)
+        if (!fs.existsSync(targetPath)) {
+          for (const ext of ['.png', '.jpg', '.jpeg', '.jfif']) {
+            const fallbackPath = targetPath.replace(/\.webp$/i, ext)
+            if (fs.existsSync(fallbackPath)) {
+              return fallbackPath
+            }
+          }
+        }
       }
       return null
     }
