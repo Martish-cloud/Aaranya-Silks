@@ -56,9 +56,9 @@ export const BridalDarkSection: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.1 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 relative rounded-2xl xl:rounded-3xl overflow-hidden bg-gradient-to-t from-[#651C32] to-[#8B1E3F] p-3.5 sm:p-5 lg:p-3.5 xl:p-4 flex flex-col justify-between shadow-2xl border border-[#C8A96B]/30 group min-h-[320px] sm:min-h-[360px] lg:min-h-0 lg:h-full will-change-transform"
+            className="lg:col-span-5 relative rounded-2xl xl:rounded-3xl overflow-hidden bg-gradient-to-t from-[#651C32] to-[#8B1E3F] p-3.5 sm:p-5 lg:p-3.5 xl:p-4 flex flex-col justify-between shadow-2xl border border-[#C8A96B]/30 group min-h-[320px] sm:min-h-[360px] lg:min-h-0 lg:h-full"
           >
             <img
               src={suhaniBridalImg}
@@ -105,10 +105,10 @@ export const BridalDarkSection: React.FC = () => {
                   key={saree.id}
                   initial={{ opacity: 0, y: 35 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: false, amount: 0.1 }}
+                  viewport={{ once: true, amount: 0.1 }}
                   transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: (idx % 2) * 0.08 }}
                   whileHover={{ y: -4 }}
-                  className="flex flex-col justify-between bg-white/[0.06] backdrop-blur-md rounded-xl xl:rounded-2xl overflow-hidden border border-white/20 hover:border-[#C8A96B] transition-all shadow-xl group text-left will-change-transform"
+                  className="flex flex-col justify-between bg-white/[0.06] backdrop-blur-md rounded-xl xl:rounded-2xl overflow-hidden border border-white/20 hover:border-[#C8A96B] transition-all shadow-xl group text-left"
                 >
                   {/* Image */}
                   <div

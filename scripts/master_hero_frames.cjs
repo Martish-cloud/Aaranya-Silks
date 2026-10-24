@@ -25,7 +25,7 @@ async function main() {
 
   // Key reference buffers for reveal
   // Frame 78: Last clean walkthrough frame before reveal
-  const bufWalkthrough78 = fs.readFileSync(path.join(publicDir, frameFiles[77]));
+  const _bufWalkthrough78 = fs.readFileSync(path.join(publicDir, frameFiles[77]));
   // Frame 89: First clean models frame
   const bufModels89 = fs.readFileSync(path.join(publicDir, frameFiles[88]));
 

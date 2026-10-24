@@ -2,9 +2,16 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, ShieldCheck, Award } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
-import { HERO_FRAMES } from '../data/heroFrames';
+import {
+  TOTAL_HERO_FRAMES,
+  getHeroFrameUrl,
+  getHeroPosterUrl
+} from '../data/heroFrames';
 
-const TOTAL_FRAMES = 160;
+// Maximum decoded frames retained in memory at any time to bound RAM footprint
+const MAX_CACHE_SIZE = 24;
+// Maximum concurrent image fetch/decode tasks
+const MAX_CONCURRENT_DOWNLOADS = 3;
 
 export const HeroFrameAnimation: React.FC = () => {
   const { navigateTo } = useShop();
@@ -19,16 +26,31 @@ export const HeroFrameAnimation: React.FC = () => {
     return false;
   });
 
-  // In-memory cache of HTMLImageElements & in-flight promises
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
+
+  // Image cache and LRU tracking: index -> HTMLImageElement
   const imagesRef = useRef<Map<number, HTMLImageElement>>(new Map());
-  const loadingMapRef = useRef<Map<number, Promise<HTMLImageElement>>>(new Map());
+  const accessOrderRef = useRef<number[]>([]);
+  const inFlightRef = useRef<Map<number, Promise<HTMLImageElement | null>>>(new Map());
+  const activeDownloadsCountRef = useRef(0);
+  const downloadQueueRef = useRef<number[]>([]);
+
+  const isVisibleRef = useRef(true);
   const rafIdRef = useRef<number | null>(null);
   const lastDrawnFrameRef = useRef<number>(-1);
-  const lastActualFrameDrawnRef = useRef<number>(-1);
   const targetFrameRef = useRef<number>(0);
   const currentFrameRef = useRef<number>(0);
+  const lastScrollYRef = useRef<number>(0);
+  const scrollDirectionRef = useRef<'down' | 'up'>('down');
+
+  // Cached layout metrics to eliminate forced layout reflow during scroll
   const canvasSizeRef = useRef({ width: 0, height: 0, dpr: 1 });
-  const containerMetricsRef = useRef({ top: 0, height: 0, scrollable: 0 });
+  const metricsRef = useRef({ top: 0, height: 0, scrollable: 1 });
 
   // Listen for reduced motion preference changes
   useEffect(() => {
@@ -40,11 +62,12 @@ export const HeroFrameAnimation: React.FC = () => {
     }
   }, []);
 
-  // Cache canvas dimensions to eliminate layout thrashing during scroll
+  // Update canvas sizing with DPR cap (2.0 max for optimal balance of sharpness and memory)
   const updateCanvasDimensions = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const displayWidth = canvas.clientWidth || window.innerWidth;
     const displayHeight = canvas.clientHeight || window.innerHeight;
 
@@ -59,16 +82,55 @@ export const HeroFrameAnimation: React.FC = () => {
     }
   }, []);
 
-  // Draw image on canvas preserving aspect ratio (object-fit: cover) with high-quality smoothing
+  // Section metrics cache - measured only on mount & resize
+  const updateMetrics = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const rect = container.getBoundingClientRect();
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const top = rect.top + scrollTop;
+    const height = container.offsetHeight;
+    const scrollable = Math.max(1, height - window.innerHeight);
+
+    metricsRef.current = { top, height, scrollable };
+    setIsMobile(window.innerWidth < 768);
+    updateCanvasDimensions();
+  }, [updateCanvasDimensions]);
+
+  // Evict frames when cache exceeds memory budget
+  const evictOldFrames = useCallback((pivotFrame: number) => {
+    const cache = imagesRef.current;
+    if (cache.size <= MAX_CACHE_SIZE) return;
+
+    // Sort cached keys by distance from the current target frame
+    const entries = Array.from(cache.keys()).map((idx) => ({
+      idx,
+      dist: Math.abs(idx - pivotFrame)
+    }));
+
+    entries.sort((a, b) => b.dist - a.dist);
+
+    while (cache.size > MAX_CACHE_SIZE && entries.length > 0) {
+      const farthest = entries.shift();
+      if (farthest && farthest.dist > 8) {
+        cache.delete(farthest.idx);
+        accessOrderRef.current = accessOrderRef.current.filter((k) => k !== farthest.idx);
+      } else {
+        break;
+      }
+    }
+  }, []);
+
+  // Draw image on canvas preserving aspect ratio (object-fit: cover)
   const drawFrame = useCallback((img: HTMLImageElement) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) return;
 
-    // Enable high-quality image smoothing for pristine 4K rendering
     ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
+    ctx.imageSmoothingQuality = 'medium';
 
     let { width: displayWidth, height: displayHeight, dpr } = canvasSizeRef.current;
     if (displayWidth === 0 || displayHeight === 0) {
@@ -107,157 +169,162 @@ export const HeroFrameAnimation: React.FC = () => {
     ctx.restore();
   }, [updateCanvasDimensions]);
 
-  // Preload frame helper with asynchronous off-thread decoding & instant frame replacement
-  const preloadImage = useCallback(
-    (index: number): Promise<HTMLImageElement> => {
-      if (imagesRef.current.has(index)) {
-        return Promise.resolve(imagesRef.current.get(index)!);
-      }
-      if (loadingMapRef.current.has(index)) {
-        return loadingMapRef.current.get(index)!;
+  const processQueueRef = useRef<() => void>(() => {});
+
+  // Queue-managed frame preloader with concurrency limiter
+  const processDownloadQueue = useCallback(() => {
+    while (
+      activeDownloadsCountRef.current < MAX_CONCURRENT_DOWNLOADS &&
+      downloadQueueRef.current.length > 0
+    ) {
+      const nextIndex = downloadQueueRef.current.shift()!;
+      if (imagesRef.current.has(nextIndex) || inFlightRef.current.has(nextIndex)) {
+        continue;
       }
 
-      const promise = new Promise<HTMLImageElement>((resolve) => {
+      activeDownloadsCountRef.current++;
+      const url = getHeroFrameUrl(nextIndex, isMobile);
+
+      const promise = new Promise<HTMLImageElement | null>((resolve) => {
         const img = new Image();
-        img.src = HERO_FRAMES[index];
-        img.onload = () => {
-          if ('decode' in img) {
-            img
-              .decode()
-              .catch(() => {})
-              .finally(() => {
-                imagesRef.current.set(index, img);
-                loadingMapRef.current.delete(index);
+        img.src = url;
 
-                // If currently visible target frame was waiting for this exact image, immediately redraw sharp version!
-                const activeIndex = Math.min(
-                  TOTAL_FRAMES - 1,
-                  Math.max(0, Math.round(currentFrameRef.current))
-                );
-                if (activeIndex === index && lastActualFrameDrawnRef.current !== index) {
-                  drawFrame(img);
-                  lastActualFrameDrawnRef.current = index;
-                  lastDrawnFrameRef.current = index;
-                }
+        const onDone = () => {
+          activeDownloadsCountRef.current--;
+          inFlightRef.current.delete(nextIndex);
+          imagesRef.current.set(nextIndex, img);
+          evictOldFrames(targetFrameRef.current);
 
-                resolve(img);
-              });
-          } else {
-            imagesRef.current.set(index, img);
-            loadingMapRef.current.delete(index);
-
-            const activeIndex = Math.min(
-              TOTAL_FRAMES - 1,
-              Math.max(0, Math.round(currentFrameRef.current))
-            );
-            if (activeIndex === index && lastActualFrameDrawnRef.current !== index) {
-              drawFrame(img);
-              lastActualFrameDrawnRef.current = index;
-              lastDrawnFrameRef.current = index;
-            }
-
-            resolve(img);
+          // If target is waiting for this exact frame, render immediately
+          const activeIndex = Math.min(
+            TOTAL_HERO_FRAMES - 1,
+            Math.max(0, Math.round(currentFrameRef.current))
+          );
+          if (activeIndex === nextIndex) {
+            drawFrame(img);
+            lastDrawnFrameRef.current = nextIndex;
           }
+
+          processQueueRef.current();
+          resolve(img);
         };
-        img.onerror = () => {
-          loadingMapRef.current.delete(index);
-          const fallback = imagesRef.current.get(0) || img;
-          resolve(fallback);
+
+        const onError = () => {
+          activeDownloadsCountRef.current--;
+          inFlightRef.current.delete(nextIndex);
+          processQueueRef.current();
+          resolve(null);
         };
+
+        if (typeof img.decode === 'function') {
+          img.decode().then(onDone).catch(onDone);
+        } else {
+          img.onload = onDone;
+          img.onerror = onError;
+        }
       });
 
-      loadingMapRef.current.set(index, promise);
-      return promise;
+      inFlightRef.current.set(nextIndex, promise);
+    }
+  }, [drawFrame, evictOldFrames, isMobile]);
+
+  useEffect(() => {
+    processQueueRef.current = processDownloadQueue;
+  }, [processDownloadQueue]);
+
+  // Request preloading of a specific frame index
+  const requestFrame = useCallback(
+    (index: number, highPriority = false): Promise<HTMLImageElement | null> => {
+      const safeIndex = Math.max(0, Math.min(TOTAL_HERO_FRAMES - 1, index));
+
+      if (imagesRef.current.has(safeIndex)) {
+        return Promise.resolve(imagesRef.current.get(safeIndex)!);
+      }
+      if (inFlightRef.current.has(safeIndex)) {
+        return inFlightRef.current.get(safeIndex)!;
+      }
+
+      if (highPriority) {
+        downloadQueueRef.current.unshift(safeIndex);
+      } else {
+        if (!downloadQueueRef.current.includes(safeIndex)) {
+          downloadQueueRef.current.push(safeIndex);
+        }
+      }
+
+      processDownloadQueue();
+      return inFlightRef.current.get(safeIndex) || Promise.resolve(null);
     },
-    [drawFrame]
+    [processDownloadQueue]
   );
 
-  // Priority preloading around current target frame
-  const priorityPreloadWindow = useCallback(
+  // Directional sliding preload window around current frame
+  const scheduleWindowPreload = useCallback(
     (centerIdx: number) => {
-      const start = Math.max(0, centerIdx - 4);
-      const end = Math.min(TOTAL_FRAMES - 1, centerIdx + 16);
-      for (let i = start; i <= end; i++) {
-        preloadImage(i);
+      const dir = scrollDirectionRef.current;
+      const forwardCount = dir === 'down' ? 8 : 4;
+      const backwardCount = dir === 'down' ? 3 : 6;
+
+      const start = Math.max(0, centerIdx - backwardCount);
+      const end = Math.min(TOTAL_HERO_FRAMES - 1, centerIdx + forwardCount);
+
+      // Prioritize immediate next frames in scroll direction
+      if (dir === 'down') {
+        for (let i = centerIdx; i <= end; i++) requestFrame(i);
+        for (let i = centerIdx - 1; i >= start; i--) requestFrame(i);
+      } else {
+        for (let i = centerIdx; i >= start; i--) requestFrame(i);
+        for (let i = centerIdx + 1; i <= end; i++) requestFrame(i);
       }
     },
-    [preloadImage]
+    [requestFrame]
   );
 
-  // Progressive preloading strategy
+  // Initial mount: load initial poster / frame 0
   useEffect(() => {
     let isCancelled = false;
+    updateMetrics();
 
-    updateCanvasDimensions();
-
-    // 1. Immediately load frame 0 and display it
-    preloadImage(0).then((firstImg) => {
-      if (!isCancelled) {
+    requestFrame(0, true).then((firstImg) => {
+      if (!isCancelled && firstImg) {
         updateCanvasDimensions();
         drawFrame(firstImg);
         lastDrawnFrameRef.current = 0;
-        lastActualFrameDrawnRef.current = 0;
       }
     });
 
-    // 2. Preload initial batch (1-35) right away
-    for (let i = 1; i <= Math.min(35, TOTAL_FRAMES - 1); i++) {
-      preloadImage(i);
+    // Warm up first 6 frames during idle time
+    const initialWarmup = () => {
+      if (isCancelled) return;
+      for (let i = 1; i <= Math.min(6, TOTAL_HERO_FRAMES - 1); i++) {
+        requestFrame(i, false);
+      }
+    };
+
+    if ('requestIdleCallback' in window) {
+      const handle = (window as Window).requestIdleCallback(initialWarmup, { timeout: 1000 });
+      return () => {
+        isCancelled = true;
+        (window as Window).cancelIdleCallback(handle);
+      };
+    } else {
+      const timer = setTimeout(initialWarmup, 120);
+      return () => {
+        isCancelled = true;
+        clearTimeout(timer);
+      };
     }
+  }, [drawFrame, requestFrame, updateCanvasDimensions, updateMetrics]);
 
-    // 3. Staged background preloader for remaining frames in fast idle chunks
-    let currentChunk = 36;
-    const chunkSize = 20;
+  // RAF render loop with cinematic damping and snap convergence
+  const startRenderLoop = useCallback(() => {
+    if (rafIdRef.current !== null) return;
 
-    const loadNextChunk = () => {
-      if (isCancelled || currentChunk >= TOTAL_FRAMES) return;
-      const end = Math.min(currentChunk + chunkSize, TOTAL_FRAMES);
-      for (let i = currentChunk; i < end; i++) {
-        preloadImage(i);
-      }
-      currentChunk = end;
-      if (currentChunk < TOTAL_FRAMES) {
-        setTimeout(loadNextChunk, 50);
-      }
-    };
-
-    const timer = setTimeout(loadNextChunk, 100);
-
-    return () => {
-      isCancelled = true;
-      clearTimeout(timer);
-    };
-  }, [preloadImage, drawFrame, updateCanvasDimensions]);
-
-  // Section metrics calculation on resize & scroll
-  const updateMetrics = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const rect = container.getBoundingClientRect();
-    const scrollTop = window.scrollY;
-    const containerTop = rect.top + scrollTop;
-    const containerHeight = container.offsetHeight;
-    const scrollable = Math.max(1, containerHeight - window.innerHeight);
-
-    containerMetricsRef.current = {
-      top: containerTop,
-      height: containerHeight,
-      scrollable,
-    };
-    updateCanvasDimensions();
-  }, [updateCanvasDimensions]);
-
-  // Scroll mapping & smooth interpolated render loop
-  useEffect(() => {
-    if (isReducedMotion) return;
-
-    updateMetrics();
-
-    let isLoopRunning = true;
-
-    // Fluid RAF render loop with cinematic damping and snap convergence
     const renderLoop = () => {
-      if (!isLoopRunning) return;
+      if (!isVisibleRef.current) {
+        rafIdRef.current = null;
+        return;
+      }
 
       const target = targetFrameRef.current;
       const current = currentFrameRef.current;
@@ -271,28 +338,23 @@ export const HeroFrameAnimation: React.FC = () => {
         // Snap when close to target or at sequence bounds to prevent lag or stuck frames
         if (
           Math.abs(target - currentFrameRef.current) < 0.2 ||
-          (target === TOTAL_FRAMES - 1 && delta < 2.5) ||
+          (target === TOTAL_HERO_FRAMES - 1 && delta < 2.5) ||
           (target === 0 && delta > -2.5)
         ) {
           currentFrameRef.current = target;
         }
 
         const frameIndex = Math.min(
-          TOTAL_FRAMES - 1,
+          TOTAL_HERO_FRAMES - 1,
           Math.max(0, Math.round(currentFrameRef.current))
         );
 
-        if (
-          frameIndex !== lastDrawnFrameRef.current ||
-          (imagesRef.current.has(frameIndex) && lastActualFrameDrawnRef.current !== frameIndex)
-        ) {
+        if (frameIndex !== lastDrawnFrameRef.current) {
           let imgToDraw = imagesRef.current.get(frameIndex);
-          let isExactMatch = true;
 
           if (!imgToDraw) {
-            isExactMatch = false;
-            // Search nearest available decoded frame in bidirectional window
-            for (let offset = 1; offset < 35; offset++) {
+            // Find nearest available cached frame to prevent any blank visual gap
+            for (let offset = 1; offset < 16; offset++) {
               if (imagesRef.current.has(frameIndex - offset)) {
                 imgToDraw = imagesRef.current.get(frameIndex - offset);
                 break;
@@ -307,9 +369,6 @@ export const HeroFrameAnimation: React.FC = () => {
           if (imgToDraw) {
             drawFrame(imgToDraw);
             lastDrawnFrameRef.current = frameIndex;
-            if (isExactMatch) {
-              lastActualFrameDrawnRef.current = frameIndex;
-            }
           }
         }
       }
@@ -318,44 +377,80 @@ export const HeroFrameAnimation: React.FC = () => {
     };
 
     rafIdRef.current = requestAnimationFrame(renderLoop);
+  }, [drawFrame]);
+
+  // Viewport intersection observer to shut down RAF when hero is offscreen
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting && !rafIdRef.current) {
+          startRenderLoop();
+        }
+      },
+      { threshold: 0.01, rootMargin: '200px 0px' }
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [startRenderLoop]);
+
+  // Passive, non-blocking scroll mapping with zero layout reads
+  useEffect(() => {
+    if (isReducedMotion) return;
+
+    updateMetrics();
+    startRenderLoop();
 
     const handleScroll = () => {
-      const container = containerRef.current;
-      if (!container) return;
-      const rect = container.getBoundingClientRect();
-      const scrollY = window.scrollY;
-      const top = rect.top + scrollY;
-      const containerHeight = container.offsetHeight;
-      const scrollable = Math.max(1, containerHeight - window.innerHeight);
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      const { top, scrollable } = metricsRef.current;
 
+      // Track scroll direction for predictive window preloading
+      scrollDirectionRef.current = scrollY >= lastScrollYRef.current ? 'down' : 'up';
+      lastScrollYRef.current = scrollY;
+
+      // Pinned distance progression calculation using cached metrics
       const rawProgress = Math.max(0, Math.min(1, (scrollY - top) / scrollable));
 
-      // Map entire 160 frame progression from 0.0 to 0.80 (80% of pinned scroll distance).
-      // The remaining 20% (from 0.80 to 1.0) is a dedicated pinned dwell buffer on the final 160th frame.
-      // This guarantees 100% that frame 160 is fully reached and viewed BEFORE the hero unpins into the next section.
+      // Map sequence from 0.0 to 0.80. Remaining 20% is dedicated pinned dwell buffer on frame 160.
       const ANIMATION_END_THRESHOLD = 0.80;
       const animProgress = Math.min(1, rawProgress / ANIMATION_END_THRESHOLD);
       const targetFrame = Math.min(
-        TOTAL_FRAMES - 1,
-        Math.floor(animProgress * (TOTAL_FRAMES - 1) + 0.5)
+        TOTAL_HERO_FRAMES - 1,
+        Math.floor(animProgress * (TOTAL_HERO_FRAMES - 1) + 0.5)
       );
 
       if (targetFrame !== targetFrameRef.current) {
         targetFrameRef.current = targetFrame;
-        priorityPreloadWindow(targetFrame);
+        scheduleWindowPreload(targetFrame);
+      }
+
+      // Resume render loop if stopped
+      if (!rafIdRef.current && isVisibleRef.current) {
+        startRenderLoop();
       }
     };
 
+    const handleResize = () => {
+      updateMetrics();
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', updateMetrics, { passive: true });
+    window.addEventListener('resize', handleResize, { passive: true });
 
     return () => {
-      isLoopRunning = false;
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', updateMetrics);
-      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+      window.removeEventListener('resize', handleResize);
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
     };
-  }, [drawFrame, isReducedMotion, priorityPreloadWindow, updateMetrics]);
+  }, [isReducedMotion, scheduleWindowPreload, startRenderLoop, updateMetrics]);
 
   return (
     <section
@@ -379,21 +474,20 @@ export const HeroFrameAnimation: React.FC = () => {
 
         {/* Fallback initial poster image positioned behind canvas */}
         <img
-          src={HERO_FRAMES[0]}
+          src={getHeroPosterUrl(isMobile)}
           alt="Aaranya Silks Luxury Saree Boutique"
           className="absolute inset-0 w-full h-full object-cover -z-1 pointer-events-none"
           loading="eager"
           fetchPriority="high"
         />
 
-        {/* Clean Subtle Bottom Transition Fade - Completely removes muddying dark vignettes & blur haze to reveal full 4K showroom clarity */}
+        {/* Clean Subtle Bottom Transition Fade */}
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#1C1A19]/80 via-[#1C1A19]/25 to-transparent pointer-events-none z-1" />
 
         {/* Decorative Gold Frame Border */}
-        {/* Decorative Gold Frame Border */}
         <div className="absolute left-1/2 -translate-x-1/2 w-[calc(100%-2.5rem)] sm:w-[calc(100%-3rem)] max-w-6xl lg:max-w-7xl top-24 bottom-12 border border-[#C8A96B]/20 pointer-events-none rounded-3xl hidden md:block z-2" />
 
-        {/* 1. Top-Left Hero Heading Label — Elevated slightly (~8px) with ample navbar clearance */}
+        {/* 1. Top-Left Hero Heading Label */}
         <div className="absolute left-6 sm:left-10 lg:left-14 top-26 sm:top-28 z-20 pointer-events-auto">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -407,7 +501,7 @@ export const HeroFrameAnimation: React.FC = () => {
             </span>
           </motion.div>
 
-          {/* Mobile-Only CTA Layout (Narrow portrait screens) */}
+          {/* Mobile-Only CTA Layout */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -432,7 +526,7 @@ export const HeroFrameAnimation: React.FC = () => {
         </div>
 
         {/* 2. Desktop Independent CTA Overlays: Balanced Around Central Green-Saree Model */}
-        {/* CTA 1: Explore The Collection — Lower-left negative space of central green-saree model */}
+        {/* CTA 1: Explore The Collection */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -448,7 +542,7 @@ export const HeroFrameAnimation: React.FC = () => {
           </button>
         </motion.div>
 
-        {/* CTA 2: Discover Our Story — Negative space to the right of central green-saree model */}
+        {/* CTA 2: Discover Our Story */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -465,7 +559,6 @@ export const HeroFrameAnimation: React.FC = () => {
 
         {/* 3. Bottom-Left Area: Certification Badges & Preserved Six Weavers Statement */}
         <div className="absolute left-6 sm:left-10 lg:left-14 bottom-14 sm:bottom-16 z-20 pointer-events-auto flex flex-col items-start gap-2 sm:gap-2.5 max-w-sm sm:max-w-md lg:max-w-lg">
-          {/* Supporting Trust & Certification Badges in Bottom-Left Corner */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -487,7 +580,6 @@ export const HeroFrameAnimation: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Preserved "Six Weavers" Statement */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

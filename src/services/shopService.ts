@@ -1,4 +1,5 @@
 import type { User, Order, PaymentStatus, PaymentMethod, CartItem, DeliveryAddress, OrderEvent } from '../types';
+import userProductImage from '../assets/user-product-image.webp';
 
 const USER_SESSION_KEY = 'aaranya_silks_user_session_v1';
 const ORDERS_STORAGE_KEY = 'aaranya_silks_orders_v1';
@@ -204,7 +205,7 @@ export const shopService = {
             originalPrice: 92000,
             rating: 5.0,
             reviewCount: 38,
-            images: ['/assets/Mayurakshi Kanjivaram Bridal Silk Saree (Auspicious Emerald)-CcxVMa80.png'],
+            images: [userProductImage],
             description: 'Handwoven in pure mulberry silk with real gold zari temple borders.',
             weaveDetail: 'Korvai Technique',
             zariType: 'Real Tested Zari',

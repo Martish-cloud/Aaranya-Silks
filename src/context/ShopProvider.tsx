@@ -1,96 +1,9 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import type { Saree, CartItem, User } from '../types';
 import { SAREES_DATA } from '../data/sarees';
 import { shopService } from '../services/shopService';
 import confetti from 'canvas-confetti';
-
-interface ShopContextType {
-  cart: CartItem[];
-  wishlist: string[];
-  addToCart: (product: Saree, selectedColor?: string, quantity?: number) => void;
-  removeFromCart: (productId: string, selectedColor: string) => void;
-  updateQuantity: (productId: string, selectedColor: string, newQty: number) => void;
-  clearCart: () => void;
-  toggleWishlist: (productId: string) => void;
-  isInWishlist: (productId: string) => boolean;
-  
-  // UI states
-  isCartOpen: boolean;
-  setIsCartOpen: (open: boolean) => void;
-  isWishlistOpen: boolean;
-  setIsWishlistOpen: (open: boolean) => void;
-  isSearchOpen: boolean;
-  setIsSearchOpen: (open: boolean) => void;
-  isCheckoutOpen: boolean;
-  setIsCheckoutOpen: (open: boolean) => void;
-  quickViewProduct: Saree | null;
-  quickViewSelectedColor: string | null;
-  openQuickView: (product: Saree, selectedColor?: string) => void;
-  closeQuickView: () => void;
-
-  // Authentication & Patron Profile
-  user: User | null;
-  setUser: (user: User | null) => void;
-  logout: () => void;
-  isAuthOpen: boolean;
-  setIsAuthOpen: (open: boolean) => void;
-  onAuthSuccessAction: (() => void) | null;
-  setOnAuthSuccessAction: (cb: (() => void) | null) => void;
-
-  // Delivery Availability Checker
-  isDeliveryOpen: boolean;
-  setIsDeliveryOpen: (open: boolean) => void;
-  deliveryProductContext: { name: string; id: string } | null;
-  openDeliveryChecker: (productName?: string, productId?: string) => void;
-
-  // Order Tracking & History
-  isOrderTrackingOpen: boolean;
-  setIsOrderTrackingOpen: (open: boolean) => void;
-  selectedTrackingOrderId: string | null;
-  setSelectedTrackingOrderId: (id: string | null) => void;
-  isOrderHistoryOpen: boolean;
-  setIsOrderHistoryOpen: (open: boolean) => void;
-  trackOrder: (orderId: string) => void;
-  
-  // Navigation / views
-  activePage: 'home' | 'catalog' | 'product' | 'story';
-  navigateTo: (page: 'home' | 'catalog' | 'product' | 'story', productSlug?: string, categoryFilter?: string, selectedColor?: string) => void;
-  goBack: () => void;
-  currentProductSlug: string | null;
-  selectedVariantColor: string | null;
-  currentCategoryFilter: string | null;
-  setCurrentCategoryFilter: (cat: string | null) => void;
-
-
-  // Cart totals
-  cartSubtotal: number;
-  cartTotalCount: number;
-  appliedCoupon: string | null;
-  discountAmount: number;
-  taxableSubtotal: number;
-  gstAmount: number;
-  shippingFee: number;
-  finalTotal: number;
-  applyCouponCode: (code: string) => boolean;
-  removeCouponCode: () => void;
-  includeGiftBox: boolean;
-  setIncludeGiftBox: (include: boolean) => void;
-
-  // Toast
-  toast: { message: string; type: 'success' | 'info' } | null;
-  showToast: (message: string, type?: 'success' | 'info') => void;
-}
-
-interface HistoryStatePayload {
-  page: 'home' | 'catalog' | 'product' | 'story';
-  productSlug?: string | null;
-  categoryFilter?: string | null;
-  selectedColor?: string | null;
-  scrollY?: number;
-  historyIndex: number;
-}
-
-const ShopContext = createContext<ShopContextType | undefined>(undefined);
+import { ShopContext, type ShopContextType, type HistoryStatePayload } from './ShopContext';
 
 const CART_STORAGE_KEY = 'aaranya_silks_cart_v1';
 const WISHLIST_STORAGE_KEY = 'aaranya_silks_wishlist_v1';
@@ -138,39 +51,50 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [onAuthSuccessAction, setOnAuthSuccessAction] = useState<(() => void) | null>(null);
 
-  const setUser = (u: User | null) => {
+  // Toast
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' } | null>(null);
+  const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showToast = useCallback((message: string, type: 'success' | 'info' = 'success') => {
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    setToast({ message, type });
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast(null);
+    }, 3800);
+  }, []);
+
+  const setUser = useCallback((u: User | null) => {
     setUserState(u);
     shopService.setCurrentUser(u);
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null);
     showToast('Signed out from patron account', 'info');
-  };
+  }, [setUser, showToast]);
 
   // Delivery Availability Checker
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
   const [deliveryProductContext, setDeliveryProductContext] = useState<{ name: string; id: string } | null>(null);
 
-  const openDeliveryChecker = (productName?: string, productId?: string) => {
+  const openDeliveryChecker = useCallback((productName?: string, productId?: string) => {
     if (productName && productId) {
       setDeliveryProductContext({ name: productName, id: productId });
     } else {
       setDeliveryProductContext(null);
     }
     setIsDeliveryOpen(true);
-  };
+  }, []);
 
   // Order Tracking & History
   const [isOrderTrackingOpen, setIsOrderTrackingOpen] = useState(false);
   const [selectedTrackingOrderId, setSelectedTrackingOrderId] = useState<string | null>(null);
   const [isOrderHistoryOpen, setIsOrderHistoryOpen] = useState(false);
 
-  const trackOrder = (orderId: string) => {
+  const trackOrder = useCallback((orderId: string) => {
     setSelectedTrackingOrderId(orderId);
     setIsOrderTrackingOpen(true);
-  };
-
+  }, []);
 
   // Navigation
   const [activePage, setActivePage] = useState<'home' | 'catalog' | 'product' | 'story'>(() => {
@@ -237,7 +161,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
             scrollY: window.scrollY
           }, '');
         }
-      }, 100);
+      }, 250);
     };
 
     const handlePopState = (e: PopStateEvent) => {
@@ -291,13 +215,11 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       window.removeEventListener('scroll', handleScrollDebounced);
       window.removeEventListener('popstate', handlePopState);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activePage, currentCategoryFilter, currentProductSlug, selectedVariantColor]);
 
   // Discount & Perks
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>('ARANYA20');
   const [includeGiftBox, setIncludeGiftBox] = useState(true);
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' } | null>(null);
 
   // Save to localStorage
   useEffect(() => {
@@ -316,15 +238,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [wishlist]);
 
-  // Toast helper
-  const showToast = (message: string, type: 'success' | 'info' = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => {
-      setToast(null);
-    }, 3800);
-  };
-
-  const addToCart = (product: Saree, selectedColor?: string, quantity: number = 1) => {
+  const addToCart = useCallback((product: Saree, selectedColor?: string, quantity: number = 1) => {
     const colorToUse = selectedColor || product.colors[0]?.name || product.color;
     
     setCart((prev) => {
@@ -339,7 +253,6 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return [...prev, { product, selectedColor: colorToUse, quantity, includeGiftBox: true }];
     });
 
-    // Delightful micro-interaction
     confetti({
       particleCount: 30,
       spread: 60,
@@ -349,16 +262,16 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     showToast(`Added "${product.name}" to your Bag`, 'success');
     setIsCartOpen(true);
-  };
+  }, [showToast]);
 
-  const removeFromCart = (productId: string, selectedColor: string) => {
+  const removeFromCart = useCallback((productId: string, selectedColor: string) => {
     setCart((prev) => prev.filter(
       (item) => !(item.product.id === productId && item.selectedColor === selectedColor)
     ));
     showToast('Item removed from Bag', 'info');
-  };
+  }, [showToast]);
 
-  const updateQuantity = (productId: string, selectedColor: string, newQty: number) => {
+  const updateQuantity = useCallback((productId: string, selectedColor: string, newQty: number) => {
     if (newQty <= 0) {
       removeFromCart(productId, selectedColor);
       return;
@@ -370,13 +283,13 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           : item
       )
     );
-  };
+  }, [removeFromCart]);
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCart([]);
-  };
+  }, []);
 
-  const toggleWishlist = (productId: string) => {
+  const toggleWishlist = useCallback((productId: string) => {
     setWishlist((prev) => {
       if (prev.includes(productId)) {
         showToast('Removed from Wishlist', 'info');
@@ -386,23 +299,23 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return [...prev, productId];
       }
     });
-  };
+  }, [showToast]);
 
-  const isInWishlist = (productId: string) => {
+  const isInWishlist = useCallback((productId: string) => {
     return wishlist.includes(productId);
-  };
+  }, [wishlist]);
 
-  const openQuickView = (product: Saree, selectedColor?: string) => {
+  const openQuickView = useCallback((product: Saree, selectedColor?: string) => {
     setQuickViewProduct(product);
     setQuickViewSelectedColor(selectedColor || null);
-  };
+  }, []);
 
-  const closeQuickView = () => {
+  const closeQuickView = useCallback(() => {
     setQuickViewProduct(null);
     setQuickViewSelectedColor(null);
-  };
+  }, []);
 
-  const navigateTo = (
+  const navigateTo = useCallback((
     page: 'home' | 'catalog' | 'product' | 'story',
     productSlug?: string,
     categoryFilter?: string,
@@ -477,9 +390,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTimeout(() => {
       isNavigatingRef.current = false;
     }, 150);
-  };
+  }, []);
 
-  const goBack = () => {
+  const goBack = useCallback(() => {
     if (typeof window !== 'undefined') {
       const currentState = window.history.state as HistoryStatePayload | null;
       if (currentState && currentState.historyIndex > 0) {
@@ -488,14 +401,13 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
     navigateTo('home');
-  };
+  }, [navigateTo]);
 
   // Calculations
-  // Step 1: Item subtotal = Sum of (Unit Price * Quantity)
-  const cartSubtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const cartTotalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartSubtotal = useMemo(() => cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0), [cart]);
+  const cartTotalCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
 
-  const applyCouponCode = (code: string) => {
+  const applyCouponCode = useCallback((code: string) => {
     const clean = code.trim().toUpperCase();
     if (clean === 'ARANYA20' || clean === 'AARANYA20') {
       if (appliedCoupon === 'ARANYA20') {
@@ -517,102 +429,133 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showToast('Invalid coupon code. Try ARANYA20', 'info');
       return false;
     }
-  };
+  }, [appliedCoupon, showToast]);
 
-  const removeCouponCode = () => {
+  const removeCouponCode = useCallback(() => {
     setAppliedCoupon(null);
     showToast('Coupon removed', 'info');
-  };
+  }, [showToast]);
 
-  // Step 2: Coupon discount = 20% on eligible Item Subtotal before GST
   const discountRate = appliedCoupon === 'ARANYA20' ? 0.20 : appliedCoupon === 'FESTIVE15' ? 0.15 : 0;
   const discountAmount = Math.round(cartSubtotal * discountRate);
-
-  // Step 3: Taxable Subtotal = Item Subtotal - Discount
   const taxableSubtotal = Math.max(0, cartSubtotal - discountAmount);
-
-  // Step 4: GST = Taxable Subtotal * 18%
   const gstAmount = Math.round(taxableSubtotal * 0.18);
-
-  // Existing shipping fee: Complimentary if subtotal >= 30,000 or empty, else 450
   const shippingFee = cartSubtotal >= 30000 || cartSubtotal === 0 ? 0 : 450;
-
-  // Step 5: Final Total = Taxable Subtotal + GST (+ shippingFee if applicable)
   const finalTotal = taxableSubtotal + gstAmount + shippingFee;
 
+  const contextValue = useMemo<ShopContextType>(() => ({
+    cart,
+    wishlist,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    toggleWishlist,
+    isInWishlist,
+    isCartOpen,
+    setIsCartOpen,
+    isWishlistOpen,
+    setIsWishlistOpen,
+    isSearchOpen,
+    setIsSearchOpen,
+    isCheckoutOpen,
+    setIsCheckoutOpen,
+    quickViewProduct,
+    quickViewSelectedColor,
+    openQuickView,
+    closeQuickView,
+    user,
+    setUser,
+    logout,
+    isAuthOpen,
+    setIsAuthOpen,
+    onAuthSuccessAction,
+    setOnAuthSuccessAction,
+    isDeliveryOpen,
+    setIsDeliveryOpen,
+    deliveryProductContext,
+    openDeliveryChecker,
+    isOrderTrackingOpen,
+    setIsOrderTrackingOpen,
+    selectedTrackingOrderId,
+    setSelectedTrackingOrderId,
+    isOrderHistoryOpen,
+    setIsOrderHistoryOpen,
+    trackOrder,
+    activePage,
+    navigateTo,
+    goBack,
+    currentProductSlug,
+    selectedVariantColor,
+    currentCategoryFilter,
+    setCurrentCategoryFilter,
+    cartSubtotal,
+    cartTotalCount,
+    appliedCoupon,
+    discountAmount,
+    taxableSubtotal,
+    gstAmount,
+    shippingFee,
+    finalTotal,
+    applyCouponCode,
+    removeCouponCode,
+    includeGiftBox,
+    setIncludeGiftBox,
+    toast,
+    showToast
+  }), [
+    cart,
+    wishlist,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    toggleWishlist,
+    isInWishlist,
+    isCartOpen,
+    isWishlistOpen,
+    isSearchOpen,
+    isCheckoutOpen,
+    quickViewProduct,
+    quickViewSelectedColor,
+    openQuickView,
+    closeQuickView,
+    user,
+    setUser,
+    logout,
+    isAuthOpen,
+    onAuthSuccessAction,
+    isDeliveryOpen,
+    deliveryProductContext,
+    openDeliveryChecker,
+    isOrderTrackingOpen,
+    selectedTrackingOrderId,
+    isOrderHistoryOpen,
+    trackOrder,
+    activePage,
+    navigateTo,
+    goBack,
+    currentProductSlug,
+    selectedVariantColor,
+    currentCategoryFilter,
+    cartSubtotal,
+    cartTotalCount,
+    appliedCoupon,
+    discountAmount,
+    taxableSubtotal,
+    gstAmount,
+    shippingFee,
+    finalTotal,
+    applyCouponCode,
+    removeCouponCode,
+    includeGiftBox,
+    toast,
+    showToast
+  ]);
+
   return (
-    <ShopContext.Provider
-      value={{
-        cart,
-        wishlist,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
-        toggleWishlist,
-        isInWishlist,
-        isCartOpen,
-        setIsCartOpen,
-        isWishlistOpen,
-        setIsWishlistOpen,
-        isSearchOpen,
-        setIsSearchOpen,
-        isCheckoutOpen,
-        setIsCheckoutOpen,
-        quickViewProduct,
-        quickViewSelectedColor,
-        openQuickView,
-        closeQuickView,
-        user,
-        setUser,
-        logout,
-        isAuthOpen,
-        setIsAuthOpen,
-        onAuthSuccessAction,
-        setOnAuthSuccessAction,
-        isDeliveryOpen,
-        setIsDeliveryOpen,
-        deliveryProductContext,
-        openDeliveryChecker,
-        isOrderTrackingOpen,
-        setIsOrderTrackingOpen,
-        selectedTrackingOrderId,
-        setSelectedTrackingOrderId,
-        isOrderHistoryOpen,
-        setIsOrderHistoryOpen,
-        trackOrder,
-        activePage,
-        navigateTo,
-        goBack,
-        currentProductSlug,
-        selectedVariantColor,
-        currentCategoryFilter,
-        setCurrentCategoryFilter,
-        cartSubtotal,
-        cartTotalCount,
-        appliedCoupon,
-        discountAmount,
-        taxableSubtotal,
-        gstAmount,
-        shippingFee,
-        finalTotal,
-        applyCouponCode,
-        removeCouponCode,
-        includeGiftBox,
-        setIncludeGiftBox,
-        toast,
-        showToast
-      }}
-    >
+    <ShopContext.Provider value={contextValue}>
       {children}
     </ShopContext.Provider>
   );
-};
-
-export const useShop = () => {
-  const context = useContext(ShopContext);
-  if (!context) {
-    throw new Error('useShop must be used within a ShopProvider');
-  }
-  return context;
 };

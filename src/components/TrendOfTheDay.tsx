@@ -6,7 +6,7 @@ import { SAREES_DATA } from '../data/sarees';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
 
-import mayurakshiImg from '../assets/Need to Update/Trend of the Day/Mayurakshi Kanjivaram Bridal Silk Saree (Auspicious Emerald).png';
+import mayurakshiImg from '../assets/Need to Update/Trend of the Day/Mayurakshi Kanjivaram Bridal Silk Saree (Auspicious Emerald).webp';
 import varanasiImg from '../assets/Need to Update/Trend of the Day/Varanasi Noor Kadhwa Banarasi Brocade (Rani Rose) (1).webp';
 import swarnaImg from '../assets/Need to Update/Trend of the Day/SWARNA HANSA (Liquid Gold).webp';
 import chandrikaImg from '../assets/Need to Update/Trend of the Day/Chandrika Midnight Flora Pure Organza Saree  (Charcoal Black) 1.webp';

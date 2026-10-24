@@ -78,10 +78,10 @@ export const CategoryStrip: React.FC = () => {
               key={mood.id}
               initial={{ opacity: 0, y: 35 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.1 }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: (idx % 6) * 0.07 }}
               onClick={() => navigateTo('catalog', undefined, mood.categoryTarget)}
-              className="group cursor-pointer flex flex-col items-center text-center will-change-transform"
+              className="group cursor-pointer flex flex-col items-center text-center"
             >
               {/* Arched Window Top Frame: rounded-t-full */}
               <div

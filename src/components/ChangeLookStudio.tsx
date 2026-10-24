@@ -9,26 +9,26 @@ import { preloadImages } from '../utils/imagePreloader';
 // Stationary pristine studio backdrop (100% free of model silhouettes)
 import studioBackdrop from '../assets/Studio/studio-backdrop.webp';
 
-// Rosé Net Embroidered (new Studio images & transparent models)
-import roseDustyRose from '../assets/Studio/ros-net-embroidered/Elegant Dusty Rose Saree Portrait.png';
-import roseIvory from '../assets/Studio/ros-net-embroidered/Elegant Ivory Saree Portrait.png';
-import roseBurgundy from '../assets/Studio/ros-net-embroidered/Embroidered Burgundy Saree Portrait.png';
+// Rosé Net Embroidered (optimized Studio images & transparent models)
+import roseDustyRose from '../assets/Studio/ros-net-embroidered/Elegant Dusty Rose Saree Portrait.webp';
+import roseIvory from '../assets/Studio/ros-net-embroidered/Elegant Ivory Saree Portrait.webp';
+import roseBurgundy from '../assets/Studio/ros-net-embroidered/Embroidered Burgundy Saree Portrait.webp';
 import roseIvoryModel from '../assets/Studio/ros-net-embroidered/ros-net-ivory-model.webp';
 import roseDustyRoseModel from '../assets/Studio/ros-net-embroidered/ros-net-rose-model.webp';
 import roseBurgundyModel from '../assets/Studio/ros-net-embroidered/ros-net-burgundy-model.webp';
 
-// Suhani Crimson Zari (new Studio images & transparent models)
-import suhaniCrimson from '../assets/Studio/suhani-crimson-zari/Elegant Maroon Saree Portrait (1).png';
-import suhaniBurgundy from '../assets/Studio/suhani-crimson-zari/Glamorous Maroon Saree Portrait.png';
-import suhaniGold from '../assets/Studio/suhani-crimson-zari/Glamorous Golden Saree Portrait.png';
+// Suhani Crimson Zari (optimized Studio images & transparent models)
+import suhaniCrimson from '../assets/Studio/suhani-crimson-zari/Elegant Maroon Saree Portrait (1).webp';
+import suhaniBurgundy from '../assets/Studio/suhani-crimson-zari/Glamorous Maroon Saree Portrait.webp';
+import suhaniGold from '../assets/Studio/suhani-crimson-zari/Glamorous Golden Saree Portrait.webp';
 import suhaniCrimsonModel from '../assets/Studio/suhani-crimson-zari/suhani-crimson-model.webp';
 import suhaniBurgundyModel from '../assets/Studio/suhani-crimson-zari/suhani-maroon-model.webp';
 import suhaniGoldModel from '../assets/Studio/suhani-crimson-zari/suhani-golden-model.webp';
 
-// Swarna Hansa Metallic Tissue (new Studio images & transparent models)
-import swarnaLiquidGold from '../assets/Studio/swarna-hansa/Glamorous Golden Saree Portrait.png';
-import swarnaWarmIvory from '../assets/Studio/swarna-hansa/Glamorous Golden Saree Portrait (1).png';
-import swarnaEmerald from '../assets/Studio/swarna-hansa/Emerald Gold Saree Elegance.png';
+// Swarna Hansa Metallic Tissue (optimized Studio images & transparent models)
+import swarnaLiquidGold from '../assets/Studio/swarna-hansa/Glamorous Golden Saree Portrait.webp';
+import swarnaWarmIvory from '../assets/Studio/swarna-hansa/Glamorous Golden Saree Portrait (1).webp';
+import swarnaEmerald from '../assets/Studio/swarna-hansa/Emerald Gold Saree Elegance.webp';
 import swarnaLiquidGoldModel from '../assets/Studio/swarna-hansa/swarna-gold-model.webp';
 import swarnaWarmIvoryModel from '../assets/Studio/swarna-hansa/swarna-ivory-model.webp';
 import swarnaEmeraldModel from '../assets/Studio/swarna-hansa/swarna-emerald-model.webp';
@@ -97,18 +97,33 @@ export const ChangeLookStudio: React.FC = () => {
   const [selectedColorIdx, setSelectedColorIdx] = useState(1);
   const [qty, setQty] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const sectionRef = React.useRef<HTMLElement>(null);
 
   const look = STUDIO_LOOKS[activeLookIdx];
   const activeColor = look.colors[selectedColorIdx] || look.colors[0];
 
   React.useEffect(() => {
-    // Eagerly preload all studio looks, models, and backgrounds upfront
-    STUDIO_LOOKS.forEach((item) => {
-      preloadImages(item.colors.map((c) => c.image));
-      preloadImages(item.colors.map((c) => c.modelImage));
-      if (item.background) preloadImages([item.background]);
-      if (item.thumbnail) preloadImages([item.thumbnail]);
-    });
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // Preload current and next look images when approaching section
+          STUDIO_LOOKS.forEach((item) => {
+            preloadImages(item.colors.map((c) => c.image));
+            preloadImages(item.colors.map((c) => c.modelImage));
+            if (item.background) preloadImages([item.background]);
+            if (item.thumbnail) preloadImages([item.thumbnail]);
+          });
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '400px 0px' }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
   const handleAddToCart = () => {
@@ -141,7 +156,7 @@ export const ChangeLookStudio: React.FC = () => {
   };
 
   return (
-    <section className="py-20 md:py-32 bg-[#FAF7F0] relative overflow-hidden">
+    <section ref={sectionRef} className="py-20 md:py-32 bg-[#FAF7F0] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
           {/* Left Column: Change Look script & 3 Thumbnails (2 cols on lg) */}

@@ -206,18 +206,18 @@ export const LatestTrendsLookbook: React.FC = () => {
   }, []);
 
   const lastProgressTimeRef = useRef<Record<number, number>>({});
-  const handleTimeUpdate = (id: number, e: React.SyntheticEvent<HTMLVideoElement>) => {
+  const handleTimeUpdate = React.useCallback((id: number, e: React.SyntheticEvent<HTMLVideoElement>) => {
     const vid = e.currentTarget;
     if (vid.duration > 0) {
-      const now = performance.now();
+      const now = Date.now();
       const last = lastProgressTimeRef.current[id] || 0;
-      if (now - last > 180) {
+      if (now - last > 250) {
         lastProgressTimeRef.current[id] = now;
         const pct = (vid.currentTime / vid.duration) * 100;
         setVideoProgress((prev) => ({ ...prev, [id]: pct }));
       }
     }
-  };
+  }, []);
 
   return (
     <section

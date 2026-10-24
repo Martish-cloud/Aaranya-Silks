@@ -27,7 +27,7 @@ const TARGET_OUTFIT_SLUGS = new Set([
 ]);
 
 const transparentImages = import.meta.glob<{ default: string }>(
-  '../assets/product_detail_transparent/**/*.{webp,png}',
+  '../assets/product_detail_transparent/**/*.webp',
   { eager: true }
 );
 
@@ -141,23 +141,18 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
     return getVariantImageForColor(firstColor, 0);
   });
 
-  const [activeImgIdx, setActiveImgIdx] = useState(0);
-
-  useEffect(() => {
-    let colIdx = 0;
+  const [activeImgIdx, setActiveImgIdx] = useState(() => {
     if (selectedVariantColor) {
       const idx = product.colors.findIndex(
         (c) => c.name.toLowerCase() === selectedVariantColor.toLowerCase()
       );
-      if (idx >= 0) colIdx = idx;
+      if (idx >= 0) return idx;
     }
-    setSelectedColorIdx(colIdx);
-    const chosenColor = product.colors[colIdx]?.name || product.color;
-    const initialImg = getVariantImageForColor(chosenColor, colIdx);
-    setActiveImg(initialImg);
-    setActiveImgIdx(colIdx);
+    return 0;
+  });
 
-    // Preload transparent and standard variants
+  // Preload transparent and standard variants in idle time
+  useEffect(() => {
     if (isTargetOutfit) {
       const transparentList: string[] = [];
       product.colors.forEach((c) => {
@@ -173,7 +168,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ slug }) =>
         preloadImages(product.colors.map((c) => c.image).filter(Boolean));
       }
     }
-  }, [slug, selectedVariantColor, product]);
+  }, [product.slug, isTargetOutfit, product.colors, product.images]);
 
   const [quantity, setQuantity] = useState(1);
   const [pincodeInput, setPincodeInput] = useState('');

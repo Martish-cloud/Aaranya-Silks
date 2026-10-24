@@ -19,7 +19,7 @@ const AUTHOR_PHOTOS: Record<string, string> = {
 
 export const ReviewsCarousel: React.FC = () => {
   // Continuous, slow, smooth horizontal auto-sliding moving from left to right without hover pausing
-  const { railRef, markUserInteraction } = useAutoScrollRail({
+  const { railRef, isInView, markUserInteraction } = useAutoScrollRail({
     direction: 'left-to-right',
     speed: 36,
     isHovered: false,
@@ -36,30 +36,28 @@ export const ReviewsCarousel: React.FC = () => {
     }
   };
 
-  // Center-focused dynamic scale and fade calculation
+  // Center-focused dynamic scale and fade calculation (only runs when in view during scroll)
   useEffect(() => {
     const rail = railRef.current;
-    if (!rail) return;
+    if (!rail || !isInView) return;
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
-    let rafId: number;
-    let isRunning = true;
+    let ticking = false;
 
     const updateFocalEffects = () => {
-      if (!isRunning || !rail) return;
-      const rect = rail.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const halfWidth = rect.width / 2;
+      const clientWidth = rail.clientWidth;
+      const scrollLeft = rail.scrollLeft;
+      const centerX = clientWidth / 2;
+      const halfWidth = clientWidth / 2;
 
       if (halfWidth > 0) {
         const children = rail.children;
         const count = children.length;
         for (let i = 0; i < count; i++) {
           const item = children[i] as HTMLElement;
-          const cardRect = item.getBoundingClientRect();
-          const cardCenterX = cardRect.left + cardRect.width / 2;
+          const cardCenterX = item.offsetLeft + item.offsetWidth / 2 - scrollLeft;
           const dist = Math.abs(cardCenterX - centerX);
           const norm = Math.min(1, dist / halfWidth);
 
@@ -72,16 +70,23 @@ export const ReviewsCarousel: React.FC = () => {
           item.style.setProperty('--focal-opacity', opacity.toFixed(3));
         }
       }
-
-      rafId = requestAnimationFrame(updateFocalEffects);
+      ticking = false;
     };
 
-    rafId = requestAnimationFrame(updateFocalEffects);
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateFocalEffects);
+      }
+    };
+
+    updateFocalEffects();
+    rail.addEventListener('scroll', onScroll, { passive: true });
+
     return () => {
-      isRunning = false;
-      cancelAnimationFrame(rafId);
+      rail.removeEventListener('scroll', onScroll);
     };
-  }, [railRef]);
+  }, [railRef, isInView]);
 
   const DISPLAY_REVIEWS = [
     ...CUSTOMER_REVIEWS,

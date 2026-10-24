@@ -1,5 +1,6 @@
-import React from 'react';
-import { ShopProvider, useShop } from './context/ShopContext';
+import React, { Suspense, lazy } from 'react';
+import { ShopProvider } from './context/ShopProvider';
+import { useShop } from './context/ShopContext';
 import { AnnouncementBar } from './components/AnnouncementBar';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
@@ -22,20 +23,22 @@ import { NewsletterSection } from './components/NewsletterSection';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { WishlistDrawer } from './components/WishlistDrawer';
-import { QuickViewModal } from './components/QuickViewModal';
-import { SearchModal } from './components/SearchModal';
-import { CheckoutModal } from './components/CheckoutModal';
-import { AuthModal } from './components/AuthModal';
-import { DeliveryCheckerModal } from './components/DeliveryCheckerModal';
-import { OrderTrackingModal } from './components/OrderTrackingModal';
-import { OrderHistoryModal } from './components/OrderHistoryModal';
-import { CatalogPage } from './components/CatalogPage';
-import { ProductDetailPage } from './components/ProductDetailPage';
-import { StoryPage } from './components/StoryPage';
 import { GlobalWatermark } from './components/GlobalWatermark';
 import { CurtainIntro } from './components/CurtainIntro';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle, Info } from 'lucide-react';
+
+// Code-split secondary views & heavy modals
+const CatalogPage = lazy(() => import('./components/CatalogPage').then(m => ({ default: m.CatalogPage })));
+const ProductDetailPage = lazy(() => import('./components/ProductDetailPage').then(m => ({ default: m.ProductDetailPage })));
+const StoryPage = lazy(() => import('./components/StoryPage').then(m => ({ default: m.StoryPage })));
+const QuickViewModal = lazy(() => import('./components/QuickViewModal').then(m => ({ default: m.QuickViewModal })));
+const SearchModal = lazy(() => import('./components/SearchModal').then(m => ({ default: m.SearchModal })));
+const CheckoutModal = lazy(() => import('./components/CheckoutModal').then(m => ({ default: m.CheckoutModal })));
+const AuthModal = lazy(() => import('./components/AuthModal').then(m => ({ default: m.AuthModal })));
+const DeliveryCheckerModal = lazy(() => import('./components/DeliveryCheckerModal').then(m => ({ default: m.DeliveryCheckerModal })));
+const OrderTrackingModal = lazy(() => import('./components/OrderTrackingModal').then(m => ({ default: m.OrderTrackingModal })));
+const OrderHistoryModal = lazy(() => import('./components/OrderHistoryModal').then(m => ({ default: m.OrderHistoryModal })));
 
 const AppContent: React.FC = () => {
   const {
@@ -52,6 +55,10 @@ const AppContent: React.FC = () => {
     setSelectedTrackingOrderId,
     isOrderHistoryOpen,
     setIsOrderHistoryOpen,
+    isAuthOpen,
+    isCheckoutOpen,
+    isSearchOpen,
+    quickViewProduct,
   } = useShop();
 
   const isHome = activePage === 'home';
@@ -135,7 +142,9 @@ const AppContent: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <CatalogPage />
+            <Suspense fallback={<div className="min-h-[60vh] flex items-center justify-center text-[#651C32] font-serif text-lg tracking-widest">Loading Masterpieces...</div>}>
+              <CatalogPage />
+            </Suspense>
           </motion.div>
         )}
 
@@ -147,7 +156,9 @@ const AppContent: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <ProductDetailPage slug={currentProductSlug} />
+            <Suspense fallback={<div className="min-h-[60vh] flex items-center justify-center text-[#651C32] font-serif text-lg tracking-widest">Loading Details...</div>}>
+              <ProductDetailPage slug={currentProductSlug} />
+            </Suspense>
           </motion.div>
         )}
 
@@ -159,7 +170,9 @@ const AppContent: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <StoryPage />
+            <Suspense fallback={<div className="min-h-[60vh] flex items-center justify-center text-[#651C32] font-serif text-lg tracking-widest">Loading Heritage...</div>}>
+              <StoryPage />
+            </Suspense>
           </motion.div>
         )}
       </main>
@@ -170,32 +183,67 @@ const AppContent: React.FC = () => {
       {/* 5. Global Modals & Drawers */}
       <CartDrawer />
       <WishlistDrawer />
-      <QuickViewModal />
-      <SearchModal />
-      <CheckoutModal key={user?.id || 'guest'} />
-      <AuthModal />
-      <DeliveryCheckerModal
-        isOpen={isDeliveryOpen}
-        onClose={() => setIsDeliveryOpen(false)}
-        productName={deliveryProductContext?.name}
-        productId={deliveryProductContext?.id}
-      />
-      <OrderTrackingModal
-        isOpen={isOrderTrackingOpen}
-        orderId={selectedTrackingOrderId}
-        onClose={() => {
-          setIsOrderTrackingOpen(false);
-          setSelectedTrackingOrderId(null);
-        }}
-      />
-      <OrderHistoryModal
-        isOpen={isOrderHistoryOpen}
-        onClose={() => setIsOrderHistoryOpen(false)}
-        onSelectOrderToTrack={(id) => {
-          setSelectedTrackingOrderId(id);
-          setIsOrderTrackingOpen(true);
-        }}
-      />
+
+      {quickViewProduct && (
+        <Suspense fallback={null}>
+          <QuickViewModal />
+        </Suspense>
+      )}
+
+      {isSearchOpen && (
+        <Suspense fallback={null}>
+          <SearchModal />
+        </Suspense>
+      )}
+
+      {isCheckoutOpen && (
+        <Suspense fallback={null}>
+          <CheckoutModal key={user?.id || 'guest'} />
+        </Suspense>
+      )}
+
+      {isAuthOpen && (
+        <Suspense fallback={null}>
+          <AuthModal />
+        </Suspense>
+      )}
+
+      {isDeliveryOpen && (
+        <Suspense fallback={null}>
+          <DeliveryCheckerModal
+            isOpen={isDeliveryOpen}
+            onClose={() => setIsDeliveryOpen(false)}
+            productName={deliveryProductContext?.name}
+            productId={deliveryProductContext?.id}
+          />
+        </Suspense>
+      )}
+
+      {isOrderTrackingOpen && (
+        <Suspense fallback={null}>
+          <OrderTrackingModal
+            isOpen={isOrderTrackingOpen}
+            orderId={selectedTrackingOrderId}
+            onClose={() => {
+              setIsOrderTrackingOpen(false);
+              setSelectedTrackingOrderId(null);
+            }}
+          />
+        </Suspense>
+      )}
+
+      {isOrderHistoryOpen && (
+        <Suspense fallback={null}>
+          <OrderHistoryModal
+            isOpen={isOrderHistoryOpen}
+            onClose={() => setIsOrderHistoryOpen(false)}
+            onSelectOrderToTrack={(id) => {
+              setSelectedTrackingOrderId(id);
+              setIsOrderTrackingOpen(true);
+            }}
+          />
+        </Suspense>
+      )}
 
       {/* 6. Toast Notification Banner */}
       <AnimatePresence>

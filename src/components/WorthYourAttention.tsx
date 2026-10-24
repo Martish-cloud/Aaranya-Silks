@@ -57,7 +57,7 @@ export interface AmbassadorOffer {
 }
 
 // 7 Brand Ambassador sequential offer mappings (reindexed 01 to 07)
-export const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
+const BRAND_AMBASSADOR_OFFERS: AmbassadorOffer[] = [
   {
     id: 1,
     number: '01',

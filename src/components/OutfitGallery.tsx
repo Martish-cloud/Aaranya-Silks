@@ -73,16 +73,16 @@ const OutfitCard = memo<OutfitCardProps>(({
         className="relative w-full aspect-[3/4] bg-[#F2EBDD]/60 overflow-hidden cursor-pointer"
         onClick={() => onCardClick(outfit)}
       >
-        <div className="absolute inset-0 w-full h-full transition-transform duration-700 ease-out group-hover:scale-105 will-change-transform">
+        <div className="absolute inset-0 w-full h-full transition-transform duration-700 ease-out group-hover:scale-105">
           <img
             src={outfit.gallery[activeAngleIndex] || outfit.image || userProductImage}
             alt={`${outfit.name} view ${activeAngleIndex + 1}`}
-            loading="eager"
+            loading="lazy"
             decoding="async"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src = userProductImage;
             }}
-            className="absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-300 ease-in-out will-change-transform"
+            className="absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-300 ease-in-out"
           />
         </div>
 

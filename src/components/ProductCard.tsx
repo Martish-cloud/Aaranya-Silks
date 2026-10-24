@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Eye, ShoppingBag, Star } from 'lucide-react';
 import type { Saree } from '../types';
@@ -17,7 +17,7 @@ interface ProductCardProps {
   shadowOnly?: boolean;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({
+export const ProductCard = memo<ProductCardProps>(({
   product,
   aspectRatio = '3/4',
   priority = false,
@@ -57,13 +57,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 35 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, amount: 0.08 }}
+      viewport={{ once: true, amount: 0.08 }}
       transition={{ duration: 0.6, ease: LUXURY_EASE, delay: staggerDelay }}
       onClick={handleCardClick}
       className={
         shadowOnly
           ? "group cursor-pointer flex flex-col h-full bg-[#FAF7F0] rounded-2xl overflow-hidden border border-[#C8A96B]/25 transition-colors duration-300 shadow-[0_4px_20px_-2px_rgba(28,26,25,0.06),0_2px_8px_-1px_rgba(101,28,50,0.04)]"
-          : "group cursor-pointer flex flex-col h-full bg-[#FAF7F0] rounded-2xl overflow-hidden border border-[#C8A96B]/20 hover:border-[#C8A96B]/60 transition-all duration-500 hover:shadow-xl hover:-translate-y-1 will-change-transform"
+          : "group cursor-pointer flex flex-col h-full bg-[#FAF7F0] rounded-2xl overflow-hidden border border-[#C8A96B]/20 hover:border-[#C8A96B]/60 transition-all duration-500 hover:shadow-xl hover:-translate-y-1"
       }
     >
       {/* Product Image Stage */}
@@ -93,7 +93,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           }}
           className={`w-full h-full object-cover object-top transition-transform duration-700 ease-out ${
             shadowOnly ? '' : 'group-hover:scale-105'
-          } will-change-transform`}
+          }`}
           loading={priority ? 'eager' : 'lazy'}
           decoding="async"
           fetchPriority={priority ? 'high' : 'auto'}
@@ -244,4 +244,4 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       </div>
     </motion.div>
   );
-};
+});

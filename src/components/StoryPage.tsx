@@ -1,7 +1,7 @@
 import { Sparkles, Heart, ArrowRight, Award, Compass, Feather } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
-import generationalMasteryImg from '../assets/The Soul of Indian Silk/Honoring Generational Mastery.png';
-import sareePortraitImg from '../assets/The Soul of Indian Silk/Glamorous South Asian Saree Portrait.png';
+import generationalMasteryImg from '../assets/The Soul of Indian Silk/Honoring Generational Mastery.webp';
+import sareePortraitImg from '../assets/The Soul of Indian Silk/Glamorous South Asian Saree Portrait.webp';
 
 export const StoryPage: React.FC = () => {
   const { navigateTo } = useShop();

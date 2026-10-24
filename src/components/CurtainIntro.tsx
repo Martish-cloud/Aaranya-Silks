@@ -5,10 +5,15 @@ import { Sparkles, ArrowRight } from 'lucide-react';
 const STORAGE_KEY = 'aaranya_curtain_intro_shown';
 
 export const CurtainIntro: React.FC = () => {
-  const [shouldRender, setShouldRender] = useState<boolean>(() => {
+  const [shouldRender] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     try {
-      return sessionStorage.getItem(STORAGE_KEY) !== 'true';
+      if (sessionStorage.getItem(STORAGE_KEY) === 'true') return false;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        sessionStorage.setItem(STORAGE_KEY, 'true');
+        return false;
+      }
+      return true;
     } catch {
       return false;
     }
@@ -19,16 +24,6 @@ export const CurtainIntro: React.FC = () => {
 
   useEffect(() => {
     if (!shouldRender) return;
-
-    // Check prefers-reduced-motion
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) {
-      try {
-        sessionStorage.setItem(STORAGE_KEY, 'true');
-      } catch {}
-      setShouldRender(false);
-      return;
-    }
 
     // Auto-part the curtains after initial regal presentation
     const openTimer = setTimeout(() => {

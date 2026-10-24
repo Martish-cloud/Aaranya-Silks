@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { Compass, ChevronLeft, ChevronRight, Sparkles, ArrowRight, BookOpen } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
@@ -94,9 +94,6 @@ function preloadLookbookImage(src: string): void {
   }
 }
 
-// Prime cache immediately at module load time for instantaneous navigation
-AUTUMN_WINTER_PAGES.forEach((page) => preloadLookbookImage(page.image));
-
 export const SeasonForecast: React.FC = () => {
   const { navigateTo } = useShop();
   const [currentPageIdx, setCurrentPageIdx] = useState(0);
@@ -104,6 +101,25 @@ export const SeasonForecast: React.FC = () => {
   const touchStartX = useRef<number | null>(null);
   const isAnimatingRef = useRef(false);
   const animTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          AUTUMN_WINTER_PAGES.forEach((page) => preloadLookbookImage(page.image));
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '300px 0px' }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const currentPage = AUTUMN_WINTER_PAGES[currentPageIdx];
 
@@ -226,6 +242,7 @@ export const SeasonForecast: React.FC = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="autumn-winter-2026"
       className="py-10 sm:py-14 bg-[#FAF7F0] relative overflow-hidden border-t border-[#C8A96B]/20"
       onTouchStart={handleTouchStart}
