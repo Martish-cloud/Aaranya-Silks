@@ -6,34 +6,13 @@ import { SAREES_DATA } from '../data/sarees';
 import { formatINR } from '../utils/formatters';
 import { WipeText } from './WipeText';
 
-import mayurakshiImg from '../assets/Need to Update/Trend of the Day/Mayurakshi Kanjivaram Bridal Silk Saree (Auspicious Emerald).webp';
-import varanasiImg from '../assets/Need to Update/Trend of the Day/Varanasi Noor Kadhwa Banarasi Brocade (Rani Rose) (1).webp';
-import swarnaImg from '../assets/Need to Update/Trend of the Day/SWARNA HANSA (Liquid Gold).webp';
-import chandrikaImg from '../assets/Need to Update/Trend of the Day/Chandrika Midnight Flora Pure Organza Saree  (Charcoal Black) 1.webp';
-import ananyaImg from '../assets/Shop All Sarees/Ananya Ivory & Gold Shalu Heritage Saree/Ananya Ivory & Gold Shalu Heritage Saree (Warm Ivory).webp';
-
-// Deterministic mapping by full product name to matching image and variant color
-const TREND_PRODUCT_MAP: Record<string, { image: string; variantColor: string }> = {
-  'Mayurakshi Kanjivaram Bridal Silk Saree': {
-    image: mayurakshiImg,
-    variantColor: 'Auspicious Emerald',
-  },
-  'Varanasi Noor Kadhwa Banarasi Brocade': {
-    image: varanasiImg,
-    variantColor: 'Rani Rose',
-  },
-  'Ananya Ivory & Gold Shalu Heritage Saree': {
-    image: ananyaImg,
-    variantColor: 'Warm Ivory',
-  },
-  'Swarna Hansa Pure Tissue Silk Saree': {
-    image: swarnaImg,
-    variantColor: 'Champagne Gold',
-  },
-  'Chandrika Midnight Flora Pure Organza Saree': {
-    image: chandrikaImg,
-    variantColor: 'Charcoal Black',
-  },
+// Target display color for Trend of the Day showcase items
+const TREND_PRODUCT_COLORS: Record<string, string> = {
+  'Mayurakshi Kanjivaram Bridal Silk Saree': 'Auspicious Emerald',
+  'Varanasi Noor Kadhwa Banarasi Brocade': 'Rani Rose',
+  'Ananya Ivory & Gold Shalu Heritage Saree': 'Warm Ivory',
+  'Swarna Hansa Pure Tissue Silk Saree': 'Champagne Gold',
+  'Chandrika Midnight Flora Pure Organza Saree': 'Charcoal Black',
 };
 
 const SIZES = ['S', 'M', 'L', 'XL'];
@@ -74,9 +53,10 @@ export const TrendOfTheDay: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {trendProducts.map((product, idx) => {
             const currentSize = selectedSizes[product.id] || 'M';
-            const mapping = TREND_PRODUCT_MAP[product.name];
-            const cardImg = mapping?.image || product.images[0];
-            const targetColor = mapping?.variantColor || product.color;
+            const targetColor = TREND_PRODUCT_COLORS[product.name] || product.color;
+            const cardImg =
+              product.colors.find((variant) => variant.name === targetColor)?.image ||
+              product.images[0];
 
             return (
               <motion.div
